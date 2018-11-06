@@ -66,5 +66,9 @@
     <Build Include="Tables\dbo.EventLog.Table.sql" />
     <Build Include="Tables\dbo.EventSource.Table.sql" />
     <Build Include="Tables\dbo.LoggingLevels.Table.sql" />
+    <None Include="Stored Procedures\dbo.stp_LogError.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Stored Procedures\dbo.stp_LogMessage.sql" />
   </ItemGroup>
 </Project>
