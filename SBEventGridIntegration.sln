@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TurnAroundAzureFunctionApp"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TurnAroundAzureFuctionApp2", "TurnAroundAzureFuctionApp2\TurnAroundAzureFuctionApp2.csproj", "{F8DAADBF-4314-4836-814B-599C549C0268}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D365Test", "D365Test\D365Test.csproj", "{94FF1B69-FB4D-48F8-BF69-3FF4C2C51C74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F8DAADBF-4314-4836-814B-599C549C0268}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8DAADBF-4314-4836-814B-599C549C0268}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8DAADBF-4314-4836-814B-599C549C0268}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94FF1B69-FB4D-48F8-BF69-3FF4C2C51C74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94FF1B69-FB4D-48F8-BF69-3FF4C2C51C74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94FF1B69-FB4D-48F8-BF69-3FF4C2C51C74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94FF1B69-FB4D-48F8-BF69-3FF4C2C51C74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
