@@ -8,7 +8,7 @@ Create or Alter PROCEDURE dbo.stp_LogError
 	,@AppName as VARCHAR(200) = 'Hub'	
 	,@DetailsJson AS VARCHAR(MAX) = null
 	,@User AS VARCHAR(100) = null
-	,@MachineName AS VARCHAR(100) = @@SERVERNAME
+	,@MachineName AS VARCHAR(100) = null
 	,@LogDate As Datetime = null
 AS
 
