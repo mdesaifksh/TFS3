@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Topshelf;
 
 namespace FieldServices.Logging.Runner
 {
@@ -15,53 +16,70 @@ namespace FieldServices.Logging.Runner
     class Program
     {
         private readonly static Logger _logger = LogManager.GetCurrentClassLogger();
-        private static int _timesRun = 0;
-        private static ManualResetEvent mre = new ManualResetEvent(false);
 
         static void Main(string[] args)
         {
             try
             {
+                
                 _logger.Info("Running Log Shipper");
 
-                using (var timer = new System.Timers.Timer())
+                var intervalstr = System.Configuration.ConfigurationManager.AppSettings["Timer.Interval"];
+                int interval;
+                if (string.IsNullOrWhiteSpace(intervalstr) || !int.TryParse(intervalstr, out interval))
                 {
-                    Run();
-
-                    timer.Interval = 60000;
-                    timer.Elapsed += Timer_Elapsed;
-                    timer.Start();
-
-                    _logger.Info("Timer started, waiting for 60 runs.");
-                    mre.WaitOne();
+                    throw new ArgumentException($"Timer.Interval app setting not set: Value:{intervalstr};");
                 }
 
-                _logger.Info($"Finished Log Shipper Run: Runs:{_timesRun};");
+                _logger.Info($"Timer Interval: {interval:#,0}");
+
+                var rc = HostFactory.Run(x =>                                   
+                {
+                    x.Service<LogShipperTimer>(s =>                                   
+                    {
+                        s.ConstructUsing(name => new LogShipperTimer(interval));                
+                        s.WhenStarted(tc => tc.Start());                         
+                        s.WhenStopped(tc => tc.Stop());
+                        s.WhenShutdown(tc => tc.Stop());
+                    });
+                    x.RunAsPrompt();                             
+                    x.SetDescription("This process ships logs from the DB to Logstash->ElasticSearch->Kibana");
+                    x.SetDisplayName("FKH FieldServices.Logging.Runner");
+                    x.SetServiceName("FKH FieldServices.Logging.Runner");
+
+                    x.EnableShutdown();
+                    x.UseNLog();
+                });
+
+                var exitCode = (int)Convert.ChangeType(rc, rc.GetTypeCode());
+                Environment.ExitCode = exitCode;
+
+                _logger.Info($"Finished Log Shipper");
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"Failed to foward log messages");
+                _logger.Error(ex, $"Failed to foward log messages.");
             }
         }
+    }
+
+    public class LogShipperTimer
+    {
+        private readonly static Logger _logger = LogManager.GetCurrentClassLogger();
+        private static int _timesRun = 0;
+        readonly System.Timers.Timer _timer;
+
+        public LogShipperTimer(int interval)
+        {
+            _timer = new System.Timers.Timer(interval) { AutoReset = true };
+            _timer.Elapsed += Timer_Elapsed;
+        }
+        public void Start() { _timer.Start(); }
+        public void Stop() { _timer.Stop(); }
 
         private static void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            //Only Run 60 times, so app restarts every hour or so.
-            if (_timesRun >= 60)
-            {
-                try
-                {
-                    ((System.Timers.Timer)sender).Stop();
-                }
-                finally
-                {
-                    mre.Set();
-                }
-            }
-            else
-            {
-                Run();
-            }
+            Run();
         }
 
         private static void Run()
@@ -82,6 +100,7 @@ namespace FieldServices.Logging.Runner
                         _logger.Info($"Pushing Messages: Count:{logmessages.Count};");
                         Settings.SaveLastDate(max);
                         UDPSender.Send(logmessages);
+                        _logger.Debug($"Pushing Messages Completed: Count:{logmessages.Count};");
                     }
                 }
             }

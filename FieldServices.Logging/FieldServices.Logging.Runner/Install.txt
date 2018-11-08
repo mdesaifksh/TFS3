@@ -1,0 +1,12 @@
+﻿To Install Service:
+FieldServices.Logging.Runner.exe install -servicename "FKH FieldServices.Logging.Runner" -displayname "FKH FieldServices.Logging.Runner" 
+
+To Stop Service:
+sc stop FieldServices.Logging.Runner.exe
+
+To Start Service:
+sc start FieldServices.Logging.Runner.exe
+
+
+To Uninstall without Excutable:
+sc delete FieldServices.Logging.Runner.exe
