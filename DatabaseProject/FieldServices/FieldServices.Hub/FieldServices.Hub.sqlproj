@@ -67,6 +67,9 @@
     <Build Include="Tables\dbo.EventSource.Table.sql" />
     <Build Include="Tables\dbo.LoggingLevels.Table.sql" />
     <None Include="Stored Procedures\dbo.stp_LogError.sql" />
+    <Build Include="Stored Procedures\FS_60_Day_Notice.sql" />
+    <Build Include="Stored Procedures\FS_30_Day_Notice.sql" />
+    <Build Include="Tables\dbo.EventIncomingLog.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Stored Procedures\dbo.stp_LogMessage.sql" />
