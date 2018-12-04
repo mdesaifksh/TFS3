@@ -6,7 +6,7 @@ if (typeof (FKH.FieldAndProjectServices) == "undefined") {
 }
 FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
-    onClick_WorkCompleted: function () {
+    onClick_TaskCompleted: function () {
         var entity = {};
         entity.fkh_direction = true;
         entity.fkh_eventdata = "[{   'Id': '<need to define>',   'EventType': '<need to define>',   'Subject': 'Dynamics: Job Complete',   'EventTime': '<need to define>',   'Data': {     'Property': '<need to define>',     'Job': '<need to define>',     'Contract': '<need to define>',     'Event': 'Job Complete'   },   'dataVersion': '',   'metadataVersion': '1',   'Topic': '<need to define>' }]";
@@ -36,7 +36,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
         req.send(JSON.stringify(entity));
     },
     
-    isVisible_WorkCompleted: function () {
+    isVisible_TaskCompleted: function () {
         if (Xrm.Page.getAttribute("msdyn_subject") != null){
             if (Xrm.Page.getAttribute("msdyn_subject").getValue() != null && Xrm.Page.getAttribute("msdyn_subject").getValue() == 'Work in progress') {
                 return true;
