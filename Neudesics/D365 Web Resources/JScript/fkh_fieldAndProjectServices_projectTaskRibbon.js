@@ -9,48 +9,84 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
     onClick_MarkComplete: function () {
         if (Xrm.Page.getAttribute("msdyn_subject") != null && Xrm.Page.getAttribute("msdyn_subject").getValue() != null){
             var thisTaskName = Xrm.Page.getAttribute("msdyn_subject").getValue();
+            var thisProjectId = Xrm.Page.getAttribute("msdyn_project").getValue()[0].id;
             switch(thisTaskName) {
                 case 'Pre-Move-Out Inspection':
-                    Xrm.Page.getAttribute("msdyn_actualend").setValue(new Date());
-                    Xrm.Page.getAttribute("msdyn_progress").setValue(100);
-                    Xrm.Page.getAttribute("statuscode").setValue(963850001);//Completed
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
                     Xrm.Page.data.refresh(true);
+                    break;
                 case 'Move-Out Inspection':
                     Xrm.Page.getAttribute("msdyn_actualstart").setValue(new Date());
-                    Xrm.Page.getAttribute("msdyn_actualend").setValue(new Date());
-                    Xrm.Page.getAttribute("msdyn_progress").setValue(100);
-                    Xrm.Page.getAttribute("statuscode").setValue(963850001);//Completed
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Budget Start'])
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, thisProjectId, ['Budget Start']);
                     Xrm.Page.data.refresh(true);
+                    break;
                 case 'Budget Start':
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Work In Progress','Quality Control Inspection','Hero Shot Picture'])
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, thisProjectId, ['Budget Approval']);
+                    Xrm.Page.data.refresh(true);
+                    break;
                 case 'Budget Approval':
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Work In Progress','Quality Control Inspection','Hero Shot Picture'])
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, thisProjectId, ['Job Assignment to Vendor(s) in Contract Creator']);
+                    Xrm.Page.data.refresh(true);
+                    break;
                 case 'Vendor(s) Says Job Started':
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Work In Progress','Quality Control Inspection','Hero Shot Picture'])
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, thisProjectId, ['Work in Progress']);
+                    Xrm.Page.data.refresh(true);
+                    break;
                 case 'Work In Progress':
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Work In Progress','Quality Control Inspection','Hero Shot Picture'])
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, thisProjectId, ['Vendor Says Job\'s Complete','Quality Control Inspection']);
+                    Xrm.Page.data.refresh(true);
+                    break;
                 case 'Quality Control Inspection':
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Work In Progress','Quality Control Inspection','Hero Shot Picture'])
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.createReWorkTasks(thisProjectId);
+                    Xrm.Page.data.refresh(true);
+                    break;
+                case 'Job Completed':
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, thisProjectId, ['Marketing Inspection','Quality Control Inspection']);
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage(thisTaskName);
+                    Xrm.Page.data.refresh(true);
+                    break;
                 case 'Hero Shot Picture':
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Work In Progress','Quality Control Inspection','Hero Shot Picture'])
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
+                    Xrm.Page.data.refresh(true);
+                    break;
                 case 'Marketing Inspection':
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Work In Progress','Quality Control Inspection','Hero Shot Picture'])
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Bi-Weekly Inspection']);
+                    Xrm.Page.data.refresh(true);
+                    break;
                 case 'Bi-Weekly Inspection':
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Work In Progress','Quality Control Inspection','Hero Shot Picture'])
+                    //FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Work In Progress']);
+                    break;
                 case 'Move-In Inspection':
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Work In Progress','Quality Control Inspection','Hero Shot Picture'])
+                    //FKH.FieldAndProjectServices.ProjectTaskRibbon.getTasks(thisTaskName, Xrm.Page.getAttribute("msdyn_project").getValue()[0].id, ['Work In Progress']);
+                    break;
                 default:
             }
         }
         return false;
+    },
+
+    completeThisTask: function () {
+        if (Xrm.Page.getAttribute("msdyn_actualstart").getValue() == null) {
+            Xrm.Page.getAttribute("msdyn_actualstart").setValue(new Date());
+        }
+        Xrm.Page.getAttribute("msdyn_actualend").setValue(new Date());
+        Xrm.Page.getAttribute("msdyn_progress").setValue(100);
+        Xrm.Page.getAttribute("statuscode").setValue(963850001);//Completed
     },
     
     isVisible_MarkComplete: function () {
         if (Xrm.Page.getAttribute("msdyn_subject") != null && Xrm.Page.getAttribute("msdyn_subject").getValue() != null){
             var taskName = Xrm.Page.getAttribute("msdyn_subject").getValue();
             var taskStatus = Xrm.Page.getAttribute("statuscode").getValue();
-            if (taskStatus != 963850001) {
+            if (taskStatus != 963850001) {//Completed
                 switch(taskName) {
                     case 'Pre-Move-Out Inspection':
                     case 'Move-Out Inspection':
@@ -80,7 +116,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
             }
         }
         var req = new XMLHttpRequest();
-        req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualend,msdyn_actualstart,msdyn_projecttaskid,msdyn_scheduledend,msdyn_scheduledstart,msdyn_subject,statuscode&$filter=_msdyn_project_value eq " + projectId + " and (" + targetTaskNameFilter + ")", true);
+        req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualend,msdyn_actualstart,msdyn_projecttaskid,msdyn_scheduledend,msdyn_scheduledstart,msdyn_subject,statuscode&$filter=statuscode ne 963850001 and _msdyn_project_value eq " + projectId + " and (" + targetTaskNameFilter + ")", true);
         req.setRequestHeader("OData-MaxVersion", "4.0");
         req.setRequestHeader("OData-Version", "4.0");
         req.setRequestHeader("Accept", "application/json");
@@ -102,58 +138,104 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
     processTasks: function(thisTaskName, results){
         switch(thisTaskName) {
             case 'Move-Out Inspection':
-                FKH.FieldAndProjectServices.ProjectTaskRibbon.startBudgetStart(thisTaskName, results);
             case 'Budget Start':
             case 'Budget Approval':
             case 'Vendor(s) Says Job Started':
+                FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask(results.value[0]);
+                break;
             case 'Work In Progress':
-            case 'Quality Control Inspection':
-            case 'Hero Shot Picture':
+                for (var i = 0; i < results.value.length; i++) {
+                    switch(results.value[i]["msdyn_subject"]) {
+                        case 'Vendor Says Job\'s Complete':
+                            FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask(results.value[i]);
+                        case 'Quality Control Inspection':
+                            FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask(results.value[i]);
+                        default:
+                    }
+                }
+                break;
+            case 'Job Completed':
+                for (var i = 0; i < results.value.length; i++) {
+                    switch(results.value[i]["msdyn_subject"]) {
+                        case 'Quality Control Inspection':
+                            FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask(results.value[i]);
+                        case 'Marketing Inspection':
+                            FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask(results.value[i]);
+                        default:
+                    }
+                }
+                break;
             case 'Marketing Inspection':
+                FKH.FieldAndProjectServices.ProjectTaskRibbon.scheduleBiWeeklyInspection();
+                break;
             case 'Bi-Weekly Inspection':
             case 'Move-In Inspection':
-                return true;
             default:
-                return false;
-        }
-        for (var i = 0; i < results.value.length; i++) {
-            var msdyn_actualend = results.value[i]["msdyn_actualend"];
-            var msdyn_actualstart = results.value[i]["msdyn_actualstart"];
-            var msdyn_projecttaskid = results.value[i]["msdyn_projecttaskid"];
-            var msdyn_scheduledend = results.value[i]["msdyn_scheduledend"];
-            var msdyn_scheduledstart = results.value[i]["msdyn_scheduledstart"];
-            var msdyn_subject = results.value[i]["msdyn_subject"];
-            var statuscode = results.value[i]["statuscode"];
-            Xrm.Utility.alertDialog(thisTaskName + " - " + msdyn_subject);
         }
     },
 
-    startBudgetStart: function(thisTaskName, results) {
-        var entity = {};
-        entity.msdyn_actualstart = new Date().toISOString();
-        entity.msdyn_progress = 1;
-        entity.statuscode = 963850000; //In Progress
+    startTask: function(task) {
+        if (task["statuscode"] == 1) { //Not Started
+            var entity = {};
+            entity.msdyn_actualstart = new Date().toISOString();
+            entity.msdyn_progress = 1;
+            entity.statuscode = 963850000; //In Progress
 
-        var req = new XMLHttpRequest();
-        req.open("PATCH", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks("+ results.value[0]["msdyn_projecttaskid"] +")", true);
-        req.setRequestHeader("OData-MaxVersion", "4.0");
-        req.setRequestHeader("OData-Version", "4.0");
-        req.setRequestHeader("Accept", "application/json");
-        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-        req.onreadystatechange = function() {
-            if (this.readyState === 4) {
-                req.onreadystatechange = null;
-                if (this.status === 204) {
-                    //Success
-                } else {
-                    Xrm.Utility.alertDialog("The Budget Start task may not have updated properly.  Please inform the CRM Help Desk. (" + this.statusText + ")");
+            var req = new XMLHttpRequest();
+            req.open("PATCH", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks("+ task["msdyn_projecttaskid"] +")", true);
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            req.onreadystatechange = function() {
+                if (this.readyState === 4) {
+                    req.onreadystatechange = null;
+                    if (this.status === 204) {
+                        //Success
+                    } else {
+                        Xrm.Utility.alertDialog("The '" + task["msdyn_subject"] + "' task may not have updated properly.  Please inform the CRM Help Desk. (" + this.statusText + ")");
+                    }
                 }
+            };
+            req.send(JSON.stringify(entity));
+        }
+    },
+
+    completeTask: function(task) {
+        if (task["statuscode"] != 963850001) { //Completed
+            var entity = {};
+            if (task["msdyn_actualstart"] == null) {
+                entity.msdyn_actualstart = new Date().toISOString();
             }
-        };
-        req.send(JSON.stringify(entity));
+            entity.msdyn_actualend = new Date().toISOString();
+            entity.msdyn_progress = 100;
+            entity.statuscode = 963850001; //Completed
+
+            var req = new XMLHttpRequest();
+            req.open("PATCH", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks("+ task["msdyn_projecttaskid"] +")", true);
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            req.onreadystatechange = function() {
+                if (this.readyState === 4) {
+                    req.onreadystatechange = null;
+                    if (this.status === 204) {
+                        //Success
+                    } else {
+                        Xrm.Utility.alertDialog("The '" + task["msdyn_subject"] + "' task may not have updated properly.  Please inform the CRM Help Desk. (" + this.statusText + ")");
+                    }
+                }
+            };
+            req.send(JSON.stringify(entity));
+        }
+    },
+
+    createReWorkTasks: function(projectId) {
+
     },
     
-    testOutgoingIntegration: function () {
+    publishMessage: function (thisTaskName) {
         var entity = {};
         entity.fkh_direction = true;
         entity.fkh_eventdata = "[{   'Id': '<need to define>',   'EventType': '<need to define>',   'Subject': 'Dynamics: Job Complete',   'EventTime': '<need to define>',   'Data': {     'Property': '<need to define>',     'Job': '<need to define>',     'Contract': '<need to define>',     'Event': 'Job Complete'   },   'dataVersion': '',   'metadataVersion': '1',   'Topic': '<need to define>' }]";
@@ -179,7 +261,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
             } else {
             }
         };
-        Xrm.Utility.alertDialog("Marking vendor's work on this job as complete in all systems.");
+        Xrm.Utility.alertDialog("Marking job as complete in all systems.");
         req.send(JSON.stringify(entity));
     }
 }
