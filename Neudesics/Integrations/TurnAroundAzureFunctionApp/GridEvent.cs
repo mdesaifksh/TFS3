@@ -37,24 +37,28 @@ namespace TurnAroundAzureFunctionApp
 
     public enum TurnAroundEvents
     {
-        Sixty_Days_Notice = 1,
-        Yardi_Lease_Renewal_Received = 2,
-        Thirty_Days_Notice = 3,
-        Yardi_PreMove_Out_Scheduled = 4,
-        Renowalk_Budget_Started = 5,
-        FotoNotes_Move_Out_Insp_Complete = 6,
-        Renowalk_Project_Status_Walked,
-        Yardi_Jobs_Created,
-        Jobs_Assigned_To_Vendor,
-        Yardi_Jobs_Started,
-        FotoNotes_Interim_Insp_Complete,
-        Vendor_Request_Change_Order,
-        Change_Order_Approved,
-        FotoNotes_QC_Insp_Complete_With_Add_Work,
-        FotoNotes_QC_Insp_Complete_With_No_Add_Work,
-        FotoNotes_Marketing_Insp_Complete,
-        FotoNotes_Bi_Weekly_Insp_Complete,
-        FotoNotes_Move_In_Insp_Complete
+        RESIDENT_NOTICE_TO_MOVE_OUT_RECEIVED = 1,
+        ASSIGN_PROJECT_MANAGER = 2,
+        CORPORATE_RENEWALS = 3,
+        MARKET_SCHEDULES_PRE_MOVE_OUT = 4,
+        PRE_MOVE_OUT_INSPECTION = 5,
+        MOVE_OUT_INSPECTION = 6,
+        BUDGET_START = 7,
+        BUDGET_APPROVAL = 8,
+        JOB_ASSIGNMENT_TO_VENDORS_IN_CONTRACT_CREATOR = 9,
+        JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI = 10,
+        VENDORS_SAYS_JOB_STARTED = 11,
+        WORK_IN_PROGRESS = 12,
+        VENDOR_REQUESTS_CHANGE_ORDER_IF_NECESSARY = 13,
+        CHANGE_ORDER_APPROVED = 14,
+        VENDOR_SAYS_JOBS_COMPLETE = 15,
+        QUALITY_CONTROL_INSPECTION = 16,
+        JOB_COMPLETED = 17,
+        HERO_SHOT_PICTURE = 18,
+        MARKETING_INSPECTION = 19,
+        BI_WEEKLY_INSPECTION = 20,
+        MOVE_IN_INSPECTION_COMPLETED = 21,
+        MOVE_OUT_DATE_CHANGED = 1001
     }
 
 }
