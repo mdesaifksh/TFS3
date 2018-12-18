@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "FieldServices.Hub", "FieldServices.Hub\FieldServices.Hub.sqlproj", "{6147BDA8-93A7-4D4A-B381-F5A93D7ED18D}"
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "PFS.Hub", "FieldServices.Hub\PFS.Hub.sqlproj", "{6147BDA8-93A7-4D4A-B381-F5A93D7ED18D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
