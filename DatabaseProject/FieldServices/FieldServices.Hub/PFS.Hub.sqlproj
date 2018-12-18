@@ -74,6 +74,7 @@
     <Build Include="Stored Procedures\FS_xDay_Notice.sql" />
     <Build Include="Stored Procedures\PFS_MoveOut_Changed.sql" />
     <Build Include="Stored Procedures\PFS_YardiContract_Submit.sql" />
+    <Build Include="Stored Procedures\PFS_UnitStatus_CorpRenewal.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Stored Procedures\dbo.stp_LogMessage.sql" />
