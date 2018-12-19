@@ -20,15 +20,7 @@ Declare @CreateEventId int = 1;
 Declare @EventId int = 10;
 Declare @SourceId int = 1;
 
-with recent_event_create as (
-	SELECT 
-		voyager_property_hmy 
-		,max(load_date) as LastEventDate
-    FROM   hub.dbo.eventlog 
-	WHERE Event_ID = @CreateEventId
-	GROUP BY Voyager_Property_HMY
-)
-,recent_event_job as (
+with recent_event_job as (
 	SELECT 
 		voyager_property_hmy 
 		,max(load_date) as LastEventDate
@@ -36,7 +28,7 @@ with recent_event_create as (
 	WHERE Event_ID = @EventId
 	GROUP BY Voyager_Property_HMY
 )
-, job_data as (
+,job_data as (
 	select 		
 		j.HPROPERTY
 		,j.SSCHEDDATE
@@ -53,16 +45,15 @@ select
 top 3	--For Testing
 	yd.YardiId
 	,yd.YardiScode
-	,yd.UnitStatus	
-	,re.LastEventDate
+	,yd.UnitStatus		
 	,jd.*
 from 
 	Homes.dbo.vYardi_PropertyLevel_YD yd
 	inner join job_data jd on jd.HPROPERTY = yd.YardiId
-	LEFT JOIN recent_event_create re on re.Voyager_Property_HMY = yd.YardiId
+	LEFT JOIN Hub.dbo.view_PFS_EventStatus re on re.Voyager_Property_HMY = yd.YardiId
 	left join recent_event_job rej on rej.Voyager_Property_HMY = yd.YardiId
 where 
-	re.LastEventDate is not null --dynamics created event (1) was sent recently
+	re.Created = 1 --make sure create project created
 	and rej.LastEventDate is null --but action job event (10) not recently sent
 )
 
@@ -78,11 +69,12 @@ where
              Getdate()                         AS Load_Date, 
              YardiId, 
 			 YardiScode,
-			 (select 
-				DTCREATED as Date1
+			  (select 
+				Homes.dbo.fncs_ConvertESTtoUTC(DTCREATED) as Date1
 				,@EventID as [Event]
 				,YardiScode  as PropertyID
 				,CAST(0 as BIT) as IsForce
+				,rtrim(JobScode) as JobID
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) as Json_Payload
         FROM   yardi_data 
 		

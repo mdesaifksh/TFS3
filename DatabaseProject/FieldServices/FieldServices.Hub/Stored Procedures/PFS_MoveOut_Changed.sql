@@ -32,7 +32,7 @@ Declare @SourceId int = 1;
 	Select 
 		Voyager_Property_HMY
 		,Json_Payload
-		,iif(isnull(ISJSON (json_payload),0) = 1, convert(date, JSON_VALUE(Json_Payload, '$.Date1')), null) as PayloadDate1
+		,iif(isnull(ISJSON (json_payload),0) = 1, convert(date, JSON_VALUE(Json_Payload, '$.Date1')), null) as PayloadDate1   --Move out date doesn't need to consider time, so convert to date
 	from	movedate_events
 	WHERE	RID = 1
 )
@@ -44,35 +44,26 @@ Declare @SourceId int = 1;
     FROM   Homes.dbo.vYardi_Tenant t	
 	WHERE DTMOVEIN <= getdate()
 )
-,recent_event_create as (
-	SELECT 
-		voyager_property_hmy 
-		,max(load_date) as LastEventDate
-    FROM   hub.dbo.eventlog 
-	WHERE Event_ID = @CreateEventId
-	GROUP BY Voyager_Property_HMY
-)
 , yardi_data as (
 select 
-top 3   --For Testing
-	t.DTMOVEOUT as MoveOutDate 
+top 3  --For Testing
+	t.DTMOVEOUT as MoveOutDate
 	,movd.PayloadDate1 as PrevMoveOutDate
 	,yd.YardiId
-	,yd.YardiScode
-	,re.LastEventDate
+	,yd.YardiScode	
 from 
 Homes.dbo.vYardi_PropertyLevel_YD yd
-LEFT JOIN recent_event_create re on re.Voyager_Property_HMY = yd.YardiId
+LEFT JOIN Hub.dbo.view_PFS_EventStatus re on re.Voyager_Property_HMY = yd.YardiId
 LEFT JOIN movedate_last movd on movd.Voyager_Property_HMY = yd.YardiId
 LEFT JOIN tenants t on t.HPROPERTY = yd.YardiId and t.RID = 1
 where 
-	re.LastEventDate is not null
+	movd.PayloadDate1 is not null and
+	re.Created = 1
 	AND (
-		(t.DTMOVEOUT is not null and (movd.PayloadDate1 is null OR movd.PayloadDate1 <> t.DTMOVEOUT ))
-		OR (t.DTMOVEOUT is null and movd.PayloadDate1 is not null))
+			(t.DTMOVEOUT is not null and (movd.PayloadDate1 is null OR convert(date,movd.PayloadDate1) <> convert(date,t.DTMOVEOUT) ))  --make sure they are compared on date
+			OR (t.DTMOVEOUT is null and movd.PayloadDate1 is not null)
+		)
 )
---select * from yardi_data
-
    INSERT INTO hub.dbo.eventlog 
                   (event_id, 
                    source_id, 
@@ -84,9 +75,9 @@ where
              @SourceID                         AS Source_ID, 
              Getdate()                         AS Load_Date, 
              YardiId, 
-			 YardiScode,
+			 YardiScode,			 
 			 (select 
-				MoveOutDate as Date1
+				Homes.dbo.fncs_ConvertESTtoUTC(MoveOutDate) as Date1
 				,@EventID as [Event]
 				,YardiScode  as PropertyID
 				,CAST(0 as BIT) as IsForce

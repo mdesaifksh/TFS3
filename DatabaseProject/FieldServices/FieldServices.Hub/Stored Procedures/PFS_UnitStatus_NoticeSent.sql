@@ -7,7 +7,7 @@ Resident Notice to Move Out - Field Services Event Fire
 Description:	This procedure will write a record to the Hub.dbo.EventLog table when a property's
 				unit status changes to the designated status.
 *******************************************************************************************/
-CREATE OR ALTER PROCEDURE [dbo].FS_UnitStatus_NoticeSent
+CREATE OR ALTER PROCEDURE [dbo].PFS_UnitStatus_NoticeSent
 AS
 BEGIN
 
@@ -20,31 +20,22 @@ exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Che
 Declare @EventId int = 1;
 Declare @SourceId int = 1;
 
-with recent_event as (
-	SELECT 
-		voyager_property_hmy 
-		,max(load_date) as LastEventDate
-    FROM   hub.dbo.eventlog 
-	WHERE Event_ID = @EventId
-	GROUP BY Voyager_Property_HMY
-)
-, yardi_data as (
+with  yardi_data as (
 select 
 top 3
 	datediff(day, yd.CurrentUnitStatusBegin, getdate()) as DaysSinceStatusChange 
 	,yd.YardiId
 	,yd.YardiScode
 	,yd.UnitStatus
-	,yd.CurrentUnitStatusBegin
-	,re.LastEventDate
+	,yd.CurrentUnitStatusBegin	
 from 
 Homes.dbo.vYardi_PropertyLevel_YD yd
-LEFT JOIN recent_event re on re.Voyager_Property_HMY = yd.YardiId
+LEFT JOIN Hub.dbo.view_PFS_EventStatus re on re.Voyager_Property_HMY = yd.YardiId
 where 
 yd.UnitStatus in ('Notice Unrented','Notice Rented','Vacant Unrented Not Ready','Vacant Rented Not Ready')
 --Either the unit status begin date is null or the event happened recently
 and (CurrentUnitStatusBegin  is null OR (CurrentUnitStatusBegin <= convert(date, getdate()) and datediff(day, CurrentUnitStatusBegin, getdate()) < 15))
-and LastEventDate is null
+and isnull(re.Created, 0) = 0
 )
    INSERT INTO hub.dbo.eventlog 
                   (event_id, 
@@ -59,7 +50,7 @@ and LastEventDate is null
              YardiId, 
 			 YardiScode,
 			 (select 
-				isnull(CurrentUnitStatusBegin, convert(date,getdate())) as Date1
+				isnull(Homes.dbo.fncs_ConvertESTtoUTC(CurrentUnitStatusBegin), getutcdate()) as Date1
 				,@EventID as [Event]
 				,YardiScode  as PropertyID
 				,CAST(0 as BIT) as IsForce
