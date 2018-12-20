@@ -14,4 +14,5 @@ CREATE TABLE [dbo].[EventIncomingLog](
 GO
 
 
-select * from [EventIncomingLog]
+--select * from [EventIncomingLog]
+

@@ -14,7 +14,7 @@ BEGIN
 SET NOCOUNT ON;
 
 	
-declare @SprocName varchar(100) = 'FS_UnitStatus_NoticeSent'
+declare @SprocName varchar(100) = 'PFS_UnitStatus_NoticeSent'
 exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Unit Status for Notice Sent'
 
 Declare @EventId int = 1;

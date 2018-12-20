@@ -76,6 +76,7 @@
     <Build Include="Stored Procedures\PFS_UnitStatus_CorpRenewal.sql" />
     <Build Include="Stored Procedures\PFS_UnitStatus_NoticeSent.sql" />
     <Build Include="Views\dbo.view_PFS_EventStatus.sql" />
+    <Build Include="Views\dbo.view_PFS_EventIncomingLog.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Stored Procedures\dbo.stp_LogMessage.sql" />

@@ -18,7 +18,7 @@ declare @SprocName varchar(100) = 'PFS_UnitStatus_CorpRenewal'
 exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Unit Status for Corporate Renewal Complete'
 
 
-Declare @CorpRenewEventId int = 2;
+Declare @CorpRenewEventId int = 3;
 Declare @CreateEventId int = 1;
 Declare @SourceId int = 1;
 
