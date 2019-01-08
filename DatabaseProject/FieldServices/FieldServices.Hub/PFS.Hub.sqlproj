@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>FieldServices.Hub</Name>
+    <Name>PFS.Hub</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{6147bda8-93a7-4d4a-b381-f5a93d7ed18d}</ProjectGuid>
@@ -23,6 +23,7 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <TargetDatabase>PFS.Hub</TargetDatabase>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -59,6 +60,7 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="Stored Procedures" />
+    <Folder Include="Views" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\dbo.Logging.Table.sql" />
@@ -68,9 +70,13 @@
     <Build Include="Tables\dbo.LoggingLevels.Table.sql" />
     <None Include="Stored Procedures\dbo.stp_LogError.sql" />
     <Build Include="Tables\dbo.EventIncomingLog.sql" />
-    <Build Include="Stored Procedures\FS_UnitStatus_NoticeSent.sql" />
-    <Build Include="Stored Procedures\FS_Lease_Renewal_Received.sql" />
     <Build Include="Stored Procedures\FS_xDay_Notice.sql" />
+    <Build Include="Stored Procedures\PFS_MoveOut_Changed.sql" />
+    <Build Include="Stored Procedures\PFS_YardiContract_Submit.sql" />
+    <Build Include="Stored Procedures\PFS_UnitStatus_CorpRenewal.sql" />
+    <Build Include="Stored Procedures\PFS_UnitStatus_NoticeSent.sql" />
+    <Build Include="Views\dbo.view_PFS_EventStatus.sql" />
+    <Build Include="Views\dbo.view_PFS_EventIncomingLog.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Stored Procedures\dbo.stp_LogMessage.sql" />
