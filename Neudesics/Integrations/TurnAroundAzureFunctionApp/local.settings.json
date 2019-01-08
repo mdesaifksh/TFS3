@@ -3,6 +3,8 @@
   "Values": {
     "ClientId": "df227c93-0513-43be-a02c-690167459b52",
     "D365OrgUrl": "https://firstkeyhomesdev.crm.dynamics.com",
-    "appKey": "OXE+UZQfM6vIQPVwBD2B/KL4O56jfJ0BJHLsuXSSqgk="
+    "appKey": "OXE+UZQfM6vIQPVwBD2B/KL4O56jfJ0BJHLsuXSSqgk=",
+    "D365ToSQL_Topic_EndPoint": "https://pfs-d365tosqlhubeventgridtopic.eastus-1.eventgrid.azure.net/api/events",
+    "D365ToSQL_SAS_Key": "uCQi10m3cngHbqJ7zBm6m3aBWz5DVQqgC+fjGRuoPWE="
   }
 }

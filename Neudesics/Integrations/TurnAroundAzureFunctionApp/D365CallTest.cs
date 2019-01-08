@@ -28,6 +28,13 @@ namespace TurnAroundAzureFunctionApp
             var content = req.Content;
             const string CustomTopicEvent = "EventGridDoc-Topic";
 
+            //var clientID = Environment.GetEnvironmentVariable("ClientId");
+            //log.Info($"CLient ID : {clientID}");
+            //var D365OrgUrl = Environment.GetEnvironmentVariable("D365OrgUrl");
+            //log.Info($"D365 Org Url : {D365OrgUrl}");
+            //var appKey = Environment.GetEnvironmentVariable("appKey");
+            //log.Info($"Application Key : {appKey}");
+
             string jsonContent = await content.ReadAsStringAsync();
    /*         jsonContent = @"[{
   'Id': 'ee008e26-cc59-49bd-ba54-b6e2b8e39e7a',
@@ -43,7 +50,8 @@ namespace TurnAroundAzureFunctionApp
   'Topic': '/subscriptions/bd07bd09-5b23-4701-9ddb-b8de9bf1802d/resourceGroups/D365Integration/providers/Microsoft.EventGrid/topics/EventGridDoc-Topic'
 }]";*/
             log.Info($"Received Event with payload: {jsonContent}");
-            //CRMCall(log);
+            CRMCall(log);
+            /*
             EventGridSubscriber eventGridSubscriber = new EventGridSubscriber();
             eventGridSubscriber.AddOrUpdateCustomEventMapping(CustomTopicEvent, typeof(GridEvent<TurnAround>));
 
@@ -89,7 +97,7 @@ namespace TurnAroundAzureFunctionApp
                     log.Info($"Got ContosoItemReceived event data, item Topic {eventGridEvent.Topic}");
                 }
             }
-
+            */
             return jsonContent == null
             ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a name on the query string or in the request body")
             : req.CreateResponse(HttpStatusCode.OK, "Hello " + jsonContent);
@@ -98,10 +106,14 @@ namespace TurnAroundAzureFunctionApp
         private static OrganizationWebProxyClient CRMCall(TraceWriter log)
         {
             var aadInstance = "https://login.microsoftonline.com/";
-            var organizationUrl = "https://firstkeyhomesdev.crm.dynamics.com";
+            //var organizationUrl = "https://firstkeyhomesdev.crm.dynamics.com";                //DEV ENVIRONMENT
+            var organizationUrl = Environment.GetEnvironmentVariable("D365OrgUrl"); //"https://firstkeyhomestest.crm.dynamics.com";
+            log.Info($"D365 Org Url : {organizationUrl}");
             var tenantId = "aa33e5f2-00dd-407e-b337-8cb00f28c25d";//[Azure AD Tenant ID];
-            var clientId = "df227c93-0513-43be-a02c-690167459b52";//[Azure AD Application ID];
-            var appKey = "OXE+UZQfM6vIQPVwBD2B/KL4O56jfJ0BJHLsuXSSqgk=";//[Azure AD Application Key];
+            var clientId = Environment.GetEnvironmentVariable("ClientId"); //"df227c93-0513-43be-a02c-690167459b52";//[Azure AD Application ID];
+            log.Info($"CLient ID : {clientId}");
+            var appKey = Environment.GetEnvironmentVariable("appKey"); //"OXE+UZQfM6vIQPVwBD2B/KL4O56jfJ0BJHLsuXSSqgk=";//[Azure AD Application Key];
+            log.Info($"Application Key : {appKey}");
             var clientcred = new ClientCredential(clientId, appKey);
             var authenticationContext = new AuthenticationContext(aadInstance + tenantId);
             var authenticationResult = authenticationContext.AcquireTokenAsync(organizationUrl, clientcred);
