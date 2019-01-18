@@ -99,7 +99,6 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                     case 'Budget Start':
                     case 'Budget Approval':
                     case 'Vendor(s) Says Job Started':
-                    case 'Work In Progress':
                     case 'Vendor Says Job\'s Complete':
                     case 'Quality Control Inspection':
                     case 'Job Completed':
@@ -278,7 +277,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                                     .then(function (data) {
                                         if (data.entities.length > 0) {
                                             var yardiJobID = data.entities[0]["fkh_yardicode"];
-                                            var data =
+                                            var datapayLoad =
                                                 {
                                                     "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': 'Turn Process : VENDOR_SAYS_JOBS_COMPLETE', 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + result.po_unitidnum + "', 'YardiJobCode' : '" + yardiJobID + "', 'Event': 15, 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
                                                     "fkh_direction": true,
@@ -286,7 +285,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                                             };
 
                                             // create account record
-                                            Xrm.WebApi.createRecord("fkh_azureintegrationcalls", data).then(
+                                            Xrm.WebApi.createRecord("fkh_azureintegrationcalls", datapayLoad).then(
                                                 function success(result) {
                                                     console.log("Azure Integration Call created with ID: " + result.id);
                                                     // perform operations on record creation
@@ -309,14 +308,14 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
                                 break;
                             case 'Job Completed':
-                                var data =
+                                var datapayLoad =
                                     {
                                         "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': 'Turn Process : JOB_COMPLETED', 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + result.po_unitidnum + "', 'Event': 17, 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
                                         "fkh_direction": true,
                                         "fkh_name": "Turn Process : JOB_COMPLETED"
                                     };
                                 // create account record
-                                Xrm.WebApi.createRecord("fkh_azureintegrationcalls", data).then(
+                                Xrm.WebApi.createRecord("fkh_azureintegrationcalls", datapayLoad).then(
                                     function success(result) {
                                         console.log("Azure Integration Call created with ID: " + result.id);
                                         // perform operations on record creation
