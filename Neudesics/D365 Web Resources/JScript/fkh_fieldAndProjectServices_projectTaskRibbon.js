@@ -256,17 +256,21 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
     publishMessage: function (thisTaskName) {
 
+        //alert("Publish Message");
         var unit = Xrm.Page.getAttribute('fkh_unitid').getValue();
+        var taskIdentifier = Xrm.Page.getAttribute('fkh_taskidentifierid').getValue();
         var today = new Date();
         var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
         var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         var dateTime = date + ' ' + time;
 
         debugger;
-        if (unit !== null) {
+        if (unit !== null && taskIdentifier !== null) {
             Xrm.WebApi.retrieveRecord("po_units", unit[0].id.replace('{', '').replace('}', ''), "?$select=po_unitid,po_unitidnum").then(
                 function success(result) {
                     if (result.po_unitidnum !== null && result.po_unitidnum !== '' && result.po_unitidnum !== undefined) {
+                        //Retrieve Task Identifier...
+                        //var taskIdentifierName = taskIdentifier[0].name;
                         //alert(result.po_unitidnum);
                         switch (thisTaskName) {
                             case 'Vendor Says Job\'s Complete':
@@ -277,11 +281,12 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                                     .then(function (data) {
                                         if (data.entities.length > 0) {
                                             var yardiJobID = data.entities[0]["fkh_yardicode"];
+                                            var isInitialRenoProcess = taskIdentifier[0].name.startsWith("IR : ");
                                             var datapayLoad =
-                                                {
-                                                    "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': 'Turn Process : VENDOR_SAYS_JOBS_COMPLETE', 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + result.po_unitidnum + "', 'YardiJobCode' : '" + yardiJobID + "', 'Event': 15, 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
+                                            {
+                                                "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': " + (isInitialRenoProcess ? "'IR : VENDOR_SAYS_JOBS_COMPLETE'" : "'Turn Process : VENDOR_SAYS_JOBS_COMPLETE'") + ", 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + result.po_unitidnum + "', 'YardiJobCode' : '" + yardiJobID + "', 'Event': " + (isInitialRenoProcess ? "214" : "15") + ", 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
                                                     "fkh_direction": true,
-                                                    "fkh_name": "Turn Process : VENDOR_SAYS_JOBS_COMPLETE"
+                                                "fkh_name": isInitialRenoProcess ? "IR : VENDOR_SAYS_JOBS_COMPLETE" : "Turn Process : VENDOR_SAYS_JOBS_COMPLETE"
                                             };
 
                                             // create account record
