@@ -266,6 +266,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
         debugger;
         if (unit !== null && taskIdentifier !== null) {
+            var isInitialRenoProcess = taskIdentifier[0].name.startsWith("IR : ");
             Xrm.WebApi.retrieveRecord("po_units", unit[0].id.replace('{', '').replace('}', ''), "?$select=po_unitid,po_unitidnum").then(
                 function success(result) {
                     if (result.po_unitidnum !== null && result.po_unitidnum !== '' && result.po_unitidnum !== undefined) {
@@ -281,11 +282,10 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                                     .then(function (data) {
                                         if (data.entities.length > 0) {
                                             var yardiJobID = data.entities[0]["fkh_yardicode"];
-                                            var isInitialRenoProcess = taskIdentifier[0].name.startsWith("IR : ");
                                             var datapayLoad =
                                             {
                                                 "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': " + (isInitialRenoProcess ? "'IR : VENDOR_SAYS_JOBS_COMPLETE'" : "'Turn Process : VENDOR_SAYS_JOBS_COMPLETE'") + ", 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + result.po_unitidnum + "', 'YardiJobCode' : '" + yardiJobID + "', 'Event': " + (isInitialRenoProcess ? "214" : "15") + ", 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
-                                                    "fkh_direction": true,
+                                                "fkh_direction": true,
                                                 "fkh_name": isInitialRenoProcess ? "IR : VENDOR_SAYS_JOBS_COMPLETE" : "Turn Process : VENDOR_SAYS_JOBS_COMPLETE"
                                             };
 
@@ -314,11 +314,11 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                                 break;
                             case 'Job Completed':
                                 var datapayLoad =
-                                    {
-                                        "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': 'Turn Process : JOB_COMPLETED', 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + result.po_unitidnum + "', 'Event': 17, 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
-                                        "fkh_direction": true,
-                                        "fkh_name": "Turn Process : JOB_COMPLETED"
-                                    };
+                                {
+                                    "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': " + (isInitialRenoProcess ? "'IR : JOB_COMPLETED'" : "'Turn Process : JOB_COMPLETED'") + ", 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + result.po_unitidnum + "', 'Event': " + (isInitialRenoProcess ? "216" : "17") + ", 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
+                                    "fkh_direction": true,
+                                    "fkh_name": isInitialRenoProcess ? "IR : JOB_COMPLETED" : "Turn Process : JOB_COMPLETED"
+                                };
                                 // create account record
                                 Xrm.WebApi.createRecord("fkh_azureintegrationcalls", datapayLoad).then(
                                     function success(result) {
