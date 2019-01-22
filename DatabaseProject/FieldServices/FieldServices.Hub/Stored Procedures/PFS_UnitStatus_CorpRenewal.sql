@@ -30,6 +30,7 @@ with prev_corp_renew_event as
     FROM   hub.dbo.eventlog 
 	WHERE Event_ID = @CorpRenewEventId
 	GROUP BY Voyager_Property_HMY
+	HAVING max(load_date) >= convert(date, dateadd(day, -120, getdate()))
 )
 , yardi_data as (
 select 

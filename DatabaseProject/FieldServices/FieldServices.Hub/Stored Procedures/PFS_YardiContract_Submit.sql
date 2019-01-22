@@ -27,6 +27,7 @@ with recent_event_job as (
     FROM   hub.dbo.eventlog 
 	WHERE Event_ID = @EventId
 	GROUP BY Voyager_Property_HMY
+	HAVING max(load_date) >= convert(date, dateadd(day, -120, getdate()))
 )
 ,job_data as (
 	select 		
