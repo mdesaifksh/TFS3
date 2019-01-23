@@ -14,5 +14,8 @@ CREATE TABLE [dbo].[EventIncomingLog](
 GO
 
 
+ALTER TABLE EventIncomingLog
+ADD [RowVersion] [timestamp] NOT NULL
+
 --select * from [EventIncomingLog]
 
