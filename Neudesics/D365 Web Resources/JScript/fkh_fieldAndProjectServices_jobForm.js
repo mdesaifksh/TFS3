@@ -6,12 +6,11 @@ if (typeof (FKH.FieldAndProjectServices) == "undefined") {
 }
 FKH.FieldAndProjectServices.JobForm = {
     jobCreated: function () {
-        debugger;
         if (Xrm.Page.getAttribute("fkh_jobstatus") != null && Xrm.Page.getAttribute("fkh_jobstatus").getValue() != null && Xrm.Page.getAttribute("fkh_jobstatus").getValue() == 963850004/*Contract Created*/) {
             if (Xrm.Page.getAttribute("fkh_unit") != null && Xrm.Page.getAttribute("fkh_unit").getValue() != null && Xrm.Page.getAttribute("fkh_unit").getValue()[0].id != null) {
                 var unitId = Xrm.Page.getAttribute("fkh_unit").getValue()[0].id;
                 var req = new XMLHttpRequest();
-                req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projects?$select=msdyn_projectid&$filter=_fkh_unitid_value eq " + unitId + " and statuscode eq 1", true);//and _msdyn_project_name eq 'Turn Process' 
+                req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projects?$select=msdyn_projectid&$filter=_fkh_unitid_value eq " + unitId + " and statuscode eq 1", true);
                 req.setRequestHeader("OData-MaxVersion", "4.0");
                 req.setRequestHeader("OData-Version", "4.0");
                 req.setRequestHeader("Accept", "application/json");
@@ -23,14 +22,14 @@ FKH.FieldAndProjectServices.JobForm = {
                         if (this.status === 200) {
                             FKH.FieldAndProjectServices.JobForm.processProjects(JSON.parse(this.response));
                         } else {
-                            Xrm.Utility.alertDialog("Problem retrieving active Turnover Project for this Unit.  Please inform the CRM Help Desk: " + this.statusText);
+                            Xrm.Utility.alertDialog("Problem retrieving active Project for this Unit.  Please inform the CRM Help Desk: " + this.statusText);
                         }
                     }
                 };
                 req.send();
             }
             else {
-                Xrm.Utility.alertDialog("A unit doesn't not appear to be related to this job, so no Turnover Project will be updated.  Please inform the CRM Help Desk.");
+                Xrm.Utility.alertDialog("A unit doesn't not appear to be related to this job, so no Project will be updated.  Please inform the CRM Help Desk.");
             }
         }
     },
