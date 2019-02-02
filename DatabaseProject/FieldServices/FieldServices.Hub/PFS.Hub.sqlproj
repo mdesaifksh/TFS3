@@ -79,6 +79,9 @@
     <Build Include="Views\dbo.view_PFS_EventIncomingLog.sql" />
     <Build Include="Tables\dbo.EventDefinition.Table_RenoUpdate.sql" />
     <Build Include="Stored Procedures\PFS_Renowalk_Status.sql" />
+    <Build Include="Stored Procedures\PFS_SFStatus_OfferAccepted.sql" />
+    <Build Include="Stored Procedures\PFS_SFStatus_OfferRejected.sql" />
+    <Build Include="Stored Procedures\PFS_SFStatus_Acquired.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Stored Procedures\dbo.stp_LogMessage.sql" />
