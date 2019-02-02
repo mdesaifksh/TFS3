@@ -26,6 +26,7 @@ with  SF_data as (
 	from hub.dbo.property p
 	LEFT JOIN Hub.dbo.view_PFS_EventStatus re on re.SFCode = p.SFCode
 	where sPreAcqStatus = 'Committed' and isnull(re.Created, 0) = 0
+	and sAcqType not like '%bulk%'
 )
    INSERT INTO hub.dbo.eventlog 
                   (event_id, 
