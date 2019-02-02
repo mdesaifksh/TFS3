@@ -16,7 +16,7 @@ SET NOCOUNT ON;
 declare @SprocName varchar(100) = 'PFS_SFStatus_Acquired'
 exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Pre Acq Status for Acquired'
 
-Declare @EventId int = 206;
+Declare @EventId int = 208;
 Declare @SourceId int = 1;
 
 with  SF_data as (
