@@ -68,9 +68,8 @@
     <Build Include="Tables\dbo.PFS_EventLog.sql" />
     <Build Include="Tables\dbo.PFS_EventSource.sql" />
     <Build Include="Tables\dbo.PFS_LoggingLevels.sql" />
-    <None Include="Stored Procedures\dbo.stp_LogError.sql" />
+    <None Include="Stored Procedures\PFS_LogError.sql" />
     <Build Include="Tables\dbo.PFS_EventIncomingLog.sql" />
-    <Build Include="Stored Procedures\FS_xDay_Notice.sql" />
     <Build Include="Stored Procedures\PFS_MoveOut_Changed.sql" />
     <Build Include="Stored Procedures\PFS_YardiContract_Submit.sql" />
     <Build Include="Stored Procedures\PFS_UnitStatus_CorpRenewal.sql" />
@@ -84,6 +83,6 @@
     <Build Include="Stored Procedures\PFS_SFStatus_Acquired.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Stored Procedures\dbo.stp_LogMessage.sql" />
+    <None Include="Stored Procedures\PFS_LogMessage.sql" />
   </ItemGroup>
 </Project>
