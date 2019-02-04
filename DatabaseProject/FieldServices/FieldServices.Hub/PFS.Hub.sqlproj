@@ -61,6 +61,7 @@
     <Folder Include="Tables" />
     <Folder Include="Stored Procedures" />
     <Folder Include="Views" />
+    <Folder Include="Deploy" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\dbo.PFS_Logging.sql" />
@@ -81,8 +82,14 @@
     <Build Include="Stored Procedures\PFS_SFStatus_OfferAccepted.sql" />
     <Build Include="Stored Procedures\PFS_SFStatus_OfferRejected.sql" />
     <Build Include="Stored Procedures\PFS_SFStatus_Acquired.sql" />
+    <None Include="Deploy\DeploySprocs.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Stored Procedures\PFS_LogMessage.sql" />
+    <None Include="Deploy\List_DeployTables.txt" />
+    <None Include="Deploy\DeployTables.sql" />
+    <None Include="Deploy\List_DeploySprocs.txt" />
+    <None Include="Deploy\List_DeployViews.txt" />
+    <None Include="Deploy\DeployViews.sql" />
   </ItemGroup>
 </Project>
