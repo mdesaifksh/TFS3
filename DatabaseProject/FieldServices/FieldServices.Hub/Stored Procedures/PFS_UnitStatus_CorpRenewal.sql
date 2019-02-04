@@ -4,7 +4,7 @@ GO
 
 /******************************************************************************************* 
 Resident Notice to Move Out - Field Services Event Fire
-Description:	This procedure will write a record to the Hub.dbo.EventLog table when a property's
+Description:	This procedure will write a record to the Hub.dbo.PFS_eventlog table when a property's
 				unit status changes to the designated status.
 *******************************************************************************************/
 CREATE OR ALTER PROCEDURE [dbo].PFS_UnitStatus_CorpRenewal
@@ -15,7 +15,7 @@ SET NOCOUNT ON;
 
 	
 declare @SprocName varchar(100) = 'PFS_UnitStatus_CorpRenewal'
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Unit Status for Corporate Renewal Complete'
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Unit Status for Corporate Renewal Complete'
 
 
 Declare @CorpRenewEventId int = 3;
@@ -27,7 +27,7 @@ with prev_corp_renew_event as
 	SELECT 
 		voyager_property_hmy 
 		,max(load_date) as LastEventDate
-    FROM   hub.dbo.eventlog 
+    FROM   hub.dbo.PFS_eventlog 
 	WHERE Event_ID = @CorpRenewEventId
 	GROUP BY Voyager_Property_HMY
 	HAVING max(load_date) >= convert(date, dateadd(day, -120, getdate()))
@@ -48,7 +48,7 @@ yd.UnitStatus in ('Vacant Rented Ready','Vacant Not Rented Ready','Occupied No N
 and ce.Created = 1	--Make sure the create event has been sent previously.
 and (ren.LastEventDate is null OR ren.LastEventDate < ce.LastCreateDate)  --Corp renewal never sent or it was sent before last time project was created.
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -68,8 +68,8 @@ and (ren.LastEventDate is null OR ren.LastEventDate < ce.LastCreateDate)  --Corp
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) as Json_Payload
         FROM   yardi_data 
 		
-declare @message varchar(200) = 'Finished Inserting Records for Corp Renewal Complete into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Records for Corp Renewal Complete into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 END
 GO

@@ -1,7 +1,7 @@
 USE [Hub]
 GO
 
---drop  TABLE [dbo].[EventIncomingLog]
+--drop  TABLE [dbo].[PFS_EventIncomingLog]
 
 CREATE TABLE [dbo].[PFS_EventIncomingLog](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
@@ -19,5 +19,5 @@ GO
 ALTER TABLE PFS_EventIncomingLog
 ADD [RowVersion] [timestamp] NOT NULL
 */
---select * from [EventIncomingLog]
+--select * from [PFS_EventIncomingLog]
 

@@ -14,7 +14,7 @@ with trimmed as (
 		,SUBSTRING(trim(Json_Payload), 2, LEN(trim(Json_Payload))-2) as Json_Payload_Trimmed
 		,CreatedAt		
 		,ISJSON(SUBSTRING(trim(Json_Payload), 2, LEN(trim(Json_Payload))-2)) as Json_Payload_Trim_IsJson		
-	from EventIncomingLog 
+	from Hub.dbo.PFS_EventIncomingLog 
 	where Json_Payload is not null
 )
 select 
@@ -41,7 +41,7 @@ with last_event_create as (
 		,EL.SFCode
 		,max(EL.load_date) as LastEventDate
 		,EL.Event_ID		
-    FROM   hub.dbo.eventlog EL 
+    FROM   hub.dbo.PFS_eventlog EL 
 	LEFT JOIN hub.dbo.property p 
 		on (el.SFCode = p.SFCode or el.SFCode is null) AND (el.Voyager_Property_HMY is null or el.Voyager_Property_HMY = p.YardihMy)
 		AND (el.SFCode is not null OR el.Voyager_Property_HMY is not null)
@@ -54,7 +54,7 @@ with last_event_create as (
 		EL.voyager_property_hmy as voyager_property_hmy
 		,EL.SFCode
 		,max(EL.load_date) as LastEventDate
-    FROM   hub.dbo.eventlog EL		
+    FROM   hub.dbo.PFS_eventlog EL		
 	WHERE EL.Event_ID = 2  --Corp Renew Event
 	OR EL.Event_ID = 206  --Offer rejected
 	GROUP BY EL.Voyager_Property_HMY, EL.SFCode

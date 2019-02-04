@@ -14,7 +14,7 @@ SET NOCOUNT ON;
 
 	
 declare @SprocName varchar(100) = 'PFS_SFStatus_Acquired'
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Pre Acq Status for Acquired'
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Pre Acq Status for Acquired'
 
 Declare @EventId int = 208;
 Declare @SourceId int = 1;
@@ -34,7 +34,7 @@ with  SF_data as (
 		AND p.YardihMy is not null  --Only mark acquired after Hub has yardi info
 		and p.YardiCode is not null
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -55,8 +55,8 @@ with  SF_data as (
         FROM   SF_data 
 		
 		
-declare @message varchar(200) = 'Finished Inserting Records into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Records into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 END
 GO

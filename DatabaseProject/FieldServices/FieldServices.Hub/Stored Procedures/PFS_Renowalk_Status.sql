@@ -3,7 +3,7 @@ GO
 
 
 --/******************************************************************************************* 
---Description:	This procedure will write a record to the Hub.dbo.EventLog table when a property's
+--Description:	This procedure will write a record to the Hub.dbo.PFS_eventlog table when a property's
 --				has a new yardi contract\job and has been sent to Dynamics.
 --*******************************************************************************************/
 CREATE OR ALTER PROCEDURE [dbo].PFS_Renowalk_Status
@@ -25,7 +25,7 @@ Declare @BudgetStartedEventIdReno int = 204;
 * Budget Started
 ********************************************************************************/
 
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking for started budgets and then approved.';
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking for started budgets and then approved.';
 
 with rw_currstat as (  --Get current renowalk status
 	select 
@@ -39,7 +39,7 @@ with rw_currstat as (  --Get current renowalk status
 	SELECT 
 		voyager_property_hmy 
 		,max(load_date) as LastEventDate		
-    FROM   hub.dbo.eventlog 
+    FROM   hub.dbo.PFS_eventlog 
 	WHERE Event_ID = @BudgetStartedEventIdTurn OR Event_ID = @BudgetStartedEventIdReno
 	GROUP BY Voyager_Property_HMY
 	HAVING max(load_date) >= convert(date, dateadd(day, -120, getdate()))
@@ -64,7 +64,7 @@ with rw_currstat as (  --Get current renowalk status
 		AND rej.Voyager_Property_HMY is null
 		and ce.Created = 1
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -84,8 +84,8 @@ with rw_currstat as (  --Get current renowalk status
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) as Json_Payload
         FROM   updatedata 
 		
-declare @message varchar(200) = 'Finished Inserting Budget Started events into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Budget Started events into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 
 /**********************************************************************************************
@@ -104,7 +104,7 @@ with rw_currstat as (  --Get current renowalk status
 	SELECT 
 		voyager_property_hmy 
 		,max(load_date) as LastEventDate		
-    FROM   hub.dbo.eventlog 
+    FROM   hub.dbo.PFS_eventlog 
 	WHERE Event_ID = @BudgetApprovedEventIdTurn OR Event_ID = @BudgetApprovedEventIdReno
 	GROUP BY Voyager_Property_HMY
 	HAVING max(load_date) >= convert(date, dateadd(day, -120, getdate()))
@@ -129,7 +129,7 @@ with rw_currstat as (  --Get current renowalk status
 		AND rej.Voyager_Property_HMY is null
 		and ce.Created = 1
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -149,8 +149,8 @@ with rw_currstat as (  --Get current renowalk status
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) as Json_Payload
         FROM   updatedata 
 		
-declare @message2 varchar(200) = 'Finished Inserting Budget Approved events into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message2;
+declare @message2 varchar(200) = 'Finished Inserting Budget Approved events into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message2;
 
 END
 GO

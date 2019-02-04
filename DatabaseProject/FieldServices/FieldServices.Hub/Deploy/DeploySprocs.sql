@@ -1,9 +1,9 @@
-USE HUB
+USE [HUB]
 -- Appending File: C:\Projects\git\ProjectAndFieldServices\DatabaseProject\FieldServices\FieldServices.Hub\Stored Procedures\PFS_LogMessage.sql
 
 GO
 
-Create or Alter PROCEDURE dbo.stp_LogMessage
+Create or Alter PROCEDURE dbo.PFS_LogMessage
 	 @LogLevel AS Int
 	,@SprocName as VARCHAR(200)
 	,@Message AS VARCHAR(Max)
@@ -28,7 +28,7 @@ where ll.Id = @LogLevel
 
 set @LogLevel = COALESCE(@LogLevel, 4)
 
-INSERT INTO [dbo].[Logging]
+INSERT INTO [dbo].[PFS_Logging]
            ([LogDate]
            ,[AppName]
            ,[SprocName]
@@ -57,7 +57,7 @@ GO
 
 GO
 
-Create or Alter PROCEDURE dbo.stp_LogError
+Create or Alter PROCEDURE dbo.PFS_LogError
 	 @LogLevel AS Int
 	,@SprocName as VARCHAR(200)
 	,@Message AS VARCHAR(Max)
@@ -84,7 +84,7 @@ Set @Exception =
 	+ '; State:' + Convert(varchar(200), @ErrorState)
 	+ '; Message:' + @ErrorMessage;
 
-exec stp_LogMessage @LogLevel, @SprocName, @Message, @AppName, @Exception, @DetailsJson, @User, @MachineName, @LogDate
+exec PFS_LogMessage @LogLevel, @SprocName, @Message, @AppName, @Exception, @DetailsJson, @User, @MachineName, @LogDate
 
 END
 -- Appending File: C:\Projects\git\ProjectAndFieldServices\DatabaseProject\FieldServices\FieldServices.Hub\Stored Procedures\PFS_MoveOut_Changed.sql
@@ -93,7 +93,7 @@ GO
 
 --/******************************************************************************************* 
 --Resident Notice to Move Out - Field Services Event Fire
---Description:	This procedure will write a record to the Hub.dbo.EventLog table when a property's
+--Description:	This procedure will write a record to the Hub.dbo.PFS_eventlog table when a property's
 --				unit status changes to the designated status.
 --*******************************************************************************************/
 CREATE OR ALTER PROCEDURE [dbo].PFS_MoveOut_Changed
@@ -104,7 +104,7 @@ SET NOCOUNT ON;
 
 	
 declare @SprocName varchar(100) = 'PFS_MoveOut_Changed'
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking for move out date changed.'
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking for move out date changed.'
 
 Declare @CreateEventId int = 1;
 Declare @EventId int = 1001;
@@ -115,7 +115,7 @@ Declare @SourceId int = 1;
 	SELECT 		
 		*		
 		,ROW_NUMBER() OVER (PARTITION BY el.Voyager_Property_HMY  ORDER BY el.load_date desc) AS RID
-    FROM   hub.dbo.eventlog el
+    FROM   hub.dbo.PFS_eventlog el
 	WHERE Event_ID = @EventId	
 )
 ,movedate_last as (
@@ -154,7 +154,7 @@ where
 			OR (t.DTMOVEOUT is null and movd.PayloadDate1 is not null)
 		)
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -174,8 +174,8 @@ where
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) as Json_Payload
         FROM   yardi_data 
 		
-declare @message varchar(200) = 'Finished Inserting Move Out Changed into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Move Out Changed into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 END
 GO
@@ -186,7 +186,7 @@ GO
 
 
 --/******************************************************************************************* 
---Description:	This procedure will write a record to the Hub.dbo.EventLog table when a property's
+--Description:	This procedure will write a record to the Hub.dbo.PFS_eventlog table when a property's
 --				has a new yardi contract\job and has been sent to Dynamics.
 --*******************************************************************************************/
 CREATE OR ALTER PROCEDURE [dbo].PFS_Renowalk_Status
@@ -208,7 +208,7 @@ Declare @BudgetStartedEventIdReno int = 204;
 * Budget Started
 ********************************************************************************/
 
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking for started budgets and then approved.';
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking for started budgets and then approved.';
 
 with rw_currstat as (  --Get current renowalk status
 	select 
@@ -222,7 +222,7 @@ with rw_currstat as (  --Get current renowalk status
 	SELECT 
 		voyager_property_hmy 
 		,max(load_date) as LastEventDate		
-    FROM   hub.dbo.eventlog 
+    FROM   hub.dbo.PFS_eventlog 
 	WHERE Event_ID = @BudgetStartedEventIdTurn OR Event_ID = @BudgetStartedEventIdReno
 	GROUP BY Voyager_Property_HMY
 	HAVING max(load_date) >= convert(date, dateadd(day, -120, getdate()))
@@ -247,7 +247,7 @@ with rw_currstat as (  --Get current renowalk status
 		AND rej.Voyager_Property_HMY is null
 		and ce.Created = 1
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -267,8 +267,8 @@ with rw_currstat as (  --Get current renowalk status
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) as Json_Payload
         FROM   updatedata 
 		
-declare @message varchar(200) = 'Finished Inserting Budget Started events into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Budget Started events into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 
 /**********************************************************************************************
@@ -287,7 +287,7 @@ with rw_currstat as (  --Get current renowalk status
 	SELECT 
 		voyager_property_hmy 
 		,max(load_date) as LastEventDate		
-    FROM   hub.dbo.eventlog 
+    FROM   hub.dbo.PFS_eventlog 
 	WHERE Event_ID = @BudgetApprovedEventIdTurn OR Event_ID = @BudgetApprovedEventIdReno
 	GROUP BY Voyager_Property_HMY
 	HAVING max(load_date) >= convert(date, dateadd(day, -120, getdate()))
@@ -312,7 +312,7 @@ with rw_currstat as (  --Get current renowalk status
 		AND rej.Voyager_Property_HMY is null
 		and ce.Created = 1
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -332,8 +332,8 @@ with rw_currstat as (  --Get current renowalk status
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) as Json_Payload
         FROM   updatedata 
 		
-declare @message2 varchar(200) = 'Finished Inserting Budget Approved events into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message2;
+declare @message2 varchar(200) = 'Finished Inserting Budget Approved events into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message2;
 
 END
 GO
@@ -356,7 +356,7 @@ SET NOCOUNT ON;
 
 	
 declare @SprocName varchar(100) = 'PFS_SFStatus_Acquired'
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Pre Acq Status for Acquired'
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Pre Acq Status for Acquired'
 
 Declare @EventId int = 208;
 Declare @SourceId int = 1;
@@ -376,7 +376,7 @@ with  SF_data as (
 		AND p.YardihMy is not null  --Only mark acquired after Hub has yardi info
 		and p.YardiCode is not null
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -397,8 +397,8 @@ with  SF_data as (
         FROM   SF_data 
 		
 		
-declare @message varchar(200) = 'Finished Inserting Records into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Records into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 END
 GO
@@ -422,7 +422,7 @@ SET NOCOUNT ON;
 
 	
 declare @SprocName varchar(100) = 'PFS_SFStatus_OfferAccepted'
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Pre Acq Status for Committed'
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Pre Acq Status for Committed'
 
 Declare @EventId int = 201;
 Declare @SourceId int = 1;
@@ -436,7 +436,7 @@ with  SF_data as (
 	where sPreAcqStatus = 'Committed' and isnull(re.Created, 0) = 0
 	and sAcqType not like '%bulk%'
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -455,8 +455,8 @@ with  SF_data as (
         FROM   SF_data 
 		
 		
-declare @message varchar(200) = 'Finished Inserting Records into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Records into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 END
 GO
@@ -480,7 +480,7 @@ SET NOCOUNT ON;
 
 	
 declare @SprocName varchar(100) = 'PFS_SFStatus_OfferRejected'
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Pre Acq Status for Rejected\Exclude or Property no longer exists'
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Pre Acq Status for Rejected\Exclude or Property no longer exists'
 
 Declare @EventId int = 206;
 Declare @SourceId int = 1;
@@ -497,7 +497,7 @@ with  SF_data as (
 		AND (sPreAcqStatus = 'Exclude' or P.SFCode is null )  --Excluded or doesn't exist
 		AND isnull(re.Created, 0) = 1 --But project status is created
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -516,8 +516,8 @@ with  SF_data as (
         FROM   SF_data 
 		
 		
-declare @message varchar(200) = 'Finished Inserting Records into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Records into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 END
 GO
@@ -531,7 +531,7 @@ GO
 
 /******************************************************************************************* 
 Resident Notice to Move Out - Field Services Event Fire
-Description:	This procedure will write a record to the Hub.dbo.EventLog table when a property's
+Description:	This procedure will write a record to the Hub.dbo.PFS_eventlog table when a property's
 				unit status changes to the designated status.
 *******************************************************************************************/
 CREATE OR ALTER PROCEDURE [dbo].PFS_UnitStatus_CorpRenewal
@@ -542,7 +542,7 @@ SET NOCOUNT ON;
 
 	
 declare @SprocName varchar(100) = 'PFS_UnitStatus_CorpRenewal'
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Unit Status for Corporate Renewal Complete'
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Unit Status for Corporate Renewal Complete'
 
 
 Declare @CorpRenewEventId int = 3;
@@ -554,7 +554,7 @@ with prev_corp_renew_event as
 	SELECT 
 		voyager_property_hmy 
 		,max(load_date) as LastEventDate
-    FROM   hub.dbo.eventlog 
+    FROM   hub.dbo.PFS_eventlog 
 	WHERE Event_ID = @CorpRenewEventId
 	GROUP BY Voyager_Property_HMY
 	HAVING max(load_date) >= convert(date, dateadd(day, -120, getdate()))
@@ -575,7 +575,7 @@ yd.UnitStatus in ('Vacant Rented Ready','Vacant Not Rented Ready','Occupied No N
 and ce.Created = 1	--Make sure the create event has been sent previously.
 and (ren.LastEventDate is null OR ren.LastEventDate < ce.LastCreateDate)  --Corp renewal never sent or it was sent before last time project was created.
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -595,8 +595,8 @@ and (ren.LastEventDate is null OR ren.LastEventDate < ce.LastCreateDate)  --Corp
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) as Json_Payload
         FROM   yardi_data 
 		
-declare @message varchar(200) = 'Finished Inserting Records for Corp Renewal Complete into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Records for Corp Renewal Complete into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 END
 GO
@@ -610,7 +610,7 @@ GO
 
 /******************************************************************************************* 
 Resident Notice to Move Out - Field Services Event Fire
-Description:	This procedure will write a record to the Hub.dbo.EventLog table when a property's
+Description:	This procedure will write a record to the Hub.dbo.PFS_eventlog table when a property's
 				unit status changes to the designated status.
 *******************************************************************************************/
 CREATE OR ALTER PROCEDURE [dbo].PFS_UnitStatus_NoticeSent
@@ -621,7 +621,7 @@ SET NOCOUNT ON;
 
 	
 declare @SprocName varchar(100) = 'PFS_UnitStatus_NoticeSent'
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Unit Status for Notice Sent'
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Unit Status for Notice Sent'
 
 Declare @EventId int = 1;
 Declare @SourceId int = 1;
@@ -643,7 +643,7 @@ yd.UnitStatus in ('Notice Unrented','Notice Rented','Vacant Unrented Not Ready',
 and (CurrentUnitStatusBegin  is null OR (CurrentUnitStatusBegin <= convert(date, getdate()) and datediff(day, CurrentUnitStatusBegin, getdate()) < 15))
 and isnull(re.Created, 0) = 0
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -663,8 +663,8 @@ and isnull(re.Created, 0) = 0
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) as Json_Payload
         FROM   yardi_data 
 		
-declare @message varchar(200) = 'Finished Inserting Records into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Records into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 END
 GO
@@ -677,7 +677,7 @@ GO
 
 
 --/******************************************************************************************* 
---Description:	This procedure will write a record to the Hub.dbo.EventLog table when a property's
+--Description:	This procedure will write a record to the Hub.dbo.PFS_eventlog table when a property's
 --				has a new yardi contract\job and has been sent to Dynamics.
 --*******************************************************************************************/
 CREATE OR ALTER PROCEDURE [dbo].PFS_YardiContract_Submit
@@ -688,7 +688,7 @@ SET NOCOUNT ON;
 
 	
 declare @SprocName varchar(100) = 'PFS_YardiContract_Submit'
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking for new yardi jobs.'
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking for new yardi jobs.'
 
 Declare @CreateEventId int = 1;
 Declare @EventId int = 10;
@@ -698,7 +698,7 @@ with recent_event_job as (
 	SELECT 
 		voyager_property_hmy 
 		,max(load_date) as LastEventDate
-    FROM   hub.dbo.eventlog 
+    FROM   hub.dbo.PFS_eventlog 
 	WHERE Event_ID = @EventId
 	GROUP BY Voyager_Property_HMY
 	HAVING max(load_date) >= convert(date, dateadd(day, -120, getdate()))
@@ -732,7 +732,7 @@ where
 	and rej.LastEventDate is null --but action job event (10) not recently sent
 )
 
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -753,8 +753,8 @@ where
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) as Json_Payload
         FROM   yardi_data 
 		
-declare @message varchar(200) = 'Finished Inserting Job Created into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Job Created into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 END
 GO

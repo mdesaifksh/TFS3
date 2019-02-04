@@ -14,7 +14,7 @@ SET NOCOUNT ON;
 
 	
 declare @SprocName varchar(100) = 'PFS_SFStatus_OfferRejected'
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Pre Acq Status for Rejected\Exclude or Property no longer exists'
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking Pre Acq Status for Rejected\Exclude or Property no longer exists'
 
 Declare @EventId int = 206;
 Declare @SourceId int = 1;
@@ -31,7 +31,7 @@ with  SF_data as (
 		AND (sPreAcqStatus = 'Exclude' or P.SFCode is null )  --Excluded or doesn't exist
 		AND isnull(re.Created, 0) = 1 --But project status is created
 )
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -50,8 +50,8 @@ with  SF_data as (
         FROM   SF_data 
 		
 		
-declare @message varchar(200) = 'Finished Inserting Records into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Records into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 END
 GO
