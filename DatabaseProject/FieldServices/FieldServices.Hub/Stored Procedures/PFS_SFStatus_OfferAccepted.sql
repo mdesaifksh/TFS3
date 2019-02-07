@@ -20,8 +20,7 @@ Declare @EventId int = 201;
 Declare @SourceId int = 1;
 
 with  SF_data as (
-	select
-	 top 3 
+	select	 
 	p.SFCode 
 	from hub.dbo.property p
 	LEFT JOIN Hub.dbo.view_PFS_EventStatus re on re.SFCode = p.SFCode

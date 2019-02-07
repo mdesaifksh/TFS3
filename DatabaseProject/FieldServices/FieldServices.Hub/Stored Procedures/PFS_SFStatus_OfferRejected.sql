@@ -20,8 +20,7 @@ Declare @EventId int = 206;
 Declare @SourceId int = 1;
 
 with  SF_data as (
-	select
-	 top 3 
+	select	 
 		re.SFCode 
 	from 
 	 Hub.dbo.view_PFS_EventStatus re

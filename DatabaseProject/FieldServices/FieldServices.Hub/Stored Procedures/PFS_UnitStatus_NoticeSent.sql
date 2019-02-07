@@ -22,7 +22,6 @@ Declare @SourceId int = 1;
 
 with  yardi_data as (
 select 
-top 3
 	datediff(day, yd.CurrentUnitStatusBegin, getdate()) as DaysSinceStatusChange 
 	,yd.YardiId
 	,yd.YardiScode

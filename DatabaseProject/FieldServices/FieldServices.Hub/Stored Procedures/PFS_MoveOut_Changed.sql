@@ -46,7 +46,6 @@ Declare @SourceId int = 1;
 )
 , yardi_data as (
 select 
-top 3  --For Testing
 	t.DTMOVEOUT as MoveOutDate
 	,movd.PayloadDate1 as PrevMoveOutDate
 	,yd.YardiId

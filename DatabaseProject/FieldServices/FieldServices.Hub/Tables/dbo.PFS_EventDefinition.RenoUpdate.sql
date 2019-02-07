@@ -2,7 +2,7 @@ USE [Hub];
 GO
 --select * from hub.dbo.[PFS_EventDefinition]
 
-begin tran
+--begin tran
 
 /*
 *	Now add Renowalk events and Ids
@@ -90,4 +90,4 @@ where Event_ID =21
 
 select * from hub.dbo.[PFS_EventDefinition] order by isnull(Reno_Id,999999), Event_ID
 
-rollback tran 
+--rollback tran 

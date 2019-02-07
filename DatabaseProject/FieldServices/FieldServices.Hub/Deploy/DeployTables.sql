@@ -126,7 +126,6 @@ USE [Hub];
 GO
 --select * from hub.dbo.[PFS_EventDefinition]
 
-begin tran
 
 /*
 *	Now add Renowalk events and Ids
@@ -212,12 +211,12 @@ Update hub.dbo.[PFS_EventDefinition]
 set Reno_ID = 220
 where Event_ID =21
 
-select * from hub.dbo.[PFS_EventDefinition] order by isnull(Reno_Id,999999), Event_ID
-
-rollback tran 
--- Appending File: C:\Projects\git\ProjectAndFieldServices\DatabaseProject\FieldServices\FieldServices.Hub\Tables\dbo.PFS_EventSource.sql
-USE [Hub]
 GO
+--select * from hub.dbo.[PFS_EventDefinition] order by isnull(Reno_Id,999999), Event_ID
+
+
+-- Appending File: C:\Projects\git\ProjectAndFieldServices\DatabaseProject\FieldServices\FieldServices.Hub\Tables\dbo.PFS_EventSource.sql
+
 /****** Object:  Table [dbo].[PFS_EventSource]    Script Date: 11/5/2018 6:18:53 PM ******/
 SET ANSI_NULLS ON
 GO

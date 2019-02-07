@@ -3,10 +3,10 @@ GO
 
 
 /******************************************************************************************* 
-Pre Acquisition Property Marked Exclude or no longer Exists - Field Services Event Fire
+Pre Acquisition Property Marked Acquired
 Description:	Checks Hub.dbo.Property for Excluded properties and current projects where the property has been removed.
 *******************************************************************************************/
-CREATE OR ALTER PROCEDURE [dbo].PFS_SFStatus_OfferRejected
+CREATE OR ALTER PROCEDURE [dbo].PFS_SFStatus_Acquired
 AS
 BEGIN
 
@@ -20,8 +20,7 @@ Declare @EventId int = 208;
 Declare @SourceId int = 1;
 
 with  SF_data as (
-	select
-	 top 3 
+	select	 
 		p.YardihMy
 		,p.YardiCode
 	from 

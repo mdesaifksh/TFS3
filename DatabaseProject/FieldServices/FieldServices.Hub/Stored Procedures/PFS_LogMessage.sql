@@ -21,7 +21,7 @@ SET @MachineName = COALESCE(@MachineName, @@SERVERNAME)
 
 --Make sure Log Level passed in exists in LoggingLevels, otherwise default it to 4 (Info)
 select @LogLevel = ll.Id
-from hub.dbo.LoggingLevels ll
+from hub.dbo.PFS_LoggingLevels ll
 where ll.Id = @LogLevel
 
 set @LogLevel = COALESCE(@LogLevel, 4)

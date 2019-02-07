@@ -23,7 +23,7 @@ SET @MachineName = COALESCE(@MachineName, @@SERVERNAME)
 
 --Make sure Log Level passed in exists in LoggingLevels, otherwise default it to 4 (Info)
 select @LogLevel = ll.Id
-from hub.dbo.LoggingLevels ll
+from hub.dbo.PFS_LoggingLevels ll
 where ll.Id = @LogLevel
 
 set @LogLevel = COALESCE(@LogLevel, 4)
@@ -136,7 +136,7 @@ Declare @SourceId int = 1;
 )
 , yardi_data as (
 select 
-top 3  --For Testing
+
 	t.DTMOVEOUT as MoveOutDate
 	,movd.PayloadDate1 as PrevMoveOutDate
 	,yd.YardiId
@@ -343,12 +343,11 @@ GO
 
 GO
 
-
 /******************************************************************************************* 
-Pre Acquisition Property Marked Exclude or no longer Exists - Field Services Event Fire
+Pre Acquisition Property Marked Acquired
 Description:	Checks Hub.dbo.Property for Excluded properties and current projects where the property has been removed.
 *******************************************************************************************/
-CREATE OR ALTER PROCEDURE [dbo].PFS_SFStatus_OfferRejected
+CREATE OR ALTER PROCEDURE [dbo].PFS_SFStatus_Acquired
 AS
 BEGIN
 
@@ -363,7 +362,7 @@ Declare @SourceId int = 1;
 
 with  SF_data as (
 	select
-	 top 3 
+	  
 		p.YardihMy
 		,p.YardiCode
 	from 
@@ -405,6 +404,7 @@ GO
 
 
 
+
 -- Appending File: C:\Projects\git\ProjectAndFieldServices\DatabaseProject\FieldServices\FieldServices.Hub\Stored Procedures\PFS_SFStatus_OfferAccepted.sql
 
 GO
@@ -429,7 +429,7 @@ Declare @SourceId int = 1;
 
 with  SF_data as (
 	select
-	 top 3 
+	  
 	p.SFCode 
 	from hub.dbo.property p
 	LEFT JOIN Hub.dbo.view_PFS_EventStatus re on re.SFCode = p.SFCode
@@ -487,7 +487,7 @@ Declare @SourceId int = 1;
 
 with  SF_data as (
 	select
-	 top 3 
+	  
 		re.SFCode 
 	from 
 	 Hub.dbo.view_PFS_EventStatus re
@@ -561,7 +561,7 @@ with prev_corp_renew_event as
 )
 , yardi_data as (
 select 
-top 3	
+	
 	yd.YardiId
 	,yd.YardiScode
 	,yd.UnitStatus	
@@ -628,7 +628,7 @@ Declare @SourceId int = 1;
 
 with  yardi_data as (
 select 
-top 3
+
 	datediff(day, yd.CurrentUnitStatusBegin, getdate()) as DaysSinceStatusChange 
 	,yd.YardiId
 	,yd.YardiScode
@@ -717,7 +717,6 @@ with recent_event_job as (
 )
 , yardi_data as (
 select 
-top 3	--For Testing
 	yd.YardiId
 	,yd.YardiScode
 	,yd.UnitStatus		

@@ -34,7 +34,6 @@ with prev_corp_renew_event as
 )
 , yardi_data as (
 select 
-top 3	
 	yd.YardiId
 	,yd.YardiScode
 	,yd.UnitStatus	

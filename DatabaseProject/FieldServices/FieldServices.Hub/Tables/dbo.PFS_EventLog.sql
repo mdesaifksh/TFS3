@@ -14,6 +14,7 @@ CREATE TABLE [dbo].[PFS_EventLog](
 	[Json_Payload] [varchar](max) NULL,
 	[RowVersion] [timestamp] NOT NULL,
 	[Voyager_Property_SCode] varchar(50) null
+	SFCode INT null
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 

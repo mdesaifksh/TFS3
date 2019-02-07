@@ -43,7 +43,6 @@ with recent_event_job as (
 )
 , yardi_data as (
 select 
-top 3	--For Testing
 	yd.YardiId
 	,yd.YardiScode
 	,yd.UnitStatus		
