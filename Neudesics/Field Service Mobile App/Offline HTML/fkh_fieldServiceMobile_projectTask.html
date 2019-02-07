@@ -26,13 +26,22 @@
         );
 
         MobileCRM.UI.EntityForm.onCommand(
+            "custom_StartTask", // Name of custom command created in Woodford
+            function (entityForm) {
+                startThisTask(entityForm);
+                saveAndCloseForm();
+            },
+            true, null
+        );
+
+        MobileCRM.UI.EntityForm.onCommand(
             "custom_Pass", // Name of custom command created in Woodford
             function (entityForm) {
                 var thisProjectId = entityForm.entity.properties.msdyn_project.id;
                 completeThisTask(entityForm);
                 completeTask('Job Completed',thisProjectId);
                 startTask('Marketing Inspection',thisProjectId);
-                //publishMessage(entityForm,'Job Completed');
+                publishMessage(entityForm,'Job Completed');
                 saveAndCloseForm();
             },
             true, null
@@ -44,9 +53,7 @@
                 var thisProjectTaskId = entityForm.entity.id;
                 var thisProjectId = entityForm.entity.properties.msdyn_project.id;
                 completeThisTask(entityForm);
-                // createReWorkTasks(thisProjectTaskId,thisProjectId,'Work In Progress');
-                // createReWorkTasks(thisProjectTaskId,thisProjectId,'Vendor Says Job\'s Complete');
-                // createReWorkTasks(thisProjectTaskId,thisProjectId,'Quality Control Inspection');
+                createReWorkTasks(thisProjectTaskId,thisProjectId);
                 saveAndCloseForm();
             },
             true, null
@@ -79,20 +86,15 @@
                         completeThisTask(entityForm);
                         startTask('Work in Progress',thisProjectId);
                         break;
-                    // case 'Work In Progress':
-                    //     completeThisTask(entityForm);
-                    //     completeTask('Vendor Says Job\'s Complete',thisProjectId);
-                    //     startTask('Quality Control Inspection',thisProjectId);
-                    //     publishMessage('Vendor Says Job\'s Complete');
-                    //     break;
                     case 'Vendor Says Job\'s Complete':
                         completeThisTask(entityForm);
                         completeTask('Work In Progress',thisProjectId);
                         startTask('Quality Control Inspection',thisProjectId);
-                        //publishMessage(entityForm,'Vendor Says Job\'s Complete');
+                        publishMessage(entityForm,'Vendor Says Job\'s Complete');
                         break;
                     case 'Hero Shot Picture':
                         completeThisTask(entityForm);
+                        closeProjectIfTaskComplete('Move-In Inspection',thisProjectId);
                         break;
                     case 'Marketing Inspection':
                         completeThisTask(entityForm);
@@ -105,7 +107,7 @@
                     case 'Move-In Inspection':
                         completeTask('Bi-Weekly Inspection',thisProjectId);
                         completeThisTask(entityForm);
-                        completeProject(thisProjectId);
+                        closeProjectIfTaskComplete('Hero Shot Picture',thisProjectId);
                         break;
                     default:
                 }
@@ -127,12 +129,22 @@
             );
         }
 
+        function startThisTask(entityForm) {
+            entityForm.entity.properties.msdyn_actualstart = new Date();
+            entityForm.entity.properties.msdyn_progress = 1;
+            entityForm.entity.properties.statuscode = 963850000; //In Progress
+        }
+
         function completeThisTask(entityForm) {
             if (entityForm.entity.properties.msdyn_actualstart == null) {
                 entityForm.entity.properties.msdyn_actualstart = new Date();
             }
             entityForm.entity.properties.msdyn_actualend = new Date();
             entityForm.entity.properties.msdyn_progress = 100;
+            var startDate = entityForm.entity.properties.msdyn_actualstart;
+            var endDate = entityForm.entity.properties.msdyn_actualend;
+            var minutesBetween = dateDiffInMinutes(startDate,endDate);
+            entityForm.entity.properties.msdyn_actualdurationminutes = minutesBetween;
             entityForm.entity.properties.statuscode = 963850001;//Completed
         }
 
@@ -190,6 +202,7 @@
                     }
                     taskEntity.properties["msdyn_actualend"] = new Date();
                     taskEntity.properties["msdyn_progress"] = 100;
+                    taskEntity.properties["msdyn_actualdurationminutes"] = dateDiffInMinutes(taskEntity.properties["msdyn_actualstart"],taskEntity.properties["msdyn_actualend"]);
                     taskEntity.properties["statuscode"] = 963850001; //Completed
                     taskEntity.save(
                       function (err) {
@@ -223,6 +236,29 @@
               }, null
             );
         }
+        
+        function closeProjectIfTaskComplete(taskName,projectId) {
+            var entity = new MobileCRM.FetchXml.Entity("msdyn_projecttask");
+            entity.addAttribute("msdyn_projecttaskid");
+
+            entity.filter = new MobileCRM.FetchXml.Filter();
+            entity.filter.where("msdyn_project", "eq", projectId);
+            entity.filter.where("statuscode", "ne", 963850001);//Completed
+            entity.filter.where("statuscode", "ne", 2);//Inactive
+            entity.filter.where("msdyn_subject", "eq", taskName);
+
+            var fetch = new MobileCRM.FetchXml.Fetch(entity);
+            fetch.execute("Array", function (result) {
+                if (result.length == 0){
+                    completeProject(projectId);
+                }
+            },
+
+            function (error) {
+               MobileCRM.bridge.alert("Error has occurred " + err);
+            },
+            null);
+        }
 
         function publishMessage(entityForm,thisTaskName){
             var unit = entityForm.entity.properties.fkh_unitid;
@@ -236,10 +272,13 @@
                     "po_unit",
                     unit,
                     function (unitEntity) {
+                        MobileCRM.bridge.alert("Here1");
                         if (unitEntity.po_unitidnum !== null && unitEntity.po_unitidnum !== '' && unitEntity.po_unitidnum !== undefined) {
+                        MobileCRM.bridge.alert("Here2");
                             //alert(result.po_unitidnum);
                             switch (thisTaskName) {
-                                case 'Vendor Says Job\'s Complete':                                    
+                                case 'Vendor Says Job\'s Complete':     
+                        MobileCRM.bridge.alert("Here3");                               
                                     MobileCRM.DynamicEntity.loadById(
                                         "msdyn_project",
                                         entityForm.entity.properties.msdyn_project.id,
@@ -260,21 +299,22 @@
                                                                 //newTaskId = this.id;
                                                             }
                                                             else
-                                                                MobileCRM.bridge.alert(" An Error Has occurred \n" + err);
+                                                                MobileCRM.bridge.alert("1 An Error Has occurred \n" + err);
                                                         }, null
                                                     );
                                                 },
                                                 function (error) {
-                                                    MobileCRM.bridge.alert("An error occurred: " + error);
+                                                    MobileCRM.bridge.alert("2 An error occurred: " + error);
                                                 }, null
                                             );
                                         },
                                         function (error) {
-                                            MobileCRM.bridge.alert("An error occurred: " + error);
+                                            MobileCRM.bridge.alert("3 An error occurred: " + error);
                                         }, null
                                     );
                                     break;
                                 case 'Job Completed':
+                        MobileCRM.bridge.alert("Here4");
                                     var newAzureIntegrationCall = new MobileCRM.DynamicEntity.createNew("fkh_azureintegrationcalls");
 
                                     newAzureIntegrationCall.properties["fkh_eventdata"] = "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': 'Turn Process : JOB_COMPLETED', 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + unitEntity.po_unitidnum + "', 'Event': 17, 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]";
@@ -286,7 +326,7 @@
                                                 //newTaskId = this.id;
                                             }
                                             else
-                                                MobileCRM.bridge.alert(" An Error Has occurred \n" + err);
+                                                MobileCRM.bridge.alert("4 An Error Has occurred \n" + err);
                                         }, null
                                     );
                                     break;
@@ -294,71 +334,91 @@
                         }
                     },
                     function (error) {
-                        MobileCRM.bridge.alert("An error occurred: " + error);
+                        MobileCRM.bridge.alert("5 An error occurred: " + error);
                     }, null
                 );
             }            
         }
 
-        function createReWorkTasks(thisProjectTaskId,thisProjectId,taskNameToCreate){
+        function createReWorkTasks(thisProjectTaskId,thisProjectId){
             MobileCRM.DynamicEntity.loadById(
                 "msdyn_projecttask",
                 thisProjectTaskId,
                 function (taskEntity) {
-                    var project = new MobileCRM.Reference("msdyn_project", thisProjectId);
-                    var newTask = new MobileCRM.DynamicEntity.createNew("msdyn_projecttask");
-                    var dueDate = new Date();
-                    var taskIdentifier;
-                    var wbsId;
-                    switch(thisTaskName) {
-                        case 'Work In Progress':
-                            taskIdentifier = new MobileCRM.Reference("fkh_taskidentifier","320EFBBD-61DE-E811-A973-000D3A16A650");
-                            wbsId = '.1';
-                            dueDate = dueDate.addDays(1);
-                            break;
-                        case 'Vendor Says Job\'s Complete':
-                            taskIdentifier = new MobileCRM.Reference("fkh_taskidentifier","FAF075E5-61DE-E811-A973-000D3A16A650");
-                            wbsId = '.2';
-                            dueDate = dueDate.addDays(2);
-                            break;
-                        case 'Quality Control Inspection':
-                            taskIdentifier = new MobileCRM.Reference("fkh_taskidentifier","6BD26FF2-61DE-E811-A973-000D3A16A650");
-                            wbsId = '.3';
-                            dueDate = dueDate.addDays(3);
-                            break;
-                        default:
-                    }
-
-                    newTask.properties["msdyn_subject"] = taskNameToCreate;
-                    newTask.properties["msdyn_project"] = project;
-                    newTask.properties["fkh_accessnotes"] = taskEntity.properties["fkh_accessnotes"];
-                    newTask.properties["msdyn_scheduledend"] = dueDate;
-                    newTask.properties["fkh_lockboxremoved"] = taskEntity.properties["fkh_lockboxremoved"];
-                    newTask.properties["fkh_mechanicallockbox"] = taskEntity.properties["fkh_mechanicallockbox"];
-                    newTask.properties["fkh_mechanicallockboxnote"] = taskEntity.properties["fkh_mechanicallockboxnote"];
-                    newTask.properties["ownerid"] = taskEntity.properties["ownerid"];
-                    newTask.properties["msdyn_progress"] = 0;
-                    newTask.properties["fkh_propertygatecode"] = taskEntity.properties["fkh_propertygatecode"];
-                    newTask.properties["fkh_rentlylockbox"] = taskEntity.properties["fkh_rentlylockbox"];
-                    newTask.properties["fkh_rentlylockboxnote"] = taskEntity.properties["fkh_rentlylockboxnote"];
-                    newTask.properties["msdyn_scheduledstart"] = dueDate;
-                    newTask.properties["statuscode"] = 1;//Not Started
-                    newTask.properties["fkh_taskidentifierid"] = taskIdentifier;
-                    newTask.properties["fkh_unitid"] = taskEntity.properties["fkh_unitid"];
-                    newTask.properties["msdyn_wbsid"] = taskEntity.properties["msdyn_wbsid"] + wbsId;
-                    newTask.save(
-                        function (err) {
-                            if (!err) {
-                                //newTaskId = this.id;
-                                createProjectTaskDependency(thisProjectTaskId,this.id,thisProjectId);
-                            }
-                            else
-                                MobileCRM.bridge.alert(" An Error Has occurred \n" + err);
-                        }, null
-                    );
+                    createNextReWorkTask(taskEntity,thisProjectTaskId,thisProjectId,'Work In Progress');
                 },
                 function (error) {
                     MobileCRM.bridge.alert("An error occurred: " + error);
+                }, null
+            );
+            return null;
+        }
+
+        function createNextReWorkTask(parentTask,predecessorProjectTaskId,thisProjectId,taskNameToCreate){
+            var project = new MobileCRM.Reference("msdyn_project", thisProjectId);
+            var newTask = new MobileCRM.DynamicEntity.createNew("msdyn_projecttask");
+            var dueDate = new Date();
+            var taskIdentifier;
+            var wbsId;
+            var nexttaskNameToCreate = "";
+            switch(taskNameToCreate) {
+                case 'Work In Progress':
+                    taskIdentifier = new MobileCRM.Reference("fkh_taskidentifier","320EFBBD-61DE-E811-A973-000D3A16A650");
+                    wbsId = '.1';
+                    dueDate = dueDate.addDays(1);
+                    nexttaskNameToCreate = "Vendor Says Job\'s Complete";
+                    break;
+                case 'Vendor Says Job\'s Complete':
+                    taskIdentifier = new MobileCRM.Reference("fkh_taskidentifier","FAF075E5-61DE-E811-A973-000D3A16A650");
+                    wbsId = '.2';
+                    dueDate = dueDate.addDays(2);
+                    nexttaskNameToCreate = "Quality Control Inspection";
+                    break;
+                case 'Quality Control Inspection':
+                    taskIdentifier = new MobileCRM.Reference("fkh_taskidentifier","6BD26FF2-61DE-E811-A973-000D3A16A650");
+                    wbsId = '.3';
+                    dueDate = dueDate.addDays(3);
+                    break;
+                default:
+            }
+
+            newTask.properties["fkh_accessnotes"] = parentTask.properties["fkh_accessnotes"];
+            newTask.properties["fkh_lockboxremoved"] = parentTask.properties["fkh_lockboxremoved"];
+            newTask.properties["fkh_mechanicallockbox"] = parentTask.properties["fkh_mechanicallockbox"];
+            newTask.properties["fkh_mechanicallockboxnote"] = parentTask.properties["fkh_mechanicallockboxnote"];
+            newTask.properties["fkh_propertygatecode"] = parentTask.properties["fkh_propertygatecode"];
+            newTask.properties["fkh_rentlylockbox"] = parentTask.properties["fkh_rentlylockbox"];
+            newTask.properties["fkh_rentlylockboxnote"] = parentTask.properties["fkh_rentlylockboxnote"];
+            newTask.properties["fkh_taskidentifierid"] = taskIdentifier;
+            newTask.properties["fkh_unitid"] = parentTask.properties["fkh_unitid"];
+            //msdyn_costestimatecontour
+            newTask.properties["msdyn_effort"] = 1;//Not Started
+            //msdyn_effortcontour
+            newTask.properties["msdyn_effortestimateatcomplete"] = 1;//Not Started
+            newTask.properties["msdyn_progress"] = 0;
+            newTask.properties["msdyn_project"] = project;
+            newTask.properties["msdyn_remaininghours"] = 1;//Not Started
+            //msdyn_resourceutilization
+            //msdyn_salesestimatecontour
+            newTask.properties["msdyn_scheduledend"] = dueDate.addDays(1);
+            //msdyn_scheduleddurationminutes
+            //msdyn_scheduledhours
+            newTask.properties["msdyn_scheduledstart"] = dueDate;
+            newTask.properties["msdyn_subject"] = taskNameToCreate;
+            newTask.properties["msdyn_wbsid"] = parentTask.properties["msdyn_wbsid"] + wbsId;
+            newTask.properties["ownerid"] = parentTask.properties["ownerid"];
+            newTask.properties["statuscode"] = 1;//Not Started
+            newTask.save(
+                function (err) {
+                    if (!err) {
+                        newTaskId = this.id;
+                        createProjectTaskDependency(predecessorProjectTaskId,newTaskId,thisProjectId);
+                        if (nexttaskNameToCreate != "") {
+                            createNextReWorkTask(parentTask,newTaskId,thisProjectId,nexttaskNameToCreate);
+                        }
+                    }
+                    else
+                        MobileCRM.bridge.alert(" An Error Has occurred \n" + err);
                 }, null
             );
         }
@@ -378,7 +438,7 @@
                     for (var i in result) { 
                         var projectTask = result[i];
                         var taskEntity = new MobileCRM.DynamicEntity("msdyn_projecttask", projectTask[0]);
-                        taskEntity.properties["msdyn_scheduledstart"] = startDate.addDays(14);
+                        taskEntity.properties["msdyn_scheduledstart"] = startDate.addDays(13);
                         taskEntity.properties["msdyn_scheduledend"] = startDate.addDays(14);
                         taskEntity.save(
                           function (err) {
@@ -407,7 +467,7 @@
                     var project = new MobileCRM.Reference("msdyn_project", thisProjectId);
                     var newTask = new MobileCRM.DynamicEntity.createNew("msdyn_projecttask");
                     var dueDate = new Date();
-
+                    
                     newTask.properties["msdyn_subject"] = 'Bi-Weekly Inspection';
                     newTask.properties["msdyn_project"] = project;
                     newTask.properties["fkh_accessnotes"] = taskEntity.properties["fkh_accessnotes"];
@@ -420,11 +480,11 @@
                     newTask.properties["fkh_propertygatecode"] = taskEntity.properties["fkh_propertygatecode"];
                     newTask.properties["fkh_rentlylockbox"] = taskEntity.properties["fkh_rentlylockbox"];
                     newTask.properties["fkh_rentlylockboxnote"] = taskEntity.properties["fkh_rentlylockboxnote"];
-                    newTask.properties["msdyn_scheduledstart"] = dueDate.addDays(14);
+                    newTask.properties["msdyn_scheduledstart"] = dueDate.addDays(13);
                     newTask.properties["statuscode"] = 1;//Not Started
                     newTask.properties["fkh_taskidentifierid"] = taskEntity.properties["fkh_taskidentifierid"];
                     newTask.properties["fkh_unitid"] = taskEntity.properties["fkh_unitid"];
-                    newTask.properties["msdyn_wbsid"] = taskEntity.properties["msdyn_wbsid"] + '.1';
+                    newTask.properties["msdyn_wbsid"] = taskEntity.properties["msdyn_wbsid"] + ".1";
                     newTask.save(
                         function (err) {
                             if (!err) {
@@ -463,6 +523,11 @@
             );
         }
 
+        function updateProjectTaskDependency(oldPredecessorTaskId,newPredecessorTaskId) {
+            var entity = new MobileCRM.FetchXml.Entity("msdyn_projecttaskdependency");
+
+        }
+
         function Createguid() {
             function s4() {
                 return Math.floor((1 + Math.random()) * 0x10000)
@@ -470,6 +535,10 @@
                     .substring(1);
             }
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+        }
+
+        function dateDiffInMinutes(startDate,endDate) {
+            return Math.floor((endDate - startDate) / (1000*60));
         }
 	</script>
 </body>
