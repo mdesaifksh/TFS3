@@ -48,8 +48,10 @@ and isnull(re.Created, 0) = 0
              Getdate()                         AS Load_Date, 
              YardiId, 
 			 YardiScode,
-			 (select 
-				isnull(Homes.dbo.fncs_ConvertESTtoUTC(CurrentUnitStatusBegin), getutcdate()) as Date1
+			 (select 				
+				iif(CurrentUnitStatusBegin is null, 
+					getutcdate(),
+					dateadd(MINUTE,datepart(TZOFFSET, CurrentUnitStatusBegin AT TIME ZONE 'Eastern Standard Time') *-1,  CurrentUnitStatusBegin)) as Date1 --Convert to UTC
 				,@EventID as [Event]
 				,YardiScode  as PropertyID
 				,CAST(0 as BIT) as IsForce

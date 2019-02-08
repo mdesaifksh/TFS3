@@ -69,8 +69,8 @@ where
              Getdate()                         AS Load_Date, 
              YardiId, 
 			 YardiScode,
-			  (select 
-				Homes.dbo.fncs_ConvertESTtoUTC(DTCREATED) as Date1
+			  (select 				
+				dateadd(MINUTE,datepart(TZOFFSET, DTCREATED AT TIME ZONE 'Eastern Standard Time') *-1,  DTCREATED) as Date1 --Convert to UTC
 				,@EventID as [Event]
 				,YardiScode  as PropertyID
 				,CAST(0 as BIT) as IsForce
