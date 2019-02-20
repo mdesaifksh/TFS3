@@ -137,6 +137,10 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
         return false;
     },
 
+    isVisible_Hidden: function () {
+        return false;
+    },
+
     isVisible_StartTask: function () {
         var taskStatus = Xrm.Page.getAttribute("statuscode").getValue();
         if (taskStatus == 1/*Not Started*/) {
