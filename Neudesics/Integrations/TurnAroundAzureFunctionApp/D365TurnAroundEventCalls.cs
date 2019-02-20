@@ -60,7 +60,7 @@ namespace TurnAroundAzureFunctionApp
             log.Info($"Received Event with payload: {jsonContent}");
             //CRMCall(log);
             EventGridSubscriber eventGridSubscriber = new EventGridSubscriber();
-            eventGridSubscriber.AddOrUpdateCustomEventMapping(CustomTopicEvent, typeof(GridEvent<TurnAround>));
+            eventGridSubscriber.AddOrUpdateCustomEventMapping(CustomTopicEvent, typeof(GridEvent<DataPayLoad>));
 
             EventGridEvent[] eventGridEvents = eventGridSubscriber.DeserializeEventGridEvents(jsonContent);
 
@@ -87,8 +87,8 @@ namespace TurnAroundAzureFunctionApp
                 else if (eventGridEvent.Data is object)
                 {
 
-                    TurnAround tr = JsonConvert.DeserializeObject<TurnAround>(eventGridEvent.Data.ToString());
-                    if (tr is TurnAround)
+                    DataPayLoad tr = JsonConvert.DeserializeObject<DataPayLoad>(eventGridEvent.Data.ToString());
+                    if (tr is DataPayLoad)
                     {
                         OrganizationWebProxyClient _service = CRMCall(log);
                         if (_service is OrganizationWebProxyClient)

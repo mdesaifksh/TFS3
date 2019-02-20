@@ -17,6 +17,7 @@ namespace TurnAroundAzureFunctionApp
         public string Topic { get; set; }
     }
 
+    /*
     public class TurnAround
     {
         public TurnAroundEvents Event { get; set; }
@@ -60,43 +61,43 @@ namespace TurnAroundAzureFunctionApp
         MARKETING_INSPECTION = 19,
         BI_WEEKLY_INSPECTION = 20,
         MOVE_IN_INSPECTION_COMPLETED = 21,
-        MOVE_OUT_DATE_CHANGED = 1001
+        MOVE_OUT_DATE_CHANGED = 1001,
+        OFFER_ACCEPTED = 201,
+        IR_ASSIGN_PROJECT_MANAGER = 202,
+        SCHEDULE_DUE_DILLIGENCE_INSPECTION = 203,
+        IR_BUDGET_START = 204,
+        IR_BUDGET_APPROVAL = 205,
+        OFFER_REJECTED_OR_APPROVALE = 206,
+        IR_JOB_ASSIGNMENT_TO_VENDORS_IN_CONTRACT_CREATOR = 207,
+        CLOSE_ESCROW = 208,
+        IR_JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI = 209,
+        IR_VENDORS_SAYS_JOB_STARTED = 210,
+        IR_WORK_IN_PROGRESS = 211,
+        IR_VENDOR_REQUESTS_CHANGE_ORDER_IF_NECESSARY = 212,
+        IR_CHANGE_ORDER_APPROVED = 213,
+        IR_VENDOR_SAYS_JOBS_COMPLETE = 214,
+        IR_QUALITY_CONTROL_INSPECTION = 215,
+        IR_JOB_COMPLETED = 216,
+        IR_HERO_SHOT_PICTURE = 217,
+        IR_MARKETING_INSPECTION = 218,
+        IR_BI_WEEKLY_INSPECTION = 219,
+        IR_MOVE_IN_INSPECTION_COMPLETED = 220,
     }
 
-
-    [DataContract]
-    public class GridEventNew<T>
-    {
-        [DataMember(Name = "id")]
-        public string Id { get; set; }
-        [DataMember(Name = "eventType")]
-        public string EventType { get; set; }
-        [DataMember(Name = "subject")]
-        public string Subject { get; set; }
-        [DataMember(Name = "eventTime")]
-        public string EventTime { get; set; }
-        [DataMember(Name = "data")]
-        public T data { get; set; }
-        [DataMember(Name = "topic")]
-        public string Topic { get; set; }
-    }
-
-    [DataContract]
+    */
     public class DataPayLoad
     {
-        [DataMember]
         public Events Event { get; set; }
-        [DataMember]
         public string PropertyID { get; set; }
-        [DataMember]
         public string Date1 { get; set; }
-        [DataMember]
         public string Date2 { get; set; }
-        [DataMember]
+        public string JobID { get; set; }
         public bool IsForce { get; set; }
+        public string FotoNotesID { get; set; }
+        public string RenowalkID { get; set; }
+        public string EmailID { get; set; }
     }
 
-    [DataContract]
     public enum Events
     {
         RESIDENT_NOTICE_TO_MOVE_OUT_RECEIVED = 1,
@@ -120,7 +121,27 @@ namespace TurnAroundAzureFunctionApp
         MARKETING_INSPECTION = 19,
         BI_WEEKLY_INSPECTION = 20,
         MOVE_IN_INSPECTION_COMPLETED = 21,
-        MOVE_OUT_DATE_CHANGED = 1001
+        MOVE_OUT_DATE_CHANGED = 1001,
+        OFFER_ACCEPTED = 201,
+        IR_ASSIGN_PROJECT_MANAGER = 202,
+        SCHEDULE_DUE_DILLIGENCE_INSPECTION = 203,
+        IR_BUDGET_START = 204,
+        IR_BUDGET_APPROVAL = 205,
+        OFFER_REJECTED_OR_APPROVAL = 206,
+        IR_JOB_ASSIGNMENT_TO_VENDORS_IN_CONTRACT_CREATOR = 207,
+        CLOSE_ESCROW = 208,
+        IR_JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI = 209,
+        IR_VENDORS_SAYS_JOB_STARTED = 210,
+        IR_WORK_IN_PROGRESS = 211,
+        IR_VENDOR_REQUESTS_CHANGE_ORDER_IF_NECESSARY = 212,
+        IR_CHANGE_ORDER_APPROVED = 213,
+        IR_VENDOR_SAYS_JOBS_COMPLETE = 214,
+        IR_QUALITY_CONTROL_INSPECTION = 215,
+        IR_JOB_COMPLETED = 216,
+        IR_HERO_SHOT_PICTURE = 217,
+        IR_MARKETING_INSPECTION = 218,
+        IR_BI_WEEKLY_INSPECTION = 219,
+        IR_MOVE_IN_INSPECTION_COMPLETED = 220
     }
 
 }
