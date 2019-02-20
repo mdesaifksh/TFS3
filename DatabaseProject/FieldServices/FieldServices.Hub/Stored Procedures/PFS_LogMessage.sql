@@ -1,7 +1,7 @@
-﻿USE HUB
+﻿USE [HUB]
 GO
 
-Create or Alter PROCEDURE dbo.stp_LogMessage
+Create or Alter PROCEDURE dbo.PFS_LogMessage
 	 @LogLevel AS Int
 	,@SprocName as VARCHAR(200)
 	,@Message AS VARCHAR(Max)
@@ -21,12 +21,12 @@ SET @MachineName = COALESCE(@MachineName, @@SERVERNAME)
 
 --Make sure Log Level passed in exists in LoggingLevels, otherwise default it to 4 (Info)
 select @LogLevel = ll.Id
-from hub.dbo.LoggingLevels ll
+from hub.dbo.PFS_LoggingLevels ll
 where ll.Id = @LogLevel
 
 set @LogLevel = COALESCE(@LogLevel, 4)
 
-INSERT INTO [dbo].[Logging]
+INSERT INTO [dbo].[PFS_Logging]
            ([LogDate]
            ,[AppName]
            ,[SprocName]

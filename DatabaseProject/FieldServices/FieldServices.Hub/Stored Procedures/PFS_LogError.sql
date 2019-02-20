@@ -1,7 +1,7 @@
-﻿USE HUB
+﻿USE [HUB]
 GO
 
-Create or Alter PROCEDURE dbo.stp_LogError
+Create or Alter PROCEDURE dbo.PFS_LogError
 	 @LogLevel AS Int
 	,@SprocName as VARCHAR(200)
 	,@Message AS VARCHAR(Max)
@@ -28,6 +28,6 @@ Set @Exception =
 	+ '; State:' + Convert(varchar(200), @ErrorState)
 	+ '; Message:' + @ErrorMessage;
 
-exec stp_LogMessage @LogLevel, @SprocName, @Message, @AppName, @Exception, @DetailsJson, @User, @MachineName, @LogDate
+exec PFS_LogMessage @LogLevel, @SprocName, @Message, @AppName, @Exception, @DetailsJson, @User, @MachineName, @LogDate
 
 END

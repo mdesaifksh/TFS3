@@ -3,7 +3,7 @@ GO
 
 
 --/******************************************************************************************* 
---Description:	This procedure will write a record to the Hub.dbo.EventLog table when a property's
+--Description:	This procedure will write a record to the Hub.dbo.PFS_eventlog table when a property's
 --				has a new yardi contract\job and has been sent to Dynamics.
 --*******************************************************************************************/
 CREATE OR ALTER PROCEDURE [dbo].PFS_YardiContract_Submit
@@ -14,7 +14,7 @@ SET NOCOUNT ON;
 
 	
 declare @SprocName varchar(100) = 'PFS_YardiContract_Submit'
-exec Hub.dbo.stp_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking for new yardi jobs.'
+exec Hub.dbo.PFS_LogMessage @LogLevel=4, @SprocName = @SprocName, @Message ='Checking for new yardi jobs.'
 
 Declare @CreateEventId int = 1;
 Declare @EventId int = 10;
@@ -24,9 +24,10 @@ with recent_event_job as (
 	SELECT 
 		voyager_property_hmy 
 		,max(load_date) as LastEventDate
-    FROM   hub.dbo.eventlog 
+    FROM   hub.dbo.PFS_eventlog 
 	WHERE Event_ID = @EventId
 	GROUP BY Voyager_Property_HMY
+	HAVING max(load_date) >= convert(date, dateadd(day, -120, getdate()))
 )
 ,job_data as (
 	select 		
@@ -42,7 +43,6 @@ with recent_event_job as (
 )
 , yardi_data as (
 select 
-top 3	--For Testing
 	yd.YardiId
 	,yd.YardiScode
 	,yd.UnitStatus		
@@ -57,7 +57,7 @@ where
 	and rej.LastEventDate is null --but action job event (10) not recently sent
 )
 
-   INSERT INTO hub.dbo.eventlog 
+   INSERT INTO hub.dbo.PFS_eventlog 
                   (event_id, 
                    source_id, 
                    load_date, 
@@ -69,8 +69,8 @@ where
              Getdate()                         AS Load_Date, 
              YardiId, 
 			 YardiScode,
-			  (select 
-				Homes.dbo.fncs_ConvertESTtoUTC(DTCREATED) as Date1
+			  (select 				
+				dateadd(MINUTE,datepart(TZOFFSET, DTCREATED AT TIME ZONE 'Eastern Standard Time') *-1,  DTCREATED) as Date1 --Convert to UTC
 				,@EventID as [Event]
 				,YardiScode  as PropertyID
 				,CAST(0 as BIT) as IsForce
@@ -78,8 +78,8 @@ where
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) as Json_Payload
         FROM   yardi_data 
 		
-declare @message varchar(200) = 'Finished Inserting Job Created into  hub.dbo.eventlog : Count:' + format(@@ROWCOUNT, 'N0');
-exec Hub.dbo.stp_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
+declare @message varchar(200) = 'Finished Inserting Job Created into  hub.dbo.PFS_eventlog : Count:' + format(@@ROWCOUNT, 'N0');
+exec Hub.dbo.PFS_LogMessage @LogLevel=3, @SprocName = @SprocName, @Message = @message;
 
 END
 GO

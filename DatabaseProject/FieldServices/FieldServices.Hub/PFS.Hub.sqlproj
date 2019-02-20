@@ -61,24 +61,35 @@
     <Folder Include="Tables" />
     <Folder Include="Stored Procedures" />
     <Folder Include="Views" />
+    <Folder Include="Deploy" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Tables\dbo.Logging.Table.sql" />
-    <Build Include="Tables\dbo.EventDefinition.Table.sql" />
-    <Build Include="Tables\dbo.EventLog.Table.sql" />
-    <Build Include="Tables\dbo.EventSource.Table.sql" />
-    <Build Include="Tables\dbo.LoggingLevels.Table.sql" />
-    <None Include="Stored Procedures\dbo.stp_LogError.sql" />
-    <Build Include="Tables\dbo.EventIncomingLog.sql" />
-    <Build Include="Stored Procedures\FS_xDay_Notice.sql" />
+    <Build Include="Tables\dbo.PFS_Logging.sql" />
+    <Build Include="Tables\dbo.PFS_EventDefinition.sql" />
+    <Build Include="Tables\dbo.PFS_EventLog.sql" />
+    <Build Include="Tables\dbo.PFS_EventSource.sql" />
+    <Build Include="Tables\dbo.PFS_LoggingLevels.sql" />
+    <None Include="Stored Procedures\PFS_LogError.sql" />
+    <Build Include="Tables\dbo.PFS_EventIncomingLog.sql" />
     <Build Include="Stored Procedures\PFS_MoveOut_Changed.sql" />
     <Build Include="Stored Procedures\PFS_YardiContract_Submit.sql" />
     <Build Include="Stored Procedures\PFS_UnitStatus_CorpRenewal.sql" />
     <Build Include="Stored Procedures\PFS_UnitStatus_NoticeSent.sql" />
     <Build Include="Views\dbo.view_PFS_EventStatus.sql" />
     <Build Include="Views\dbo.view_PFS_EventIncomingLog.sql" />
+    <Build Include="Tables\dbo.PFS_EventDefinition.RenoUpdate.sql" />
+    <Build Include="Stored Procedures\PFS_Renowalk_Status.sql" />
+    <Build Include="Stored Procedures\PFS_SFStatus_OfferAccepted.sql" />
+    <Build Include="Stored Procedures\PFS_SFStatus_OfferRejected.sql" />
+    <Build Include="Stored Procedures\PFS_SFStatus_Acquired.sql" />
+    <None Include="Deploy\DeploySprocs.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Stored Procedures\dbo.stp_LogMessage.sql" />
+    <None Include="Stored Procedures\PFS_LogMessage.sql" />
+    <None Include="Deploy\List_DeployTables.txt" />
+    <None Include="Deploy\DeployTables.sql" />
+    <None Include="Deploy\List_DeploySprocs.txt" />
+    <None Include="Deploy\List_DeployViews.txt" />
+    <None Include="Deploy\DeployViews.sql" />
   </ItemGroup>
 </Project>
