@@ -1,0 +1,3234 @@
+<ImportExportXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Entities>
+    <Entity>
+      <Name LocalizedName="Project Task" OriginalName="Project Task">msdyn_projecttask</Name>
+      <EntityInfo>
+        <entity Name="msdyn_projecttask">
+          <LocalizedNames>
+            <LocalizedName description="Project Task" languagecode="1033" />
+          </LocalizedNames>
+          <LocalizedCollectionNames>
+            <LocalizedCollectionName description="Project Tasks" languagecode="1033" />
+          </LocalizedCollectionNames>
+          <Descriptions>
+            <Description description="Tasks related to project." languagecode="1033" />
+          </Descriptions>
+          <attributes>
+            <attribute PhysicalName="CreatedBy">
+              <Type>lookup</Type>
+              <Name>createdby</Name>
+              <LogicalName>createdby</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForReadApi>1</ValidForReadApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>0</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <LookupStyle>single</LookupStyle>
+              <LookupTypes />
+              <displaynames>
+                <displayname description="Created By" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unique identifier of the user who created the record." languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="CreatedOnBehalfBy">
+              <Type>lookup</Type>
+              <Name>createdonbehalfby</Name>
+              <LogicalName>createdonbehalfby</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForReadApi>1</ValidForReadApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>0</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <LookupStyle>single</LookupStyle>
+              <LookupTypes />
+              <displaynames>
+                <displayname description="Created By (Delegate)" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unique identifier of the delegate user who created the record." languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="ExchangeRate">
+              <Type>decimal</Type>
+              <Name>exchangerate</Name>
+              <LogicalName>exchangerate</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>disabled</ImeMode>
+              <ValidForReadApi>1</ValidForReadApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <MinValue>1E-10</MinValue>
+              <MaxValue>100000000000</MaxValue>
+              <Accuracy>10</Accuracy>
+              <displaynames>
+                <displayname description="Exchange Rate" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Shows the exchange rate for the currency associated with the entity with respect to the base currency." languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="fkh_AccessNotes">
+              <Type>ntext</Type>
+              <Name>fkh_accessnotes</Name>
+              <LogicalName>fkh_accessnotes</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>1</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.0</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <Format></Format>
+              <MaxLength>8000</MaxLength>
+              <displaynames>
+                <displayname description="Access Notes" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unit Access Notes" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="fkh_LockboxRemoved">
+              <Type>datetime</Type>
+              <Name>fkh_lockboxremoved</Name>
+              <LogicalName>fkh_lockboxremoved</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>1</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.0</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <Format>date</Format>
+              <CanChangeDateTimeBehavior>1</CanChangeDateTimeBehavior>
+              <Behavior>1</Behavior>
+              <displaynames>
+                <displayname description="Lockbox Removed" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unit LockBox Removed" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="fkh_MechanicalLockbox">
+              <Type>nvarchar</Type>
+              <Name>fkh_mechanicallockbox</Name>
+              <LogicalName>fkh_mechanicallockbox</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>1</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.0</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <Format>text</Format>
+              <MaxLength>50</MaxLength>
+              <Length>100</Length>
+              <displaynames>
+                <displayname description="Mechanical Lockbox" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unit Mechanical Lockbox" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="fkh_MechanicalLockboxNote">
+              <Type>nvarchar</Type>
+              <Name>fkh_mechanicallockboxnote</Name>
+              <LogicalName>fkh_mechanicallockboxnote</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>1</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.0</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <Format>text</Format>
+              <MaxLength>50</MaxLength>
+              <Length>100</Length>
+              <displaynames>
+                <displayname description="Mechanical Lockbox Note" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unit Mechanical Lockbox Note" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="fkh_PropertyGateCode">
+              <Type>nvarchar</Type>
+              <Name>fkh_propertygatecode</Name>
+              <LogicalName>fkh_propertygatecode</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>1</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.0</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <Format>text</Format>
+              <MaxLength>10</MaxLength>
+              <Length>20</Length>
+              <displaynames>
+                <displayname description="Property Gate Code" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unit Property Gate Code" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="fkh_RentlyLockbox">
+              <Type>nvarchar</Type>
+              <Name>fkh_rentlylockbox</Name>
+              <LogicalName>fkh_rentlylockbox</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>1</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.0</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <Format>text</Format>
+              <MaxLength>100</MaxLength>
+              <Length>200</Length>
+              <displaynames>
+                <displayname description="Rently Lockbox" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unit Rently Lockbox" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="fkh_RentlyLockboxNote">
+              <Type>nvarchar</Type>
+              <Name>fkh_rentlylockboxnote</Name>
+              <LogicalName>fkh_rentlylockboxnote</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>1</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.0</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <Format>text</Format>
+              <MaxLength>50</MaxLength>
+              <Length>100</Length>
+              <displaynames>
+                <displayname description="Rently Lockbox Note" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unit Rently Lockbox Note" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="fkh_TaskIdentifierId">
+              <Type>lookup</Type>
+              <Name>fkh_taskidentifierid</Name>
+              <LogicalName>fkh_taskidentifierid</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>1</IsCustomField>
+              <IsAuditEnabled>0</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.0</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <LookupStyle>single</LookupStyle>
+              <LookupTypes />
+              <displaynames>
+                <displayname description="Task Identifier" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Task Identifier" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="fkh_UnitId">
+              <Type>lookup</Type>
+              <Name>fkh_unitid</Name>
+              <LogicalName>fkh_unitid</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>1</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.0</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <LookupStyle>single</LookupStyle>
+              <LookupTypes />
+              <displaynames>
+                <displayname description="Unit" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Lookup to Unit" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="ModifiedBy">
+              <Type>lookup</Type>
+              <Name>modifiedby</Name>
+              <LogicalName>modifiedby</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForReadApi>1</ValidForReadApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>0</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <LookupStyle>single</LookupStyle>
+              <LookupTypes />
+              <displaynames>
+                <displayname description="Modified By" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unique identifier of user who last modified the record." languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="ModifiedOnBehalfBy">
+              <Type>lookup</Type>
+              <Name>modifiedonbehalfby</Name>
+              <LogicalName>modifiedonbehalfby</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForReadApi>1</ValidForReadApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>0</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <LookupStyle>single</LookupStyle>
+              <LookupTypes />
+              <displaynames>
+                <displayname description="Modified By (Delegate)" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unique identifier of the delegate user who modified the record." languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="msdyn_IsLineTask">
+              <Type>bit</Type>
+              <Name>msdyn_islinetask</Name>
+              <LogicalName>msdyn_islinetask</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>1</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.0</IntroducedVersion>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <AppDefaultValue>0</AppDefaultValue>
+              <optionset Name="msdyn_projecttask_msdyn_islinetask">
+                <OptionSetType>bit</OptionSetType>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <displaynames>
+                  <displayname description="IsLineTask" languagecode="1033" />
+                </displaynames>
+                <Descriptions>
+                  <Description description="Shows whether the task is a line task. It is a LineTask if true otherwise false." languagecode="1033" />
+                </Descriptions>
+                <options>
+                  <option value="0" Color="#0000ff">
+                    <labels>
+                      <label description="No" languagecode="1033" />
+                    </labels>
+                  </option>
+                  <option value="1" Color="#0000ff">
+                    <labels>
+                      <label description="Yes" languagecode="1033" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+              <displaynames>
+                <displayname description="IsLineTask" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Shows whether the task is a line task" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="msdyn_subject">
+              <Type>nvarchar</Type>
+              <Name>msdyn_subject</Name>
+              <LogicalName>msdyn_subject</LogicalName>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>QueueItemTitle|PrimaryName|ValidForAdvancedFind|ValidForForm|ValidForGrid|RequiredForForm</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>1</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <Format>text</Format>
+              <MaxLength>450</MaxLength>
+              <Length>900</Length>
+              <displaynames>
+                <displayname description="Project Task Name" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Type the name of the custom entity." languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="OwnerId">
+              <Type>owner</Type>
+              <Name>ownerid</Name>
+              <LogicalName>ownerid</LogicalName>
+              <RequiredLevel>systemrequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid|RequiredForForm</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <LookupStyle>single</LookupStyle>
+              <LookupTypes>
+                <LookupType id="00000000-0000-0000-0000-000000000000">8</LookupType>
+                <LookupType id="00000000-0000-0000-0000-000000000000">9</LookupType>
+              </LookupTypes>
+              <displaynames>
+                <displayname description="Owner" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Owner Id" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="OwningBusinessUnit">
+              <Type>lookup</Type>
+              <Name>owningbusinessunit</Name>
+              <LogicalName>owningbusinessunit</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <ImeMode>auto</ImeMode>
+              <ValidForReadApi>1</ValidForReadApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>0</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <LookupStyle>single</LookupStyle>
+              <LookupTypes />
+              <displaynames>
+                <displayname description="Owning Business Unit" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unique identifier for the business unit that owns the record" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="OwningTeam">
+              <Type>lookup</Type>
+              <Name>owningteam</Name>
+              <LogicalName>owningteam</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <ImeMode>auto</ImeMode>
+              <ValidForReadApi>1</ValidForReadApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>0</IsAuditEnabled>
+              <IsLogical>1</IsLogical>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <LookupStyle>single</LookupStyle>
+              <LookupTypes />
+              <displaynames>
+                <displayname description="Owning Team" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unique identifier for the team that owns the record." languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="OwningUser">
+              <Type>lookup</Type>
+              <Name>owninguser</Name>
+              <LogicalName>owninguser</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <ImeMode>auto</ImeMode>
+              <ValidForReadApi>1</ValidForReadApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>0</IsAuditEnabled>
+              <IsLogical>1</IsLogical>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <LookupStyle>single</LookupStyle>
+              <LookupTypes />
+              <displaynames>
+                <displayname description="Owning User" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unique identifier for the user that owns the record." languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="processid">
+              <Type>uniqueidentifier</Type>
+              <Name>processid</Name>
+              <LogicalName>processid</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <IsCustomizable>0</IsCustomizable>
+              <IsRenameable>0</IsRenameable>
+              <CanModifySearchSettings>0</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>0</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>0</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <displaynames>
+                <displayname description="Process Id" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Contains the id of the process associated with the entity." languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="StageId">
+              <Type>uniqueidentifier</Type>
+              <Name>stageid</Name>
+              <LogicalName>stageid</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>6.0.0.0</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <displaynames>
+                <displayname description="Process Stage" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Unique identifier of the Stage." languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="statecode">
+              <Type>state</Type>
+              <Name>statecode</Name>
+              <LogicalName>statecode</LogicalName>
+              <RequiredLevel>systemrequired</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <optionset Name="msdyn_projecttask_statecode">
+                <OptionSetType>state</OptionSetType>
+                <IntroducedVersion>1.0.0.1</IntroducedVersion>
+                <displaynames>
+                  <displayname description="Status" languagecode="1033" />
+                </displaynames>
+                <Descriptions>
+                  <Description description="Status of the Project Task" languagecode="1033" />
+                </Descriptions>
+                <states>
+                  <state value="0" defaultstatus="1" invariantname="Active">
+                    <labels>
+                      <label description="Active" languagecode="1033" />
+                    </labels>
+                  </state>
+                  <state value="1" defaultstatus="2" invariantname="Inactive">
+                    <labels>
+                      <label description="Inactive" languagecode="1033" />
+                    </labels>
+                  </state>
+                </states>
+              </optionset>
+              <displaynames>
+                <displayname description="Project Task Status" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Status of the Project Task" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="statuscode">
+              <Type>status</Type>
+              <Name>statuscode</Name>
+              <LogicalName>statuscode</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <optionset Name="msdyn_projecttask_statuscode">
+                <OptionSetType>status</OptionSetType>
+                <IntroducedVersion>1.0.0.1</IntroducedVersion>
+                <displaynames>
+                  <displayname description="Status Reason" languagecode="1033" />
+                </displaynames>
+                <Descriptions>
+                  <Description description="Reason for the status of the Project Task" languagecode="1033" />
+                </Descriptions>
+                <statuses>
+                  <status value="1" state="0" TransitionData="" Color="#0000ff">
+                    <labels>
+                      <label description="Not Started" languagecode="1033" />
+                    </labels>
+                  </status>
+                  <status value="963850000" state="0" TransitionData="" Color="#0000ff">
+                    <labels>
+                      <label description="In Progress" languagecode="1033" />
+                    </labels>
+                  </status>
+                  <status value="963850001" state="0" TransitionData="" Color="#0000ff">
+                    <labels>
+                      <label description="Completed" languagecode="1033" />
+                    </labels>
+                  </status>
+                  <status value="2" state="1" TransitionData="" Color="#0000ff">
+                    <labels>
+                      <label description="Inactive" languagecode="1033" />
+                    </labels>
+                  </status>
+                </statuses>
+              </optionset>
+              <displaynames>
+                <displayname description="Status Reason" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Reason for the status of the Project Task" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="TransactionCurrencyId">
+              <Type>lookup</Type>
+              <Name>transactioncurrencyid</Name>
+              <LogicalName>transactioncurrencyid</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <IsCustomizable>1</IsCustomizable>
+              <IsRenameable>1</IsRenameable>
+              <CanModifySearchSettings>1</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <LookupStyle>single</LookupStyle>
+              <LookupTypes />
+              <displaynames>
+                <displayname description="Currency" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Shows the currency associated with the entity." languagecode="1033" />
+              </Descriptions>
+            </attribute>
+            <attribute PhysicalName="traversedpath">
+              <Type>nvarchar</Type>
+              <Name>traversedpath</Name>
+              <LogicalName>traversedpath</LogicalName>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForGrid</DisplayMask>
+              <ImeMode>auto</ImeMode>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <IsCustomField>0</IsCustomField>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsSecured>0</IsSecured>
+              <IntroducedVersion>1.0.0.1</IntroducedVersion>
+              <IsCustomizable>0</IsCustomizable>
+              <IsRenameable>0</IsRenameable>
+              <CanModifySearchSettings>0</CanModifySearchSettings>
+              <CanModifyRequirementLevelSettings>0</CanModifyRequirementLevelSettings>
+              <CanModifyAdditionalSettings>0</CanModifyAdditionalSettings>
+              <SourceType>0</SourceType>
+              <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+              <IsSortableEnabled>0</IsSortableEnabled>
+              <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+              <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+              <IsDataSourceSecret>0</IsDataSourceSecret>
+              <AutoNumberFormat></AutoNumberFormat>
+              <Format>text</Format>
+              <MaxLength>1250</MaxLength>
+              <Length>2500</Length>
+              <displaynames>
+                <displayname description="Traversed Path" languagecode="1033" />
+              </displaynames>
+              <Descriptions>
+                <Description description="A comma separated list of string values representing the unique identifiers of stages in a Business Process Flow Instance in the order that they occur." languagecode="1033" />
+              </Descriptions>
+            </attribute>
+          </attributes>
+          <EntitySetName>msdyn_projecttasks</EntitySetName>
+          <IsDuplicateCheckSupported>1</IsDuplicateCheckSupported>
+          <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+          <IsRequiredOffline>0</IsRequiredOffline>
+          <IsInteractionCentricEnabled>0</IsInteractionCentricEnabled>
+          <IsCollaboration>1</IsCollaboration>
+          <AutoRouteToOwnerQueue>0</AutoRouteToOwnerQueue>
+          <IsConnectionsEnabled>0</IsConnectionsEnabled>
+          <EntityColor></EntityColor>
+          <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+          <IsOneNoteIntegrationEnabled>0</IsOneNoteIntegrationEnabled>
+          <IsKnowledgeManagementEnabled>0</IsKnowledgeManagementEnabled>
+          <IsSLAEnabled>0</IsSLAEnabled>
+          <IsDocumentRecommendationsEnabled>0</IsDocumentRecommendationsEnabled>
+          <IsBPFEntity>0</IsBPFEntity>
+          <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+          <IsAuditEnabled>0</IsAuditEnabled>
+          <IsRetrieveAuditEnabled>0</IsRetrieveAuditEnabled>
+          <IsRetrieveMultipleAuditEnabled>0</IsRetrieveMultipleAuditEnabled>
+          <IsActivity>0</IsActivity>
+          <ActivityTypeMask></ActivityTypeMask>
+          <IsActivityParty>0</IsActivityParty>
+          <IsReplicated>0</IsReplicated>
+          <IsReplicationUserFiltered>0</IsReplicationUserFiltered>
+          <IsMailMergeEnabled>0</IsMailMergeEnabled>
+          <IsVisibleInMobile>0</IsVisibleInMobile>
+          <IsVisibleInMobileClient>0</IsVisibleInMobileClient>
+          <IsReadOnlyInMobileClient>0</IsReadOnlyInMobileClient>
+          <IsOfflineInMobileClient>0</IsOfflineInMobileClient>
+          <DaysSinceRecordLastModified>0</DaysSinceRecordLastModified>
+          <MobileOfflineFilters></MobileOfflineFilters>
+          <IsMapiGridEnabled>1</IsMapiGridEnabled>
+          <IsReadingPaneEnabled>0</IsReadingPaneEnabled>
+          <IsQuickCreateEnabled>0</IsQuickCreateEnabled>
+          <SyncToExternalSearchIndex>0</SyncToExternalSearchIndex>
+          <IntroducedVersion>1.0.0.1</IntroducedVersion>
+          <IconMediumName>fkh_ProjectTask_32x32.png</IconMediumName>
+          <IconSmallName>fkh_ProjectTask_16x16.png</IconSmallName>
+          <IconVectorName>fkh_ProjectTask_16x16.png</IconVectorName>
+          <EnforceStateTransitions>0</EnforceStateTransitions>
+          <EntityHelpUrlEnabled>1</EntityHelpUrlEnabled>
+          <EntityHelpUrl>http://go.microsoft.com/fwlink/?LinkId=773453</EntityHelpUrl>
+          <ChangeTrackingEnabled>0</ChangeTrackingEnabled>
+          <IsEnabledForExternalChannels>0</IsEnabledForExternalChannels>
+          <HasRelatedNotes>True</HasRelatedNotes>
+          <HasRelatedActivities>True</HasRelatedActivities>
+        </entity>
+      </EntityInfo>
+      <FormXml>
+        <forms type="main">
+          <systemform>
+            <formid>{c3feb05f-33ee-4183-8fe4-4b68a97b9ec1}</formid>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <FormPresentation>1</FormPresentation>
+            <FormActivationState>1</FormActivationState>
+            <form shownavigationbar="true" showImage="false" maxWidth="1900">
+              <tabs>
+                <tab verticallayout="true" id="{7a08287e-9b25-4ee0-a2dd-288055bd63a7}" IsUserDefined="1" name="{7a08287e-9b25-4ee0-a2dd-288055bd63a7}" locklevel="0" expanded="true" showlabel="true">
+                  <labels>
+                    <label description="General" languagecode="1033" />
+                  </labels>
+                  <columns>
+                    <column width="50%">
+                      <sections>
+                        <section showlabel="false" showbar="false" IsUserDefined="0" id="{31359e97-258b-43cf-a02e-e8fdcc0889fb}">
+                          <labels>
+                            <label description="General" languagecode="1033" />
+                          </labels>
+                          <rows>
+                            <row>
+                              <cell id="{764d804b-ea5a-aa95-b4d4-81670c5db80a}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Project" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_project" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="msdyn_project" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{861ac31b-7ab2-485a-b294-c8f8c741b4ed}">
+                                <labels>
+                                  <label description="Subject" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_subject" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="msdyn_subject" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{dace5801-be2c-db59-b8a2-30ad14ac1eb5}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Start Date" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_scheduledstart" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_scheduledstart" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{8b638d79-2739-6153-be32-21880088e50b}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Actual Start" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_actualstart" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_actualstart" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{d92b9a9d-0071-aeea-2761-190517553427}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Due Date" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_scheduledend" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_scheduledend" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{3d04b38e-5b6d-543a-4a40-a8d46c22c0db}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Actual End Date/Time" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_actualend" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_actualend" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{60053568-6a34-8671-4ecb-a0668a3e4246}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Progress %" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_progress" classid="{C3EFE0C3-0EC6-42be-8349-CBD9079DFD8E}" datafieldname="msdyn_progress" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{0287d105-5858-aa69-9646-243e1468b2eb}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Actual Duration" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_actualdurationminutes" classid="{AA987274-CE4E-4271-A803-66164311A958}" datafieldname="msdyn_actualdurationminutes" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{1ce0ea0e-a603-3c3d-b3c6-2e7d273d9c6d}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Status Reason" languagecode="1033" />
+                                </labels>
+                                <control id="statuscode" classid="{5D68B988-0661-4db2-BC3E-17598AD3BE6C}" datafieldname="statuscode" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{cd04cce4-2f8e-42b0-85b1-57ae5d315525}">
+                                <labels>
+                                  <label description="Owner" languagecode="1033" />
+                                </labels>
+                                <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" />
+                              </cell>
+                            </row>
+                          </rows>
+                        </section>
+                      </sections>
+                    </column>
+                    <column width="50%">
+                      <sections>
+                        <section name="notes_section" showlabel="false" showbar="false" locklevel="0" id="{b1dba879-e5c2-648b-8ba6-ead4c800dc2b}" IsUserDefined="0" layout="varwidth" columns="1" labelwidth="115" celllabelalignment="Left" celllabelposition="Left">
+                          <labels>
+                            <label description="Notes" languagecode="1033" />
+                          </labels>
+                          <rows>
+                            <row>
+                              <cell id="{0a323d9a-981a-0e4a-bb3e-50d1c7a7c084}" showlabel="true" rowspan="15" auto="false" colspan="1">
+                                <labels>
+                                  <label description="Note Text" languagecode="1033" />
+                                </labels>
+                                <control id="notescontrol" classid="{06375649-c143-495e-a496-c962e5b4488e}" />
+                              </cell>
+                            </row>
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                          </rows>
+                        </section>
+                        <section showlabel="false" showbar="false" id="{4fdeb155-c726-4210-a41f-97ce03bd0a9d}" IsUserDefined="0" height="auto" name="{4fdeb155-c726-4210-a41f-97ce03bd0a9d}" columns="1" locklevel="0" labelwidth="115" celllabelalignment="Left" celllabelposition="Left" visible="false">
+                          <labels>
+                            <label description="Additional fields" languagecode="1033" />
+                          </labels>
+                          <rows>
+                            <row>
+                              <cell id="{58c4140e-cc8a-4c2d-a0cc-25408f9b8939}">
+                                <labels>
+                                  <label description="Regarding" languagecode="1033" />
+                                </labels>
+                                <control id="regardingobjectid" classid="{F3015350-44A2-4aa0-97B5-00166532B5E9}" datafieldname="regardingobjectid" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{48ce67c1-c7d6-921c-aa60-d4e35c653855}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Description" languagecode="1033" />
+                                </labels>
+                                <control id="description" classid="{E0DECE4B-6FC8-4a8f-A065-082708572369}" datafieldname="description" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{04b399a3-3005-30a3-4845-e05160c95522}" showlabel="true" locklevel="0" visible="false">
+                                <labels>
+                                  <label description="Task Identifier" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_taskidentifierid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="fkh_taskidentifierid" disabled="false" uniqueid="{24e7556b-bce8-5ae4-25b8-54189717a439}">
+                                  <parameters>
+                                    <AutoResolve>true</AutoResolve>
+                                    <DisableMru>false</DisableMru>
+                                    <DisableQuickFind>false</DisableQuickFind>
+                                    <DisableViewPicker>false</DisableViewPicker>
+                                    <DefaultViewId>{AE06295D-87D3-4FB7-8ACA-4BFD86B6B76F}</DefaultViewId>
+                                    <AllowFilterOff>false</AllowFilterOff>
+                                  </parameters>
+                                </control>
+                              </cell>
+                            </row>
+                          </rows>
+                        </section>
+                      </sections>
+                    </column>
+                  </columns>
+                </tab>
+                <tab name="tab_3" id="{80c6ed51-7e8d-2bb9-6c50-5d0817a40ad8}" IsUserDefined="0" locklevel="0" showlabel="true" expanded="false">
+                  <labels>
+                    <label description="Unit Information" languagecode="1033" />
+                  </labels>
+                  <columns>
+                    <column width="100%">
+                      <sections>
+                        <section name="tab_3_section_1" showlabel="false" showbar="false" locklevel="0" id="{e0c0458b-c27c-a6d2-1ee7-8ed1c2311042}" IsUserDefined="0" layout="varwidth" columns="11" labelwidth="115" celllabelalignment="Left" celllabelposition="Left">
+                          <labels>
+                            <label description="Section" languagecode="1033" />
+                          </labels>
+                          <rows>
+                            <row>
+                              <cell id="{dca5e617-7ad5-644b-b663-671069da7d47}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Unit" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_unitid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="fkh_unitid" disabled="false" />
+                              </cell>
+                              <cell id="{67918d92-3745-b9c4-6620-da29d02190e7}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Access Notes" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_accessnotes" classid="{E0DECE4B-6FC8-4a8f-A065-082708572369}" datafieldname="fkh_accessnotes" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{9a94315d-3cc8-d4e1-3406-6992ba28616a}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Lockbox Removed" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_lockboxremoved" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="fkh_lockboxremoved" disabled="false" />
+                              </cell>
+                              <cell id="{7b5426c8-556a-4b22-eb4b-9b4b9a603642}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Property Gate Code" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_propertygatecode" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="fkh_propertygatecode" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{4c6b2040-5981-c386-0b54-ea136b556260}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Mechanical Lockbox" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_mechanicallockbox" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="fkh_mechanicallockbox" disabled="false" />
+                              </cell>
+                              <cell id="{c1a2dbc2-5484-43ce-4893-14a51954b2ae}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Mechanical Lockbox Note" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_mechanicallockboxnote" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="fkh_mechanicallockboxnote" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{04690456-08bc-4018-b1ae-e931b9007972}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Rently Lockbox" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_rentlylockbox" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="fkh_rentlylockbox" disabled="false" />
+                              </cell>
+                              <cell id="{68c1709a-c98e-e6cd-a755-1b047e052d83}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Rently Lockbox Note" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_rentlylockboxnote" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="fkh_rentlylockboxnote" disabled="false" />
+                              </cell>
+                            </row>
+                          </rows>
+                        </section>
+                      </sections>
+                    </column>
+                  </columns>
+                </tab>
+              </tabs>
+              <header id="{baca1ba4-13df-4c32-861a-2a87c4bead1b}" celllabelposition="Top" columns="1111" labelwidth="115">
+                <rows>
+                  <row>
+                    <cell id="{7c6cc861-4f63-41b1-82d9-332c736c9d68}">
+                      <labels>
+                        <label description="Priority" languagecode="1033" />
+                      </labels>
+                      <control id="header_prioritycode" classid="{3EF39988-22BB-4f0b-BBBE-64B5A3748AEE}" datafieldname="prioritycode" disabled="false" />
+                    </cell>
+                    <cell id="{93cd4255-098b-4077-a5f6-9e77df92ff36}">
+                      <labels>
+                        <label description="Due Date" languagecode="1033" />
+                      </labels>
+                      <control id="header_msdyn_scheduledend" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_scheduledend" disabled="false" />
+                    </cell>
+                    <cell id="{8656ed9d-1712-4265-a822-479b0520c44f}">
+                      <labels>
+                        <label description="Activity Status" languagecode="1033" />
+                      </labels>
+                      <control id="header_statecode" classid="{3EF39988-22BB-4f0b-BBBE-64B5A3748AEE}" datafieldname="statecode" disabled="false" />
+                    </cell>
+                    <cell id="{94b653ab-28e0-496b-bb1c-d8b2597b6fea}">
+                      <labels>
+                        <label description="Owner" languagecode="1033" />
+                      </labels>
+                      <control id="header_ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" disabled="false" />
+                    </cell>
+                  </row>
+                </rows>
+              </header>
+              <Navigation>
+                <NavBar></NavBar>
+                <NavBarAreas>
+                  <NavBarArea Id="Info">
+                    <Titles>
+                      <Title LCID="1033" Text="Common" />
+                      <Title LCID="1025" Text="شائع" />
+                      <Title LCID="1026" Text="Общи" />
+                      <Title LCID="1027" Text="Comú" />
+                      <Title LCID="1029" Text="Společné" />
+                      <Title LCID="1030" Text="Almindelig" />
+                      <Title LCID="1031" Text="Gemeinsam verwendet" />
+                      <Title LCID="1032" Text="Κοινό" />
+                      <Title LCID="3082" Text="Común" />
+                      <Title LCID="1061" Text="Levinud" />
+                      <Title LCID="1069" Text="Ohikoak" />
+                      <Title LCID="1035" Text="Yhteiset" />
+                      <Title LCID="1036" Text="Éléments communs" />
+                      <Title LCID="1110" Text="Común" />
+                      <Title LCID="1037" Text="פריטים נפוצים" />
+                      <Title LCID="1081" Text="सामान्य" />
+                      <Title LCID="1050" Text="Uobičajeno" />
+                      <Title LCID="1038" Text="Közös" />
+                      <Title LCID="1057" Text="Umum" />
+                      <Title LCID="1040" Text="Elementi comuni" />
+                      <Title LCID="1041" Text="共通" />
+                      <Title LCID="1087" Text="Жалпы" />
+                      <Title LCID="1042" Text="일반" />
+                      <Title LCID="1063" Text="Įprasta" />
+                      <Title LCID="1062" Text="Kopējs" />
+                      <Title LCID="1086" Text="Umum" />
+                      <Title LCID="1044" Text="Felles" />
+                      <Title LCID="1043" Text="Algemeen" />
+                      <Title LCID="1045" Text="Wspólne" />
+                      <Title LCID="1046" Text="Comum" />
+                      <Title LCID="2070" Text="Comum" />
+                      <Title LCID="1048" Text="Comun" />
+                      <Title LCID="1049" Text="Общий" />
+                      <Title LCID="1051" Text="Bežné" />
+                      <Title LCID="1060" Text="Skupno" />
+                      <Title LCID="3098" Text="Уобичајено" />
+                      <Title LCID="2074" Text="Uobičajeno" />
+                      <Title LCID="1053" Text="Gemensamt" />
+                      <Title LCID="1054" Text="ทั่วไป" />
+                      <Title LCID="1055" Text="Ortak" />
+                      <Title LCID="1058" Text="Спільне" />
+                      <Title LCID="1066" Text="Thông thường" />
+                      <Title LCID="2052" Text="公用" />
+                      <Title LCID="3076" Text="一般" />
+                      <Title LCID="1028" Text="一般" />
+                    </Titles>
+                  </NavBarArea>
+                  <NavBarArea Id="Sales">
+                    <Titles>
+                      <Title LCID="1033" Text="Sales" />
+                      <Title LCID="1025" Text="‏‏مبيعات" />
+                      <Title LCID="1026" Text="Продажби" />
+                      <Title LCID="1027" Text="Vendes" />
+                      <Title LCID="1029" Text="Prodej" />
+                      <Title LCID="1030" Text="Salg" />
+                      <Title LCID="1031" Text="Vertrieb" />
+                      <Title LCID="1032" Text="Πωλήσεις" />
+                      <Title LCID="3082" Text="Ventas" />
+                      <Title LCID="1061" Text="Müük" />
+                      <Title LCID="1069" Text="Salmentak" />
+                      <Title LCID="1035" Text="Myynti" />
+                      <Title LCID="1036" Text="Ventes" />
+                      <Title LCID="1110" Text="Vendas" />
+                      <Title LCID="1037" Text="מכירות" />
+                      <Title LCID="1081" Text="विक्रय" />
+                      <Title LCID="1050" Text="Prodaja" />
+                      <Title LCID="1038" Text="Értékesítés" />
+                      <Title LCID="1057" Text="Penjualan" />
+                      <Title LCID="1040" Text="Vendite" />
+                      <Title LCID="1041" Text="営業" />
+                      <Title LCID="1087" Text="Сатылым" />
+                      <Title LCID="1042" Text="영업" />
+                      <Title LCID="1063" Text="Pardavimas" />
+                      <Title LCID="1062" Text="Pārdošana" />
+                      <Title LCID="1086" Text="Jualan" />
+                      <Title LCID="1044" Text="Salg" />
+                      <Title LCID="1043" Text="Verkoop" />
+                      <Title LCID="1045" Text="Sprzedaż" />
+                      <Title LCID="1046" Text="Vendas" />
+                      <Title LCID="2070" Text="Vendas" />
+                      <Title LCID="1048" Text="Vânzări" />
+                      <Title LCID="1049" Text="Продажи" />
+                      <Title LCID="1051" Text="Predaj" />
+                      <Title LCID="1060" Text="Prodaja" />
+                      <Title LCID="3098" Text="Продаја" />
+                      <Title LCID="2074" Text="Prodaja" />
+                      <Title LCID="1053" Text="Försäljning" />
+                      <Title LCID="1054" Text="การขาย" />
+                      <Title LCID="1055" Text="Satış" />
+                      <Title LCID="1058" Text="Збут" />
+                      <Title LCID="1066" Text="Bán hàng" />
+                      <Title LCID="2052" Text="销售" />
+                      <Title LCID="3076" Text="銷售" />
+                      <Title LCID="1028" Text="銷售" />
+                    </Titles>
+                  </NavBarArea>
+                  <NavBarArea Id="Service">
+                    <Titles>
+                      <Title LCID="1033" Text="Service" />
+                      <Title LCID="1025" Text="الخدمة" />
+                      <Title LCID="1026" Text="Обслужване" />
+                      <Title LCID="1027" Text="Servei" />
+                      <Title LCID="1029" Text="Služby" />
+                      <Title LCID="1030" Text="Service" />
+                      <Title LCID="1031" Text="Service" />
+                      <Title LCID="1032" Text="Υπηρεσία" />
+                      <Title LCID="3082" Text="Servicio" />
+                      <Title LCID="1061" Text="Teenindus" />
+                      <Title LCID="1069" Text="Zerbitzua" />
+                      <Title LCID="1035" Text="Palvelu" />
+                      <Title LCID="1036" Text="Service" />
+                      <Title LCID="1110" Text="Servizo" />
+                      <Title LCID="1037" Text="שירות" />
+                      <Title LCID="1081" Text="सेवा" />
+                      <Title LCID="1050" Text="Usluga" />
+                      <Title LCID="1038" Text="Szolgáltatás" />
+                      <Title LCID="1057" Text="Layanan" />
+                      <Title LCID="1040" Text="Servizio" />
+                      <Title LCID="1041" Text="サービス" />
+                      <Title LCID="1087" Text="Қызмет" />
+                      <Title LCID="1042" Text="서비스" />
+                      <Title LCID="1063" Text="Aptarnavimas" />
+                      <Title LCID="1062" Text="Serviss" />
+                      <Title LCID="1086" Text="Perkhidmatan" />
+                      <Title LCID="1044" Text="Service" />
+                      <Title LCID="1043" Text="Service" />
+                      <Title LCID="1045" Text="Usługa" />
+                      <Title LCID="1046" Text="Serviço" />
+                      <Title LCID="2070" Text="Serviço" />
+                      <Title LCID="1048" Text="Serviciu" />
+                      <Title LCID="1049" Text="Сервис" />
+                      <Title LCID="1051" Text="Služba" />
+                      <Title LCID="1060" Text="Storitev" />
+                      <Title LCID="3098" Text="Услуга" />
+                      <Title LCID="2074" Text="Usluga" />
+                      <Title LCID="1053" Text="Tjänst" />
+                      <Title LCID="1054" Text="การบริการ" />
+                      <Title LCID="1055" Text="Servis" />
+                      <Title LCID="1058" Text="Послуга" />
+                      <Title LCID="1066" Text="Dịch vụ" />
+                      <Title LCID="2052" Text="服务" />
+                      <Title LCID="3076" Text="服務" />
+                      <Title LCID="1028" Text="服務" />
+                    </Titles>
+                  </NavBarArea>
+                  <NavBarArea Id="Marketing">
+                    <Titles>
+                      <Title LCID="1033" Text="Marketing" />
+                      <Title LCID="1025" Text="التسويق" />
+                      <Title LCID="1026" Text="Маркетинг" />
+                      <Title LCID="1027" Text="Màrqueting" />
+                      <Title LCID="1029" Text="Marketing" />
+                      <Title LCID="1030" Text="Marketing" />
+                      <Title LCID="1031" Text="Marketing" />
+                      <Title LCID="1032" Text="Μάρκετινγκ" />
+                      <Title LCID="3082" Text="Marketing" />
+                      <Title LCID="1061" Text="Turundus" />
+                      <Title LCID="1069" Text="Marketina" />
+                      <Title LCID="1035" Text="Markkinointi" />
+                      <Title LCID="1036" Text="Marketing" />
+                      <Title LCID="1110" Text="Márketing" />
+                      <Title LCID="1037" Text="שיווק" />
+                      <Title LCID="1081" Text="मार्केटिंग" />
+                      <Title LCID="1050" Text="Marketing" />
+                      <Title LCID="1038" Text="Marketing" />
+                      <Title LCID="1057" Text="Pemasaran" />
+                      <Title LCID="1040" Text="Marketing" />
+                      <Title LCID="1041" Text="マーケティング" />
+                      <Title LCID="1087" Text="Маркетинг" />
+                      <Title LCID="1042" Text="마케팅" />
+                      <Title LCID="1063" Text="Rinkodara" />
+                      <Title LCID="1062" Text="Mārketings" />
+                      <Title LCID="1086" Text="Pemasaran" />
+                      <Title LCID="1044" Text="Markedsføring" />
+                      <Title LCID="1043" Text="Marketing" />
+                      <Title LCID="1045" Text="Marketing" />
+                      <Title LCID="1046" Text="Marketing" />
+                      <Title LCID="2070" Text="Marketing" />
+                      <Title LCID="1048" Text="Marketing" />
+                      <Title LCID="1049" Text="Маркетинг" />
+                      <Title LCID="1051" Text="Marketing" />
+                      <Title LCID="1060" Text="Trženje" />
+                      <Title LCID="3098" Text="Маркетинг" />
+                      <Title LCID="2074" Text="Marketing" />
+                      <Title LCID="1053" Text="Marknadsföring" />
+                      <Title LCID="1054" Text="การตลาด" />
+                      <Title LCID="1055" Text="Pazarlama" />
+                      <Title LCID="1058" Text="Маркетинг" />
+                      <Title LCID="1066" Text="Tiếp thị" />
+                      <Title LCID="2052" Text="市场营销" />
+                      <Title LCID="3076" Text="行銷" />
+                      <Title LCID="1028" Text="行銷" />
+                    </Titles>
+                  </NavBarArea>
+                  <NavBarArea Id="ProcessCenter">
+                    <Titles>
+                      <Title LCID="1033" Text="Process Sessions" />
+                      <Title LCID="1025" Text="جلسات عمل العمليات" />
+                      <Title LCID="1026" Text="Сесии на процес" />
+                      <Title LCID="1027" Text="Sessions del procés" />
+                      <Title LCID="1029" Text="Relace procesů" />
+                      <Title LCID="1030" Text="Processessioner" />
+                      <Title LCID="1031" Text="Prozesssitzungen" />
+                      <Title LCID="1032" Text="Περίοδοι λειτουργίας διεργασίας" />
+                      <Title LCID="3082" Text="Sesiones de proceso" />
+                      <Title LCID="1061" Text="Protsessiseansid" />
+                      <Title LCID="1069" Text="Prozesu-saioak" />
+                      <Title LCID="1035" Text="Prosessin istunnot" />
+                      <Title LCID="1036" Text="Sessions de traitement" />
+                      <Title LCID="1110" Text="Sesións de proceso" />
+                      <Title LCID="1037" Text="הפעלות תהליך" />
+                      <Title LCID="1081" Text="प्रक्रिया सत्र" />
+                      <Title LCID="1050" Text="Sesije procesa" />
+                      <Title LCID="1038" Text="Feldolgozási munkamenetek" />
+                      <Title LCID="1057" Text="Sesi Proses" />
+                      <Title LCID="1040" Text="Sessioni processo" />
+                      <Title LCID="1041" Text="プロセス セッション" />
+                      <Title LCID="1087" Text="Процесс сеанстары" />
+                      <Title LCID="1042" Text="프로세스 세션" />
+                      <Title LCID="1063" Text="Apdorojimo seansai" />
+                      <Title LCID="1062" Text="Apstrādes sesijas" />
+                      <Title LCID="1086" Text="Proses Sesi" />
+                      <Title LCID="1044" Text="Prosessøkter" />
+                      <Title LCID="1043" Text="Processessies" />
+                      <Title LCID="1045" Text="Sesje procesów" />
+                      <Title LCID="1046" Text="Sessões de Processo" />
+                      <Title LCID="2070" Text="Processar Sessões" />
+                      <Title LCID="1048" Text="Sesiuni de proces" />
+                      <Title LCID="1049" Text="Сеансы процесса" />
+                      <Title LCID="1051" Text="Relácie procesov" />
+                      <Title LCID="1060" Text="Seje procesov" />
+                      <Title LCID="3098" Text="Сесије процеса" />
+                      <Title LCID="2074" Text="Sesije procesa" />
+                      <Title LCID="1053" Text="Processessioner" />
+                      <Title LCID="1054" Text="เซสชันของกระบวนการ" />
+                      <Title LCID="1055" Text="İşlem Oturumları" />
+                      <Title LCID="1058" Text="Сеанси процесів" />
+                      <Title LCID="1066" Text="Giao dịch quy trình" />
+                      <Title LCID="2052" Text="进程会话" />
+                      <Title LCID="3076" Text="程序工作階段" />
+                      <Title LCID="1028" Text="程序工作階段" />
+                    </Titles>
+                  </NavBarArea>
+                </NavBarAreas>
+              </Navigation>
+              <controlDescriptions />
+            </form>
+            <LocalizedNames>
+              <LocalizedName description="Information" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+              <Description description="A form for this entity." languagecode="1033" />
+            </Descriptions>
+          </systemform>
+          <systemform>
+            <formid>{4458babd-c0e5-497e-9c8a-a85c5b490246}</formid>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <FormPresentation>1</FormPresentation>
+            <FormActivationState>1</FormActivationState>
+            <form shownavigationbar="true" showImage="false" maxWidth="1900">
+              <tabs>
+                <tab verticallayout="true" id="{7a08287e-9b25-4ee0-a2dd-288055bd63a7}" IsUserDefined="1" name="{7a08287e-9b25-4ee0-a2dd-288055bd63a7}" locklevel="0" expanded="true" showlabel="true" labelid="{d6dfbbf2-1739-4eca-af1f-47eecc3fb3ec}">
+                  <labels>
+                    <label description="General" languagecode="1033" />
+                  </labels>
+                  <columns>
+                    <column width="50%">
+                      <sections>
+                        <section showlabel="false" showbar="false" IsUserDefined="0" id="{31359e97-258b-43cf-a02e-e8fdcc0889fb}" labelid="{1355c6d8-ffd1-4dea-8af9-57b015e42fa6}">
+                          <labels>
+                            <label description="General" languagecode="1033" />
+                          </labels>
+                          <rows>
+                            <row>
+                              <cell id="{861ac31b-7ab2-485a-b294-c8f8c741b4ed}" labelid="{ae37c0ab-3250-4dd3-987b-ac9c81aa6f45}">
+                                <labels>
+                                  <label description="Subject" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_subject" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="msdyn_subject" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{a4d89349-0476-7918-2baa-a430d75e2568}" showlabel="true" locklevel="0" labelid="{679a77c8-11a2-42ba-8df9-155883e7fe98}">
+                                <labels>
+                                  <label description="Category" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_transactioncategory" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="msdyn_transactioncategory" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{80954860-b3d4-7533-20e0-0b68bce49aa9}" showlabel="true" locklevel="0" labelid="{db603407-18ba-47ec-a0fb-ce8143be2940}">
+                                <labels>
+                                  <label description="Role" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_resourcecategory" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="msdyn_resourcecategory" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{a3134c7d-a531-99a4-dbc5-531c67306390}" showlabel="true" locklevel="0" labelid="{1344ef2b-44e4-40df-8617-625fd4c14180}">
+                                <labels>
+                                  <label description="Effort Hours" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_effort" classid="{0D2C745A-E5A8-4c8f-BA63-C6D3BB604660}" datafieldname="msdyn_effort" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{25d722e7-3e0d-9795-506a-26a25969c23a}" showlabel="true" locklevel="0" labelid="{1244427d-fb46-449e-ab60-fb6a8229a9ce}">
+                                <labels>
+                                  <label description="Number of resources" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_numberofresources" classid="{C6D124CA-7EDA-4a60-AEA9-7FB8D318B68F}" datafieldname="msdyn_numberofresources" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{dace5801-be2c-db59-b8a2-30ad14ac1eb5}" showlabel="true" locklevel="0" labelid="{9693f156-d9fc-4b1d-8181-23c60d27be59}">
+                                <labels>
+                                  <label description="Start Date" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_scheduledstart" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_scheduledstart" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{8b638d79-2739-6153-be32-21880088e50b}" showlabel="true" locklevel="0" labelid="{5a06a1bb-5d0f-4939-a36f-4a4fa89d172d}">
+                                <labels>
+                                  <label description="Actual Start" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_actualstart" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_actualstart" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{d92b9a9d-0071-aeea-2761-190517553427}" showlabel="true" locklevel="0" labelid="{74f82c18-2f36-464d-b36d-469875a8317d}">
+                                <labels>
+                                  <label description="Due Date" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_scheduledend" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_scheduledend" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{3d04b38e-5b6d-543a-4a40-a8d46c22c0db}" showlabel="true" locklevel="0" labelid="{8a118318-afe3-443c-9783-92bd51884d52}">
+                                <labels>
+                                  <label description="Actual End Date/Time" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_actualend" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_actualend" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{60053568-6a34-8671-4ecb-a0668a3e4246}" showlabel="true" locklevel="0" labelid="{f61f685a-6e17-48ca-80bf-d72b64d1fc2f}">
+                                <labels>
+                                  <label description="Progress %" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_progress" classid="{C3EFE0C3-0EC6-42be-8349-CBD9079DFD8E}" datafieldname="msdyn_progress" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{2a29a4ac-b854-c33a-b7e3-a3a7d484b28d}" showlabel="true" locklevel="0" labelid="{f4f74690-328a-49e9-bd7b-3640dda21ddf}">
+                                <labels>
+                                  <label description="Duration" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_duration" classid="{0D2C745A-E5A8-4c8f-BA63-C6D3BB604660}" datafieldname="msdyn_duration" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{4c23b4cb-261b-7c35-63a3-a88d749a8a63}" showlabel="true" locklevel="0" labelid="{fec7711f-e5cd-4a20-9868-96232302ee3e}">
+                                <labels>
+                                  <label description="Resources" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_assignedresources" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="msdyn_assignedresources" disabled="false" uniqueid="{2d1e2e62-95b4-8c51-4449-141028adc347}" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{16223adc-ec85-adb5-d045-90a46404875c}" showlabel="true" locklevel="0" labelid="{8e5b86d8-bd51-49e7-b3f4-5e61860cc5b2}">
+                                <labels>
+                                  <label description="Assigned Team Members" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_assignedteammembers" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="msdyn_assignedteammembers" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{1ce0ea0e-a603-3c3d-b3c6-2e7d273d9c6d}" showlabel="true" locklevel="0" labelid="{60b9c344-dadc-430f-8962-0f9578715210}">
+                                <labels>
+                                  <label description="Status Reason" languagecode="1033" />
+                                </labels>
+                                <control id="statuscode" classid="{5D68B988-0661-4db2-BC3E-17598AD3BE6C}" datafieldname="statuscode" disabled="false" />
+                              </cell>
+                            </row>
+                          </rows>
+                        </section>
+                      </sections>
+                    </column>
+                    <column width="50%">
+                      <sections>
+                        <section showlabel="false" showbar="false" id="{4fdeb155-c726-4210-a41f-97ce03bd0a9d}" IsUserDefined="0" height="auto" name="{4fdeb155-c726-4210-a41f-97ce03bd0a9d}" columns="1" locklevel="0" labelwidth="115" celllabelalignment="Left" celllabelposition="Left" labelid="{af55ada2-96f9-43ab-af2a-5daa5f28c100}">
+                          <labels>
+                            <label description="Additional fields" languagecode="1033" />
+                          </labels>
+                          <rows>
+                            <row>
+                              <cell id="{cd04cce4-2f8e-42b0-85b1-57ae5d315525}" labelid="{3fe25b2b-0f82-4e9a-9396-a1c5e2afe70a}">
+                                <labels>
+                                  <label description="Owner" languagecode="1033" />
+                                </labels>
+                                <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{58c4140e-cc8a-4c2d-a0cc-25408f9b8939}" labelid="{e08ad700-de67-4433-8401-b0e433632187}">
+                                <labels>
+                                  <label description="Regarding" languagecode="1033" />
+                                </labels>
+                                <control id="regardingobjectid" classid="{F3015350-44A2-4aa0-97B5-00166532B5E9}" datafieldname="regardingobjectid" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{2e571542-9c47-2de9-c61c-de99126b1d71}" showlabel="true" locklevel="0" labelid="{00e15305-c421-4be9-80aa-16b80c3f0775}">
+                                <labels>
+                                  <label description="Parent Task" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_parenttask" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="msdyn_parenttask" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{764d804b-ea5a-aa95-b4d4-81670c5db80a}" showlabel="true" locklevel="0" labelid="{c6374f18-353b-433e-94e4-7d41744402c6}">
+                                <labels>
+                                  <label description="Project" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_project" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="msdyn_project" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{48ce67c1-c7d6-921c-aa60-d4e35c653855}" showlabel="true" locklevel="0" labelid="{3e56ce76-bf25-49b2-84ce-246d8ae32fb7}">
+                                <labels>
+                                  <label description="Description" languagecode="1033" />
+                                </labels>
+                                <control id="description" classid="{E0DECE4B-6FC8-4a8f-A065-082708572369}" datafieldname="description" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{04b399a3-3005-30a3-4845-e05160c95522}" showlabel="true" locklevel="0" labelid="{0baf531e-fb42-4837-8934-39d085addffa}">
+                                <labels>
+                                  <label description="Task Identifier" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_taskidentifierid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="fkh_taskidentifierid" disabled="false" uniqueid="{24e7556b-bce8-5ae4-25b8-54189717a439}">
+                                  <parameters>
+                                    <AutoResolve>true</AutoResolve>
+                                    <DisableMru>false</DisableMru>
+                                    <DisableQuickFind>false</DisableQuickFind>
+                                    <DisableViewPicker>false</DisableViewPicker>
+                                    <DefaultViewId>{AE06295D-87D3-4FB7-8ACA-4BFD86B6B76F}</DefaultViewId>
+                                    <AllowFilterOff>false</AllowFilterOff>
+                                  </parameters>
+                                </control>
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{a517a329-0633-a154-7982-490a092c7adc}" showlabel="true" locklevel="0" labelid="{4c2251b2-dee6-43a0-95bc-929c3beffab4}">
+                                <labels>
+                                  <label description="Resourcing unit" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_resourceorganizationalunitid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="msdyn_resourceorganizationalunitid" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{29261024-c408-ac26-2c0e-27d167cea64e}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Scheduled Duration" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_scheduleddurationminutes" classid="{AA987274-CE4E-4271-A803-66164311A958}" datafieldname="msdyn_scheduleddurationminutes" disabled="false" />
+                              </cell>
+                            </row>
+                          </rows>
+                        </section>
+                        <section name="notes_section" showlabel="false" showbar="false" locklevel="0" id="{b1dba879-e5c2-648b-8ba6-ead4c800dc2b}" IsUserDefined="0" layout="varwidth" columns="1" labelwidth="115" celllabelalignment="Left" celllabelposition="Left" labelid="{a5eb57a5-9a7d-4fe4-9b22-607b41f9bed3}">
+                          <labels>
+                            <label description="Notes" languagecode="1033" />
+                          </labels>
+                          <rows>
+                            <row>
+                              <cell id="{0a323d9a-981a-0e4a-bb3e-50d1c7a7c084}" showlabel="true" rowspan="15" auto="false" colspan="1" labelid="{578e8c3a-d05b-471d-9c58-a43ba4b84aa6}">
+                                <labels>
+                                  <label description="Note Text" languagecode="1033" />
+                                </labels>
+                                <control id="notescontrol" classid="{06375649-c143-495e-a496-c962e5b4488e}" />
+                              </cell>
+                            </row>
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                            <row />
+                          </rows>
+                        </section>
+                      </sections>
+                    </column>
+                  </columns>
+                </tab>
+                <tab name="tab_3" id="{80c6ed51-7e8d-2bb9-6c50-5d0817a40ad8}" IsUserDefined="0" locklevel="0" showlabel="true" expanded="false" labelid="{6d450f94-5c25-4a5d-9ed5-14a309f72c59}">
+                  <labels>
+                    <label description="Unit Information" languagecode="1033" />
+                  </labels>
+                  <columns>
+                    <column width="100%">
+                      <sections>
+                        <section name="tab_3_section_1" showlabel="false" showbar="false" locklevel="0" id="{e0c0458b-c27c-a6d2-1ee7-8ed1c2311042}" IsUserDefined="0" layout="varwidth" columns="11" labelwidth="115" celllabelalignment="Left" celllabelposition="Left" labelid="{974c5849-da7c-4330-bff2-9348d80b5ad1}">
+                          <labels>
+                            <label description="Section" languagecode="1033" />
+                          </labels>
+                          <rows>
+                            <row>
+                              <cell id="{dca5e617-7ad5-644b-b663-671069da7d47}" showlabel="true" locklevel="0" labelid="{418f5f69-3c1e-48cc-857a-cdb109239c57}">
+                                <labels>
+                                  <label description="Unit" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_unitid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="fkh_unitid" disabled="false" />
+                              </cell>
+                              <cell id="{67918d92-3745-b9c4-6620-da29d02190e7}" showlabel="true" locklevel="0" labelid="{760894c7-7f96-4f97-a833-ab099bd29bb8}">
+                                <labels>
+                                  <label description="Access Notes" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_accessnotes" classid="{E0DECE4B-6FC8-4a8f-A065-082708572369}" datafieldname="fkh_accessnotes" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{9a94315d-3cc8-d4e1-3406-6992ba28616a}" showlabel="true" locklevel="0" labelid="{8b5847d0-a46e-429c-8929-a8f1fd6e9854}">
+                                <labels>
+                                  <label description="Lockbox Removed" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_lockboxremoved" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="fkh_lockboxremoved" disabled="false" />
+                              </cell>
+                              <cell id="{7b5426c8-556a-4b22-eb4b-9b4b9a603642}" showlabel="true" locklevel="0" labelid="{d56c129d-f476-4da9-aef3-3ffec4158d7c}">
+                                <labels>
+                                  <label description="Property Gate Code" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_propertygatecode" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="fkh_propertygatecode" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{4c6b2040-5981-c386-0b54-ea136b556260}" showlabel="true" locklevel="0" labelid="{dd920af5-899e-45ea-a1df-dd52587f301d}">
+                                <labels>
+                                  <label description="Mechanical Lockbox" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_mechanicallockbox" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="fkh_mechanicallockbox" disabled="false" />
+                              </cell>
+                              <cell id="{c1a2dbc2-5484-43ce-4893-14a51954b2ae}" showlabel="true" locklevel="0" labelid="{5be6a47d-2383-4184-adcf-af84aa33540d}">
+                                <labels>
+                                  <label description="Mechanical Lockbox Note" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_mechanicallockboxnote" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="fkh_mechanicallockboxnote" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{04690456-08bc-4018-b1ae-e931b9007972}" showlabel="true" locklevel="0" labelid="{b27d50ad-0e06-4b72-8a7a-38c219251297}">
+                                <labels>
+                                  <label description="Rently Lockbox" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_rentlylockbox" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="fkh_rentlylockbox" disabled="false" />
+                              </cell>
+                              <cell id="{68c1709a-c98e-e6cd-a755-1b047e052d83}" showlabel="true" locklevel="0" labelid="{4a68272f-4827-4d41-9c86-c79c1ee10e3d}">
+                                <labels>
+                                  <label description="Rently Lockbox Note" languagecode="1033" />
+                                </labels>
+                                <control id="fkh_rentlylockboxnote" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="fkh_rentlylockboxnote" disabled="false" />
+                              </cell>
+                            </row>
+                          </rows>
+                        </section>
+                      </sections>
+                    </column>
+                  </columns>
+                </tab>
+              </tabs>
+              <header id="{baca1ba4-13df-4c32-861a-2a87c4bead1b}" celllabelposition="Top" columns="1111" labelwidth="115">
+                <rows>
+                  <row>
+                    <cell id="{7c6cc861-4f63-41b1-82d9-332c736c9d68}" labelid="{6aa1e4c7-99fc-4ccf-9327-8f97e56a59f8}">
+                      <labels>
+                        <label description="Priority" languagecode="1033" />
+                      </labels>
+                      <control id="header_prioritycode" classid="{3EF39988-22BB-4f0b-BBBE-64B5A3748AEE}" datafieldname="prioritycode" disabled="false" />
+                    </cell>
+                    <cell id="{93cd4255-098b-4077-a5f6-9e77df92ff36}" labelid="{148c813a-6e74-425c-b377-6e627aff5f36}">
+                      <labels>
+                        <label description="Due Date" languagecode="1033" />
+                      </labels>
+                      <control id="header_msdyn_scheduledend" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_scheduledend" disabled="false" />
+                    </cell>
+                    <cell id="{8656ed9d-1712-4265-a822-479b0520c44f}" labelid="{bb9c2b71-8f32-4035-abdf-02c878442e24}">
+                      <labels>
+                        <label description="Activity Status" languagecode="1033" />
+                      </labels>
+                      <control id="header_statecode" classid="{3EF39988-22BB-4f0b-BBBE-64B5A3748AEE}" datafieldname="statecode" disabled="false" />
+                    </cell>
+                    <cell id="{94b653ab-28e0-496b-bb1c-d8b2597b6fea}" labelid="{4d406e8c-2c54-442d-bacb-b0cb921f4245}">
+                      <labels>
+                        <label description="Owner" languagecode="1033" />
+                      </labels>
+                      <control id="header_ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" disabled="false" />
+                    </cell>
+                  </row>
+                </rows>
+              </header>
+              <Navigation>
+                <NavBar></NavBar>
+                <NavBarAreas>
+                  <NavBarArea Id="Info">
+                    <Titles>
+                      <Title LCID="1033" Text="Common" />
+                      <Title LCID="1025" Text="شائع" />
+                      <Title LCID="1026" Text="Общи" />
+                      <Title LCID="1027" Text="Comú" />
+                      <Title LCID="1029" Text="Společné" />
+                      <Title LCID="1030" Text="Almindelig" />
+                      <Title LCID="1031" Text="Gemeinsam verwendet" />
+                      <Title LCID="1032" Text="Κοινό" />
+                      <Title LCID="3082" Text="Común" />
+                      <Title LCID="1061" Text="Levinud" />
+                      <Title LCID="1069" Text="Ohikoak" />
+                      <Title LCID="1035" Text="Yhteiset" />
+                      <Title LCID="1036" Text="Éléments communs" />
+                      <Title LCID="1110" Text="Común" />
+                      <Title LCID="1037" Text="פריטים נפוצים" />
+                      <Title LCID="1081" Text="सामान्य" />
+                      <Title LCID="1050" Text="Uobičajeno" />
+                      <Title LCID="1038" Text="Közös" />
+                      <Title LCID="1057" Text="Umum" />
+                      <Title LCID="1040" Text="Elementi comuni" />
+                      <Title LCID="1041" Text="共通" />
+                      <Title LCID="1087" Text="Жалпы" />
+                      <Title LCID="1042" Text="일반" />
+                      <Title LCID="1063" Text="Įprasta" />
+                      <Title LCID="1062" Text="Kopējs" />
+                      <Title LCID="1086" Text="Umum" />
+                      <Title LCID="1044" Text="Felles" />
+                      <Title LCID="1043" Text="Algemeen" />
+                      <Title LCID="1045" Text="Wspólne" />
+                      <Title LCID="1046" Text="Comum" />
+                      <Title LCID="2070" Text="Comum" />
+                      <Title LCID="1048" Text="Comun" />
+                      <Title LCID="1049" Text="Общий" />
+                      <Title LCID="1051" Text="Bežné" />
+                      <Title LCID="1060" Text="Skupno" />
+                      <Title LCID="3098" Text="Уобичајено" />
+                      <Title LCID="2074" Text="Uobičajeno" />
+                      <Title LCID="1053" Text="Gemensamt" />
+                      <Title LCID="1054" Text="ทั่วไป" />
+                      <Title LCID="1055" Text="Ortak" />
+                      <Title LCID="1058" Text="Спільне" />
+                      <Title LCID="1066" Text="Thông thường" />
+                      <Title LCID="2052" Text="公用" />
+                      <Title LCID="3076" Text="一般" />
+                      <Title LCID="1028" Text="一般" />
+                    </Titles>
+                  </NavBarArea>
+                  <NavBarArea Id="Sales">
+                    <Titles>
+                      <Title LCID="1033" Text="Sales" />
+                      <Title LCID="1025" Text="‏‏مبيعات" />
+                      <Title LCID="1026" Text="Продажби" />
+                      <Title LCID="1027" Text="Vendes" />
+                      <Title LCID="1029" Text="Prodej" />
+                      <Title LCID="1030" Text="Salg" />
+                      <Title LCID="1031" Text="Vertrieb" />
+                      <Title LCID="1032" Text="Πωλήσεις" />
+                      <Title LCID="3082" Text="Ventas" />
+                      <Title LCID="1061" Text="Müük" />
+                      <Title LCID="1069" Text="Salmentak" />
+                      <Title LCID="1035" Text="Myynti" />
+                      <Title LCID="1036" Text="Ventes" />
+                      <Title LCID="1110" Text="Vendas" />
+                      <Title LCID="1037" Text="מכירות" />
+                      <Title LCID="1081" Text="विक्रय" />
+                      <Title LCID="1050" Text="Prodaja" />
+                      <Title LCID="1038" Text="Értékesítés" />
+                      <Title LCID="1057" Text="Penjualan" />
+                      <Title LCID="1040" Text="Vendite" />
+                      <Title LCID="1041" Text="営業" />
+                      <Title LCID="1087" Text="Сатылым" />
+                      <Title LCID="1042" Text="영업" />
+                      <Title LCID="1063" Text="Pardavimas" />
+                      <Title LCID="1062" Text="Pārdošana" />
+                      <Title LCID="1086" Text="Jualan" />
+                      <Title LCID="1044" Text="Salg" />
+                      <Title LCID="1043" Text="Verkoop" />
+                      <Title LCID="1045" Text="Sprzedaż" />
+                      <Title LCID="1046" Text="Vendas" />
+                      <Title LCID="2070" Text="Vendas" />
+                      <Title LCID="1048" Text="Vânzări" />
+                      <Title LCID="1049" Text="Продажи" />
+                      <Title LCID="1051" Text="Predaj" />
+                      <Title LCID="1060" Text="Prodaja" />
+                      <Title LCID="3098" Text="Продаја" />
+                      <Title LCID="2074" Text="Prodaja" />
+                      <Title LCID="1053" Text="Försäljning" />
+                      <Title LCID="1054" Text="การขาย" />
+                      <Title LCID="1055" Text="Satış" />
+                      <Title LCID="1058" Text="Збут" />
+                      <Title LCID="1066" Text="Bán hàng" />
+                      <Title LCID="2052" Text="销售" />
+                      <Title LCID="3076" Text="銷售" />
+                      <Title LCID="1028" Text="銷售" />
+                    </Titles>
+                  </NavBarArea>
+                  <NavBarArea Id="Service">
+                    <Titles>
+                      <Title LCID="1033" Text="Service" />
+                      <Title LCID="1025" Text="الخدمة" />
+                      <Title LCID="1026" Text="Обслужване" />
+                      <Title LCID="1027" Text="Servei" />
+                      <Title LCID="1029" Text="Služby" />
+                      <Title LCID="1030" Text="Service" />
+                      <Title LCID="1031" Text="Service" />
+                      <Title LCID="1032" Text="Υπηρεσία" />
+                      <Title LCID="3082" Text="Servicio" />
+                      <Title LCID="1061" Text="Teenindus" />
+                      <Title LCID="1069" Text="Zerbitzua" />
+                      <Title LCID="1035" Text="Palvelu" />
+                      <Title LCID="1036" Text="Service" />
+                      <Title LCID="1110" Text="Servizo" />
+                      <Title LCID="1037" Text="שירות" />
+                      <Title LCID="1081" Text="सेवा" />
+                      <Title LCID="1050" Text="Usluga" />
+                      <Title LCID="1038" Text="Szolgáltatás" />
+                      <Title LCID="1057" Text="Layanan" />
+                      <Title LCID="1040" Text="Servizio" />
+                      <Title LCID="1041" Text="サービス" />
+                      <Title LCID="1087" Text="Қызмет" />
+                      <Title LCID="1042" Text="서비스" />
+                      <Title LCID="1063" Text="Aptarnavimas" />
+                      <Title LCID="1062" Text="Serviss" />
+                      <Title LCID="1086" Text="Perkhidmatan" />
+                      <Title LCID="1044" Text="Service" />
+                      <Title LCID="1043" Text="Service" />
+                      <Title LCID="1045" Text="Usługa" />
+                      <Title LCID="1046" Text="Serviço" />
+                      <Title LCID="2070" Text="Serviço" />
+                      <Title LCID="1048" Text="Serviciu" />
+                      <Title LCID="1049" Text="Сервис" />
+                      <Title LCID="1051" Text="Služba" />
+                      <Title LCID="1060" Text="Storitev" />
+                      <Title LCID="3098" Text="Услуга" />
+                      <Title LCID="2074" Text="Usluga" />
+                      <Title LCID="1053" Text="Tjänst" />
+                      <Title LCID="1054" Text="การบริการ" />
+                      <Title LCID="1055" Text="Servis" />
+                      <Title LCID="1058" Text="Послуга" />
+                      <Title LCID="1066" Text="Dịch vụ" />
+                      <Title LCID="2052" Text="服务" />
+                      <Title LCID="3076" Text="服務" />
+                      <Title LCID="1028" Text="服務" />
+                    </Titles>
+                  </NavBarArea>
+                  <NavBarArea Id="Marketing">
+                    <Titles>
+                      <Title LCID="1033" Text="Marketing" />
+                      <Title LCID="1025" Text="التسويق" />
+                      <Title LCID="1026" Text="Маркетинг" />
+                      <Title LCID="1027" Text="Màrqueting" />
+                      <Title LCID="1029" Text="Marketing" />
+                      <Title LCID="1030" Text="Marketing" />
+                      <Title LCID="1031" Text="Marketing" />
+                      <Title LCID="1032" Text="Μάρκετινγκ" />
+                      <Title LCID="3082" Text="Marketing" />
+                      <Title LCID="1061" Text="Turundus" />
+                      <Title LCID="1069" Text="Marketina" />
+                      <Title LCID="1035" Text="Markkinointi" />
+                      <Title LCID="1036" Text="Marketing" />
+                      <Title LCID="1110" Text="Márketing" />
+                      <Title LCID="1037" Text="שיווק" />
+                      <Title LCID="1081" Text="मार्केटिंग" />
+                      <Title LCID="1050" Text="Marketing" />
+                      <Title LCID="1038" Text="Marketing" />
+                      <Title LCID="1057" Text="Pemasaran" />
+                      <Title LCID="1040" Text="Marketing" />
+                      <Title LCID="1041" Text="マーケティング" />
+                      <Title LCID="1087" Text="Маркетинг" />
+                      <Title LCID="1042" Text="마케팅" />
+                      <Title LCID="1063" Text="Rinkodara" />
+                      <Title LCID="1062" Text="Mārketings" />
+                      <Title LCID="1086" Text="Pemasaran" />
+                      <Title LCID="1044" Text="Markedsføring" />
+                      <Title LCID="1043" Text="Marketing" />
+                      <Title LCID="1045" Text="Marketing" />
+                      <Title LCID="1046" Text="Marketing" />
+                      <Title LCID="2070" Text="Marketing" />
+                      <Title LCID="1048" Text="Marketing" />
+                      <Title LCID="1049" Text="Маркетинг" />
+                      <Title LCID="1051" Text="Marketing" />
+                      <Title LCID="1060" Text="Trženje" />
+                      <Title LCID="3098" Text="Маркетинг" />
+                      <Title LCID="2074" Text="Marketing" />
+                      <Title LCID="1053" Text="Marknadsföring" />
+                      <Title LCID="1054" Text="การตลาด" />
+                      <Title LCID="1055" Text="Pazarlama" />
+                      <Title LCID="1058" Text="Маркетинг" />
+                      <Title LCID="1066" Text="Tiếp thị" />
+                      <Title LCID="2052" Text="市场营销" />
+                      <Title LCID="3076" Text="行銷" />
+                      <Title LCID="1028" Text="行銷" />
+                    </Titles>
+                  </NavBarArea>
+                  <NavBarArea Id="ProcessCenter">
+                    <Titles>
+                      <Title LCID="1033" Text="Process Sessions" />
+                      <Title LCID="1025" Text="جلسات عمل العمليات" />
+                      <Title LCID="1026" Text="Сесии на процес" />
+                      <Title LCID="1027" Text="Sessions del procés" />
+                      <Title LCID="1029" Text="Relace procesů" />
+                      <Title LCID="1030" Text="Processessioner" />
+                      <Title LCID="1031" Text="Prozesssitzungen" />
+                      <Title LCID="1032" Text="Περίοδοι λειτουργίας διεργασίας" />
+                      <Title LCID="3082" Text="Sesiones de proceso" />
+                      <Title LCID="1061" Text="Protsessiseansid" />
+                      <Title LCID="1069" Text="Prozesu-saioak" />
+                      <Title LCID="1035" Text="Prosessin istunnot" />
+                      <Title LCID="1036" Text="Sessions de traitement" />
+                      <Title LCID="1110" Text="Sesións de proceso" />
+                      <Title LCID="1037" Text="הפעלות תהליך" />
+                      <Title LCID="1081" Text="प्रक्रिया सत्र" />
+                      <Title LCID="1050" Text="Sesije procesa" />
+                      <Title LCID="1038" Text="Feldolgozási munkamenetek" />
+                      <Title LCID="1057" Text="Sesi Proses" />
+                      <Title LCID="1040" Text="Sessioni processo" />
+                      <Title LCID="1041" Text="プロセス セッション" />
+                      <Title LCID="1087" Text="Процесс сеанстары" />
+                      <Title LCID="1042" Text="프로세스 세션" />
+                      <Title LCID="1063" Text="Apdorojimo seansai" />
+                      <Title LCID="1062" Text="Apstrādes sesijas" />
+                      <Title LCID="1086" Text="Proses Sesi" />
+                      <Title LCID="1044" Text="Prosessøkter" />
+                      <Title LCID="1043" Text="Processessies" />
+                      <Title LCID="1045" Text="Sesje procesów" />
+                      <Title LCID="1046" Text="Sessões de Processo" />
+                      <Title LCID="2070" Text="Processar Sessões" />
+                      <Title LCID="1048" Text="Sesiuni de proces" />
+                      <Title LCID="1049" Text="Сеансы процесса" />
+                      <Title LCID="1051" Text="Relácie procesov" />
+                      <Title LCID="1060" Text="Seje procesov" />
+                      <Title LCID="3098" Text="Сесије процеса" />
+                      <Title LCID="2074" Text="Sesije procesa" />
+                      <Title LCID="1053" Text="Processessioner" />
+                      <Title LCID="1054" Text="เซสชันของกระบวนการ" />
+                      <Title LCID="1055" Text="İşlem Oturumları" />
+                      <Title LCID="1058" Text="Сеанси процесів" />
+                      <Title LCID="1066" Text="Giao dịch quy trình" />
+                      <Title LCID="2052" Text="进程会话" />
+                      <Title LCID="3076" Text="程序工作階段" />
+                      <Title LCID="1028" Text="程序工作階段" />
+                    </Titles>
+                  </NavBarArea>
+                </NavBarAreas>
+              </Navigation>
+              <controlDescriptions />
+              <DisplayConditions Order="1">
+                <Role Id="{627090ff-40a3-4053-8790-584edc5be201}" />
+                <Role Id="{119f245c-3cc8-4b62-b31c-d1a046ced15d}" />
+              </DisplayConditions>
+            </form>
+            <IsCustomizable>1</IsCustomizable>
+            <CanBeDeleted>1</CanBeDeleted>
+            <LocalizedNames>
+              <LocalizedName description="Admin" languagecode="1033" />
+            </LocalizedNames>
+          </systemform>
+        </forms>
+        <forms type="quickCreate">
+          <systemform unmodified="1">
+            <formid>{47d95a1e-19c3-4983-a511-4cdde7582086}</formid>
+            <IntroducedVersion>1.0.0.1</IntroducedVersion>
+            <FormPresentation>1</FormPresentation>
+            <FormActivationState>1</FormActivationState>
+            <form>
+              <tabs>
+                <tab id="{1a706560-2806-4cc8-a5ed-16081b6abcb3}" name="tab_1" showlabel="false">
+                  <labels>
+                    <label description="Tab" languagecode="1033" />
+                  </labels>
+                  <columns>
+                    <column width="33%">
+                      <sections>
+                        <section id="{7e54dd18-bc69-462a-aa07-612a0e1a8a49}" name="tab_1_column_1_section_1" columns="1" showlabel="false" showbar="false" IsUserDefined="0">
+                          <labels>
+                            <label description="section" languagecode="1033" />
+                          </labels>
+                          <rows>
+                            <row>
+                              <cell id="{3de4a614-538e-0414-791b-4b3c4cbd8c8c}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Project" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_project" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="msdyn_project" disabled="false" />
+                              </cell>
+                            </row>
+                          </rows>
+                        </section>
+                      </sections>
+                    </column>
+                    <column width="33%">
+                      <sections>
+                        <section id="{4cf81e4c-8cd2-42e1-aefb-a9c58e55bff7}" name="tab_1_column_2_section_1" columns="1" showlabel="false" showbar="false" IsUserDefined="0">
+                          <labels>
+                            <label description="section" languagecode="1033" />
+                          </labels>
+                          <rows>
+                            <row>
+                              <cell id="{5ad0d51a-06d2-7832-9d3d-366a22e9099b}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Subject" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_subject" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="msdyn_subject" disabled="false" />
+                              </cell>
+                            </row>
+                          </rows>
+                        </section>
+                      </sections>
+                    </column>
+                    <column width="33%">
+                      <sections>
+                        <section id="{021a47e4-8eb0-4400-8a09-7cd639c51934}" name="tab_1_column_3_section_1" columns="1" showlabel="false" showbar="false" IsUserDefined="0">
+                          <labels>
+                            <label description="section" languagecode="1033" />
+                          </labels>
+                          <rows>
+                            <row>
+                              <cell id="{cd985d2c-2503-4d2a-1997-c7704ed825c3}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Start Date" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_scheduledstart" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_scheduledstart" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{7b663b78-799b-5e97-b5aa-5d92eb170347}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Due Date" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_scheduledend" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_scheduledend" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{7452a0c9-a653-3bc7-17b3-a1b956908a5a}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Effort Hours" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_effort" classid="{0D2C745A-E5A8-4c8f-BA63-C6D3BB604660}" datafieldname="msdyn_effort" disabled="false" />
+                              </cell>
+                            </row>
+                          </rows>
+                        </section>
+                      </sections>
+                    </column>
+                  </columns>
+                </tab>
+              </tabs>
+              <DisplayConditions Order="1">
+                <Role Id="{627090ff-40a3-4053-8790-584edc5be201}" />
+              </DisplayConditions>
+            </form>
+            <LocalizedNames>
+              <LocalizedName description="New Form" languagecode="1033" />
+            </LocalizedNames>
+          </systemform>
+        </forms>
+        <forms type="quick">
+          <systemform unmodified="1">
+            <formid>{b048a6d2-7a9c-42c1-91c8-e9a0f8dc0f18}</formid>
+            <IntroducedVersion>1.0.0.1</IntroducedVersion>
+            <FormPresentation>1</FormPresentation>
+            <FormActivationState>1</FormActivationState>
+            <form>
+              <tabs>
+                <tab id="{dd7f247f-61e0-49af-9d20-63d2202357dd}" name="tab_1" showlabel="false">
+                  <labels>
+                    <label description="Tab" languagecode="1033" />
+                  </labels>
+                  <columns>
+                    <column width="100%">
+                      <sections>
+                        <section id="{9750d5dc-8aa7-4635-a4cd-5de90c8085bd}" name="tab_1_column_1_section_1" columns="1" showlabel="false" showbar="false" IsUserDefined="0">
+                          <labels>
+                            <label description="section" languagecode="1033" />
+                          </labels>
+                          <rows>
+                            <row>
+                              <cell id="{9cbab5dc-c619-ded9-7d4e-33b645dc5a5b}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Subject" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_subject" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="msdyn_subject" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{db21e3d7-55a3-3731-b074-10b621045e4d}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Due Date" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_scheduledend" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="msdyn_scheduledend" disabled="false" />
+                              </cell>
+                            </row>
+                            <row>
+                              <cell id="{8e659656-7106-5c23-ec59-1861a2606843}" showlabel="true" locklevel="0">
+                                <labels>
+                                  <label description="Scheduled Duration" languagecode="1033" />
+                                </labels>
+                                <control id="msdyn_scheduleddurationminutes" classid="{AA987274-CE4E-4271-A803-66164311A958}" datafieldname="msdyn_scheduleddurationminutes" disabled="false" />
+                              </cell>
+                            </row>
+                          </rows>
+                        </section>
+                      </sections>
+                    </column>
+                  </columns>
+                </tab>
+              </tabs>
+              <DisplayConditions Order="1">
+                <Role Id="{627090ff-40a3-4053-8790-584edc5be201}" />
+              </DisplayConditions>
+            </form>
+            <LocalizedNames>
+              <LocalizedName description="New Form" languagecode="1033" />
+            </LocalizedNames>
+          </systemform>
+        </forms>
+      </FormXml>
+      <SavedQueries>
+        <savedqueries>
+          <savedquery>
+            <isquickfindquery>0</isquickfindquery>
+            <isprivate>0</isprivate>
+            <isdefault>0</isdefault>
+            <savedqueryid>{1a0f550d-9c2b-4007-82e0-e52c06f59c88}</savedqueryid>
+            <layoutxml>
+              <grid name="resultset" jump="msdyn_subject" select="1" icon="1" preview="1">
+                <row name="result" id="msdyn_projecttaskid">
+                  <cell name="msdyn_wbsid" width="100" />
+                  <cell name="msdyn_subject" width="300" />
+                  <cell name="statuscode" width="100" />
+                  <cell name="msdyn_scheduledstart" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_actualstart" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_scheduledend" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_actualend" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_scheduleddurationminutes" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_actualdurationminutes" width="100" />
+                </row>
+              </grid>
+            </layoutxml>
+            <querytype>0</querytype>
+            <fetchxml>
+              <fetch version="1.0" mapping="logical">
+                <entity name="msdyn_projecttask">
+                  <attribute name="msdyn_subject" />
+                  <order attribute="msdyn_scheduledstart" descending="false" />
+                  <filter type="and">
+                    <condition attribute="statecode" operator="not-null" />
+                    <condition attribute="msdyn_islinetask" operator="eq" value="0" />
+                  </filter>
+                  <attribute name="statuscode" />
+                  <attribute name="msdyn_scheduledend" />
+                  <attribute name="msdyn_scheduleddurationminutes" />
+                  <attribute name="msdyn_actualdurationminutes" />
+                  <attribute name="msdyn_scheduledstart" />
+                  <attribute name="msdyn_actualstart" />
+                  <attribute name="msdyn_actualend" />
+                  <attribute name="msdyn_wbsid" />
+                  <attribute name="msdyn_projecttaskid" />
+                </entity>
+              </fetch>
+            </fetchxml>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <LocalizedNames>
+              <LocalizedName description="All Project Tasks" languagecode="1033" />
+            </LocalizedNames>
+          </savedquery>
+          <savedquery>
+            <IsCustomizable>1</IsCustomizable>
+            <CanBeDeleted>1</CanBeDeleted>
+            <isquickfindquery>0</isquickfindquery>
+            <isprivate>0</isprivate>
+            <isdefault>0</isdefault>
+            <savedqueryid>{70997c78-0be1-e811-a972-000d3a16ac21}</savedqueryid>
+            <layoutxml>
+              <grid name="resultset" jump="msdyn_subject" select="1" icon="1" preview="1">
+                <row name="result" id="msdyn_projecttaskid">
+                  <cell name="msdyn_assignedteammembers" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_subject" width="300" />
+                  <cell name="msdyn_scheduledstart" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_actualstart" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_scheduledend" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_actualend" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_scheduleddurationminutes" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_actualdurationminutes" width="100" />
+                  <cell name="msdyn_project" width="100" />
+                  <cell name="a_575e2f242c3ee811a995000d3a192311.fkh_unitid" width="100" disableSorting="1" />
+                </row>
+              </grid>
+            </layoutxml>
+            <querytype>0</querytype>
+            <fetchxml>
+              <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+                <entity name="msdyn_projecttask">
+                  <attribute name="msdyn_subject" />
+                  <attribute name="msdyn_scheduledend" />
+                  <attribute name="msdyn_scheduleddurationminutes" />
+                  <attribute name="msdyn_actualdurationminutes" />
+                  <attribute name="msdyn_scheduledstart" />
+                  <attribute name="msdyn_actualstart" />
+                  <attribute name="msdyn_actualend" />
+                  <attribute name="msdyn_project" />
+                  <attribute name="msdyn_assignedteammembers" />
+                  <order attribute="msdyn_scheduledend" descending="false" />
+                  <filter type="and">
+                    <condition attribute="msdyn_actualstart" operator="not-null" />
+                    <condition attribute="msdyn_actualend" operator="null" />
+                    <condition attribute="msdyn_subject" operator="eq" value="Work in progress" />
+                  </filter>
+                  <link-entity name="msdyn_project" from="msdyn_projectid" to="msdyn_project" alias="a_575e2f242c3ee811a995000d3a192311">
+                    <attribute name="fkh_unitid" />
+                    <filter type="and">
+                      <condition attribute="msdyn_projecttemplate" operator="not-null" />
+                    </filter>
+                  </link-entity>
+                  <attribute name="msdyn_projecttaskid" />
+                </entity>
+              </fetch>
+            </fetchxml>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <LocalizedNames>
+              <LocalizedName description="Current Work In Progress" languagecode="1033" />
+            </LocalizedNames>
+          </savedquery>
+          <savedquery>
+            <isquickfindquery>0</isquickfindquery>
+            <isprivate>0</isprivate>
+            <isdefault>1</isdefault>
+            <savedqueryid>{d0a93df9-04fe-47c9-9e5d-bb7aeff65a0a}</savedqueryid>
+            <layoutxml>
+              <grid name="resultset" jump="msdyn_subject" select="1" icon="1" preview="1">
+                <row name="result" id="msdyn_projecttaskid">
+                  <cell name="a_575e2f242c3ee811a995000d3a192311.fkh_unitid" width="100" disableSorting="1" />
+                  <cell name="msdyn_subject" width="300" />
+                  <cell name="msdyn_scheduledstart" width="100" />
+                  <cell name="msdyn_actualstart" width="100" />
+                  <cell name="msdyn_scheduledend" width="100" />
+                  <cell name="msdyn_actualend" width="100" />
+                  <cell name="msdyn_scheduleddurationminutes" width="100" />
+                  <cell name="msdyn_actualdurationminutes" width="100" />
+                  <cell name="msdyn_project" width="100" />
+                </row>
+              </grid>
+            </layoutxml>
+            <querytype>0</querytype>
+            <fetchxml>
+              <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+                <entity name="msdyn_projecttask">
+                  <attribute name="msdyn_subject" />
+                  <attribute name="msdyn_scheduledstart" />
+                  <attribute name="msdyn_scheduleddurationminutes" />
+                  <attribute name="msdyn_project" />
+                  <attribute name="msdyn_scheduledend" />
+                  <attribute name="msdyn_actualstart" />
+                  <attribute name="msdyn_actualend" />
+                  <attribute name="msdyn_actualdurationminutes" />
+                  <order attribute="msdyn_scheduledend" descending="false" />
+                  <filter type="and">
+                    <condition attribute="statecode" operator="eq" value="0" />
+                    <condition attribute="msdyn_islinetask" operator="eq" value="0" />
+                    <condition attribute="ownerid" operator="eq-userid" />
+                  </filter>
+                  <link-entity name="msdyn_project" from="msdyn_projectid" to="msdyn_project" visible="false" link-type="outer" alias="a_575e2f242c3ee811a995000d3a192311">
+                    <attribute name="fkh_unitid" />
+                  </link-entity>
+                  <attribute name="msdyn_projecttaskid" />
+                </entity>
+              </fetch>
+            </fetchxml>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <LocalizedNames>
+              <LocalizedName description="My Open Project Tasks" languagecode="1033" />
+            </LocalizedNames>
+          </savedquery>
+          <savedquery>
+            <IsCustomizable>1</IsCustomizable>
+            <CanBeDeleted>1</CanBeDeleted>
+            <isquickfindquery>0</isquickfindquery>
+            <isprivate>0</isprivate>
+            <isdefault>0</isdefault>
+            <savedqueryid>{156dcf93-afde-e811-a973-000d3a16a650}</savedqueryid>
+            <layoutxml>
+              <grid name="resultset" jump="msdyn_subject" select="1" icon="1" preview="1">
+                <row name="result" id="msdyn_projecttaskid">
+                  <cell name="msdyn_assignedteammembers" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_subject" width="300" />
+                  <cell name="msdyn_scheduledstart" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_actualstart" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_scheduledend" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_actualend" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_scheduleddurationminutes" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_actualdurationminutes" width="100" />
+                  <cell name="msdyn_project" width="100" />
+                  <cell name="a_575e2f242c3ee811a995000d3a192311.fkh_unitid" width="100" disableSorting="1" />
+                </row>
+              </grid>
+            </layoutxml>
+            <querytype>0</querytype>
+            <fetchxml>
+              <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+                <entity name="msdyn_projecttask">
+                  <attribute name="msdyn_subject" />
+                  <attribute name="msdyn_scheduledend" />
+                  <attribute name="msdyn_scheduleddurationminutes" />
+                  <attribute name="msdyn_actualdurationminutes" />
+                  <attribute name="msdyn_scheduledstart" />
+                  <attribute name="msdyn_actualstart" />
+                  <attribute name="msdyn_actualend" />
+                  <attribute name="msdyn_project" />
+                  <attribute name="msdyn_assignedteammembers" />
+                  <order attribute="msdyn_scheduledend" descending="false" />
+                  <filter type="and">
+                    <condition attribute="msdyn_actualstart" operator="not-null" />
+                    <condition attribute="msdyn_actualend" operator="null" />
+                    <condition attribute="msdyn_scheduledend" operator="olderthan-x-minutes" value="1" />
+                  </filter>
+                  <link-entity name="msdyn_project" from="msdyn_projectid" to="msdyn_project" alias="a_575e2f242c3ee811a995000d3a192311">
+                    <attribute name="fkh_unitid" />
+                    <filter type="and">
+                      <condition attribute="msdyn_projecttemplate" operator="not-null" />
+                    </filter>
+                  </link-entity>
+                  <attribute name="msdyn_projecttaskid" />
+                </entity>
+              </fetch>
+            </fetchxml>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <LocalizedNames>
+              <LocalizedName description="Overdue Project Tasks In Progress" languagecode="1033" />
+            </LocalizedNames>
+          </savedquery>
+          <savedquery>
+            <isquickfindquery>1</isquickfindquery>
+            <isprivate>0</isprivate>
+            <isdefault>1</isdefault>
+            <savedqueryid>{d4ee54dd-34c4-4d49-83a8-7b04d638feba}</savedqueryid>
+            <layoutxml>
+              <grid name="resultset" jump="msdyn_subject" select="1" icon="1" preview="1">
+                <row name="result" id="msdyn_projecttaskid">
+                  <cell name="msdyn_subject" width="300" />
+                  <cell name="createdon" width="125" />
+                </row>
+              </grid>
+            </layoutxml>
+            <querytype>4</querytype>
+            <fetchxml>
+              <fetch version="1.0" mapping="logical">
+                <entity name="msdyn_projecttask">
+                  <attribute name="msdyn_subject" />
+                  <attribute name="createdon" />
+                  <order attribute="msdyn_subject" descending="false" />
+                  <filter type="and">
+                    <condition attribute="msdyn_islinetask" operator="eq" value="0" />
+                  </filter>
+                  <filter type="or" isquickfindfields="1">
+                    <condition attribute="msdyn_subject" operator="like" value="{0}" />
+                    <condition attribute="fkh_unitid" operator="like" value="{0}" />
+                  </filter>
+                  <attribute name="msdyn_projecttaskid" />
+                </entity>
+              </fetch>
+            </fetchxml>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <LocalizedNames>
+              <LocalizedName description="Quick Find Active Project Tasks" languagecode="1033" />
+            </LocalizedNames>
+          </savedquery>
+          <savedquery>
+            <IsCustomizable>1</IsCustomizable>
+            <CanBeDeleted>1</CanBeDeleted>
+            <isquickfindquery>0</isquickfindquery>
+            <isprivate>0</isprivate>
+            <isdefault>0</isdefault>
+            <savedqueryid>{7786601d-0ce1-e811-a972-000d3a16ac21}</savedqueryid>
+            <layoutxml>
+              <grid name="resultset" jump="msdyn_subject" select="1" icon="1" preview="1">
+                <row name="result" id="msdyn_projecttaskid">
+                  <cell name="msdyn_assignedteammembers" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_subject" width="300" />
+                  <cell name="msdyn_scheduledstart" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_actualstart" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_scheduledend" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_actualend" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_scheduleddurationminutes" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+                  <cell name="msdyn_actualdurationminutes" width="100" />
+                  <cell name="msdyn_project" width="100" />
+                  <cell name="a_575e2f242c3ee811a995000d3a192311.fkh_unitid" width="100" disableSorting="1" />
+                </row>
+              </grid>
+            </layoutxml>
+            <querytype>0</querytype>
+            <fetchxml>
+              <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+                <entity name="msdyn_projecttask">
+                  <attribute name="msdyn_subject" />
+                  <attribute name="msdyn_scheduledend" />
+                  <attribute name="msdyn_scheduleddurationminutes" />
+                  <attribute name="msdyn_actualdurationminutes" />
+                  <attribute name="msdyn_scheduledstart" />
+                  <attribute name="msdyn_actualstart" />
+                  <attribute name="msdyn_actualend" />
+                  <attribute name="msdyn_project" />
+                  <attribute name="msdyn_assignedteammembers" />
+                  <order attribute="msdyn_scheduledend" descending="false" />
+                  <filter type="and">
+                    <condition attribute="msdyn_actualstart" operator="not-null" />
+                    <condition attribute="msdyn_actualend" operator="null" />
+                    <condition attribute="msdyn_subject" operator="eq" value="Work in progress" />
+                    <condition attribute="msdyn_scheduledend" operator="olderthan-x-minutes" value="1" />
+                  </filter>
+                  <link-entity name="msdyn_project" from="msdyn_projectid" to="msdyn_project" alias="a_575e2f242c3ee811a995000d3a192311">
+                    <attribute name="fkh_unitid" />
+                    <filter type="and">
+                      <condition attribute="msdyn_projecttemplate" operator="not-null" />
+                    </filter>
+                  </link-entity>
+                  <attribute name="msdyn_projecttaskid" />
+                </entity>
+              </fetch>
+            </fetchxml>
+            <IntroducedVersion>1.0.0.0</IntroducedVersion>
+            <LocalizedNames>
+              <LocalizedName description="Work In Progress Behind Schedule" languagecode="1033" />
+            </LocalizedNames>
+          </savedquery>
+        </savedqueries>
+      </SavedQueries>
+      <RibbonDiffXml>
+        <CustomActions>
+          <CustomAction Id="fkh.msdyn_projecttask.Fail.Button.CustomAction" Location="Mscrm.Form.msdyn_projecttask.MainTab.Save.Controls._children" Sequence="19">
+            <CommandUIDefinition>
+              <Button Alt="$LocLabels:fkh.msdyn_projecttask.Fail.Button.Alt" Command="fkh.msdyn_projecttask.Fail.Command" Id="fkh.msdyn_projecttask.Fail.Button" Image32by32="/_imgs/ribbon/ActivtiyClose_32.png" Image16by16="/_imgs/ribbon/Close_16.png" LabelText="$LocLabels:fkh.msdyn_projecttask.Fail.Button.LabelText" Sequence="19" TemplateAlias="o1" ToolTipTitle="$LocLabels:fkh.msdyn_projecttask.Fail.Button.ToolTipTitle" ToolTipDescription="$LocLabels:fkh.msdyn_projecttask.Fail.Button.ToolTipDescription" />
+            </CommandUIDefinition>
+          </CustomAction>
+          <CustomAction Id="fkh.msdyn_projecttask.MarkDone.Button.CustomAction" Location="Mscrm.Form.msdyn_projecttask.MainTab.Save.Controls._children" Sequence="15">
+            <CommandUIDefinition>
+              <Button Alt="$LocLabels:fkh.msdyn_projecttask.MarkDone.Button.Alt" Command="fkh.msdyn_projecttask.MarkDone.Command" Id="fkh.msdyn_projecttask.MarkDone.Button" Image32by32="/_imgs/ribbon/SaveAsCompleted_32.png" Image16by16="/_imgs/ribbon/MarkAsComplete_16.png" LabelText="$LocLabels:fkh.msdyn_projecttask.MarkDone.Button.LabelText" Sequence="15" TemplateAlias="o1" ToolTipTitle="$LocLabels:fkh.msdyn_projecttask.MarkDone.Button.ToolTipTitle" ToolTipDescription="$LocLabels:fkh.msdyn_projecttask.MarkDone.Button.ToolTipDescription" />
+            </CommandUIDefinition>
+          </CustomAction>
+          <CustomAction Id="fkh.msdyn_projecttask.Pass.Button.CustomAction" Location="Mscrm.Form.msdyn_projecttask.MainTab.Save.Controls._children" Sequence="18">
+            <CommandUIDefinition>
+              <Button Alt="$LocLabels:fkh.msdyn_projecttask.Pass.Button.Alt" Command="fkh.msdyn_projecttask.Pass.Command" Id="fkh.msdyn_projecttask.Pass.Button" Image32by32="/_imgs/ribbon/SaveAsCompleted_32.png" Image16by16="/_imgs/ribbon/MarkAsComplete_16.png" LabelText="$LocLabels:fkh.msdyn_projecttask.Pass.Button.LabelText" Sequence="18" TemplateAlias="o1" ToolTipTitle="$LocLabels:fkh.msdyn_projecttask.Pass.Button.ToolTipTitle" ToolTipDescription="$LocLabels:fkh.msdyn_projecttask.Pass.Button.ToolTipDescription" />
+            </CommandUIDefinition>
+          </CustomAction>
+          <CustomAction Id="fkh.msdyn_projecttask.StartTask.Button.CustomAction" Location="Mscrm.Form.msdyn_projecttask.MainTab.Save.Controls._children" Sequence="13">
+            <CommandUIDefinition>
+              <Button Alt="$LocLabels:fkh.msdyn_projecttask.StartTask.Button.Alt" Command="fkh.msdyn_projecttask.StartTask.Command" Id="fkh.msdyn_projecttask.StartTask.Button" Image32by32="$webresource:fkh_Next_32x32.png" Image16by16="$webresource:fkh_Next_16x16.png" LabelText="$LocLabels:fkh.msdyn_projecttask.StartTask.Button.LabelText" Sequence="13" TemplateAlias="o1" ToolTipTitle="$LocLabels:fkh.msdyn_projecttask.StartTask.Button.ToolTipTitle" ToolTipDescription="$LocLabels:fkh.msdyn_projecttask.StartTask.Button.ToolTipDescription" />
+            </CommandUIDefinition>
+          </CustomAction>
+        </CustomActions>
+        <Templates>
+          <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
+        </Templates>
+        <CommandDefinitions>
+          <CommandDefinition Id="fkh.msdyn_projecttask.Fail.Command">
+            <EnableRules>
+              <EnableRule Id="fkh.msdyn_projecttask.PassFail.EnableRule" />
+            </EnableRules>
+            <DisplayRules />
+            <Actions>
+              <JavaScriptFunction FunctionName="FKH.FieldAndProjectServices.ProjectTaskRibbon.onClick_Fail" Library="$webresource:fkh_fieldAndProjectServices_projectTaskRibbon.js" />
+            </Actions>
+          </CommandDefinition>
+          <CommandDefinition Id="fkh.msdyn_projecttask.MarkDone.Command">
+            <EnableRules>
+              <EnableRule Id="fkh.msdyn_projecttask.MarkDone.EnableRule" />
+            </EnableRules>
+            <DisplayRules />
+            <Actions>
+              <JavaScriptFunction FunctionName="FKH.FieldAndProjectServices.ProjectTaskRibbon.onClick_MarkComplete" Library="$webresource:fkh_fieldAndProjectServices_projectTaskRibbon.js" />
+            </Actions>
+          </CommandDefinition>
+          <CommandDefinition Id="fkh.msdyn_projecttask.Pass.Command">
+            <EnableRules>
+              <EnableRule Id="fkh.msdyn_projecttask.PassFail.EnableRule" />
+            </EnableRules>
+            <DisplayRules />
+            <Actions>
+              <JavaScriptFunction FunctionName="FKH.FieldAndProjectServices.ProjectTaskRibbon.onClick_Pass" Library="$webresource:fkh_fieldAndProjectServices_projectTaskRibbon.js" />
+            </Actions>
+          </CommandDefinition>
+          <CommandDefinition Id="fkh.msdyn_projecttask.StartTask.Command">
+            <EnableRules>
+              <EnableRule Id="fkh.msdyn_projecttask.StartTask.EnableRule" />
+            </EnableRules>
+            <DisplayRules />
+            <Actions>
+              <JavaScriptFunction FunctionName="FKH.FieldAndProjectServices.ProjectTaskRibbon.onClick_StartTask" Library="$webresource:fkh_fieldAndProjectServices_projectTaskRibbon.js" />
+            </Actions>
+          </CommandDefinition>
+        </CommandDefinitions>
+        <RuleDefinitions>
+          <TabDisplayRules />
+          <DisplayRules />
+          <EnableRules>
+            <EnableRule Id="fkh.msdyn_projecttask.MarkDone.EnableRule">
+              <CustomRule FunctionName="FKH.FieldAndProjectServices.ProjectTaskRibbon.isVisible_MarkComplete" Library="$webresource:fkh_fieldAndProjectServices_projectTaskRibbon.js" Default="false" InvertResult="false" />
+            </EnableRule>
+            <EnableRule Id="fkh.msdyn_projecttask.PassFail.EnableRule">
+              <CustomRule FunctionName="FKH.FieldAndProjectServices.ProjectTaskRibbon.isVisible_PassFail" Library="$webresource:fkh_fieldAndProjectServices_projectTaskRibbon.js" Default="false" InvertResult="false" />
+            </EnableRule>
+            <EnableRule Id="fkh.msdyn_projecttask.StartTask.EnableRule">
+              <CustomRule FunctionName="FKH.FieldAndProjectServices.ProjectTaskRibbon.isVisible_StartTask" Library="$webresource:fkh_fieldAndProjectServices_projectTaskRibbon.js" Default="false" InvertResult="false" />
+            </EnableRule>
+          </EnableRules>
+        </RuleDefinitions>
+        <LocLabels>
+          <LocLabel Id="fkh.msdyn_projecttask.Fail.Button.Alt">
+            <Titles>
+              <Title description="Fail" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.Fail.Button.LabelText">
+            <Titles>
+              <Title description="Fail" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.Fail.Button.ToolTipDescription">
+            <Titles>
+              <Title description="Fail" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.Fail.Button.ToolTipTitle">
+            <Titles>
+              <Title description="Fail" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.MarkDone.Button.Alt">
+            <Titles>
+              <Title description="Mark Done" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.MarkDone.Button.LabelText">
+            <Titles>
+              <Title description="Mark Done" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.MarkDone.Button.ToolTipDescription">
+            <Titles>
+              <Title description="Mark Done" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.MarkDone.Button.ToolTipTitle">
+            <Titles>
+              <Title description="Mark Done" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.Pass.Button.Alt">
+            <Titles>
+              <Title description="Pass" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.Pass.Button.LabelText">
+            <Titles>
+              <Title description="Pass" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.Pass.Button.ToolTipDescription">
+            <Titles>
+              <Title description="Pass" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.Pass.Button.ToolTipTitle">
+            <Titles>
+              <Title description="Pass" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.StartTask.Button.Alt">
+            <Titles>
+              <Title description="Start Task" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.StartTask.Button.LabelText">
+            <Titles>
+              <Title description="Start Task" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.StartTask.Button.ToolTipDescription">
+            <Titles>
+              <Title description="Start Task" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+          <LocLabel Id="fkh.msdyn_projecttask.StartTask.Button.ToolTipTitle">
+            <Titles>
+              <Title description="Start Task" languagecode="1033" />
+            </Titles>
+          </LocLabel>
+        </LocLabels>
+      </RibbonDiffXml>
+    </Entity>
+  </Entities>
+  <Roles></Roles>
+  <Workflows></Workflows>
+  <FieldSecurityProfiles></FieldSecurityProfiles>
+  <Templates />
+  <EntityMaps />
+  <EntityRelationships>
+    <EntityRelationship Name="business_unit_msdyn_projecttask">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IsCustomizable>1</IsCustomizable>
+      <IntroducedVersion>1.0.0.1</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>BusinessUnit</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>NoCascade</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <ReferencingAttributeName>OwningBusinessUnit</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Unique identifier for the business unit that owns the record" languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+    </EntityRelationship>
+    <EntityRelationship Name="fkh_fkh_taskidentifier_msdyn_projecttask">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IsCustomizable>1</IsCustomizable>
+      <IntroducedVersion>1.0.0.0</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>fkh_taskidentifier</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>RemoveLink</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <CascadeRollupView>NoCascade</CascadeRollupView>
+      <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+      <ReferencingAttributeName>fkh_TaskIdentifierId</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Task Identifier" languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+      <EntityRelationshipRoles>
+        <EntityRelationshipRole>
+          <NavPaneDisplayOption>UseCollectionName</NavPaneDisplayOption>
+          <NavPaneArea>Details</NavPaneArea>
+          <NavPaneOrder>10000</NavPaneOrder>
+          <NavigationPropertyName>fkh_TaskIdentifierId</NavigationPropertyName>
+          <CustomLabels>
+            <CustomLabel description="" languagecode="1033" />
+          </CustomLabels>
+          <RelationshipRoleType>1</RelationshipRoleType>
+        </EntityRelationshipRole>
+        <EntityRelationshipRole>
+          <NavigationPropertyName>fkh_fkh_taskidentifier_msdyn_projecttask</NavigationPropertyName>
+          <RelationshipRoleType>0</RelationshipRoleType>
+        </EntityRelationshipRole>
+      </EntityRelationshipRoles>
+    </EntityRelationship>
+    <EntityRelationship Name="fkh_po_unit_msdyn_projecttask_Unit">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IsCustomizable>1</IsCustomizable>
+      <IntroducedVersion>1.0.0.0</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>po_unit</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>RemoveLink</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <CascadeRollupView>NoCascade</CascadeRollupView>
+      <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+      <ReferencingAttributeName>fkh_UnitId</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Lookup to Unit" languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+      <EntityRelationshipRoles>
+        <EntityRelationshipRole>
+          <NavPaneDisplayOption>UseCollectionName</NavPaneDisplayOption>
+          <NavPaneArea>Details</NavPaneArea>
+          <NavPaneOrder>10000</NavPaneOrder>
+          <NavigationPropertyName>fkh_UnitId</NavigationPropertyName>
+          <CustomLabels>
+            <CustomLabel description="" languagecode="1033" />
+          </CustomLabels>
+          <RelationshipRoleType>1</RelationshipRoleType>
+        </EntityRelationshipRole>
+        <EntityRelationshipRole>
+          <NavigationPropertyName>fkh_po_unit_msdyn_projecttask_Unit</NavigationPropertyName>
+          <RelationshipRoleType>0</RelationshipRoleType>
+        </EntityRelationshipRole>
+      </EntityRelationshipRoles>
+    </EntityRelationship>
+    <EntityRelationship Name="lk_msdyn_projecttask_createdby">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IsCustomizable>1</IsCustomizable>
+      <IntroducedVersion>1.0.0.1</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>SystemUser</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>NoCascade</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <ReferencingAttributeName>CreatedBy</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Unique identifier of the user who created the record." languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+    </EntityRelationship>
+    <EntityRelationship Name="lk_msdyn_projecttask_modifiedby">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IsCustomizable>1</IsCustomizable>
+      <IntroducedVersion>1.0.0.1</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>SystemUser</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>NoCascade</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <ReferencingAttributeName>ModifiedBy</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Unique identifier of user who last modified the record." languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+    </EntityRelationship>
+    <EntityRelationship Name="msdyn_bookableresourcecategory_msdyn_projecttask_resourcecategory">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IntroducedVersion>1.0.0.1</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>BookableResourceCategory</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>Restrict</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <CascadeRollupView>NoCascade</CascadeRollupView>
+      <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+      <ReferencingAttributeName>msdyn_resourcecategory</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Select the resource role for the task." languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+      <EntityRelationshipRoles>
+        <EntityRelationshipRole>
+          <NavPaneDisplayOption>DoNotDisplay</NavPaneDisplayOption>
+          <NavPaneArea>Details</NavPaneArea>
+          <NavPaneOrder>10000</NavPaneOrder>
+          <NavigationPropertyName>msdyn_resourcecategory</NavigationPropertyName>
+          <CustomLabels>
+            <CustomLabel description="" languagecode="1033" />
+          </CustomLabels>
+          <RelationshipRoleType>1</RelationshipRoleType>
+        </EntityRelationshipRole>
+        <EntityRelationshipRole>
+          <RelationshipRoleType>0</RelationshipRoleType>
+        </EntityRelationshipRole>
+      </EntityRelationshipRoles>
+    </EntityRelationship>
+    <EntityRelationship Name="msdyn_msdyn_project_msdyn_projecttask_project">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IntroducedVersion>1.0.0.0</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>msdyn_project</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>RemoveLink</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <CascadeRollupView>NoCascade</CascadeRollupView>
+      <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+      <ReferencingAttributeName>msdyn_project</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Select the project name." languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+      <EntityRelationshipRoles>
+        <EntityRelationshipRole>
+          <NavPaneDisplayOption>UseCollectionName</NavPaneDisplayOption>
+          <NavPaneArea>Details</NavPaneArea>
+          <NavPaneOrder>10000</NavPaneOrder>
+          <NavigationPropertyName>msdyn_project</NavigationPropertyName>
+          <CustomLabels>
+            <CustomLabel description="" languagecode="1033" />
+          </CustomLabels>
+          <RelationshipRoleType>1</RelationshipRoleType>
+        </EntityRelationshipRole>
+        <EntityRelationshipRole>
+          <RelationshipRoleType>0</RelationshipRoleType>
+        </EntityRelationshipRole>
+      </EntityRelationshipRoles>
+    </EntityRelationship>
+    <EntityRelationship Name="msdyn_msdyn_projecttask_msdyn_projecttask_parenttask">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IntroducedVersion>1.0.0.0</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>msdyn_projecttask</ReferencedEntityName>
+      <CascadeAssign>Cascade</CascadeAssign>
+      <CascadeDelete>Cascade</CascadeDelete>
+      <CascadeReparent>Cascade</CascadeReparent>
+      <CascadeShare>Cascade</CascadeShare>
+      <CascadeUnshare>Cascade</CascadeUnshare>
+      <CascadeRollupView>NoCascade</CascadeRollupView>
+      <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+      <ReferencingAttributeName>msdyn_parenttask</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Select the summary or parent task in the hierarchy that contains a child task." languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+      <EntityRelationshipRoles>
+        <EntityRelationshipRole>
+          <NavPaneDisplayOption>UseCollectionName</NavPaneDisplayOption>
+          <NavPaneArea>Details</NavPaneArea>
+          <NavPaneOrder>10000</NavPaneOrder>
+          <NavigationPropertyName>msdyn_parenttask</NavigationPropertyName>
+          <CustomLabels>
+            <CustomLabel description="" languagecode="1033" />
+          </CustomLabels>
+          <RelationshipRoleType>1</RelationshipRoleType>
+        </EntityRelationshipRole>
+        <EntityRelationshipRole>
+          <RelationshipRoleType>0</RelationshipRoleType>
+        </EntityRelationshipRole>
+      </EntityRelationshipRoles>
+    </EntityRelationship>
+    <EntityRelationship Name="msdyn_msdyn_projectteam_msdyn_projecttask_AssignedTeamMembers">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IntroducedVersion>1.0.0.0</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>msdyn_projectteam</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>RemoveLink</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <CascadeRollupView>NoCascade</CascadeRollupView>
+      <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+      <ReferencingAttributeName>msdyn_AssignedTeamMembers</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Select the project team member that has been assigned to a task." languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+      <EntityRelationshipRoles>
+        <EntityRelationshipRole>
+          <NavPaneDisplayOption>UseCollectionName</NavPaneDisplayOption>
+          <NavPaneArea>Details</NavPaneArea>
+          <NavPaneOrder>10000</NavPaneOrder>
+          <NavigationPropertyName>msdyn_AssignedTeamMembers</NavigationPropertyName>
+          <CustomLabels>
+            <CustomLabel description="" languagecode="1033" />
+          </CustomLabels>
+          <RelationshipRoleType>1</RelationshipRoleType>
+        </EntityRelationshipRole>
+        <EntityRelationshipRole>
+          <RelationshipRoleType>0</RelationshipRoleType>
+        </EntityRelationshipRole>
+      </EntityRelationshipRoles>
+    </EntityRelationship>
+    <EntityRelationship Name="msdyn_msdyn_transactioncategory_msdyn_projecttask_transactioncategory">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IntroducedVersion>1.0.0.1</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>msdyn_transactioncategory</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>Restrict</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <CascadeRollupView>NoCascade</CascadeRollupView>
+      <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+      <ReferencingAttributeName>msdyn_transactioncategory</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Select the transaction category for the task." languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+      <EntityRelationshipRoles>
+        <EntityRelationshipRole>
+          <NavPaneDisplayOption>DoNotDisplay</NavPaneDisplayOption>
+          <NavPaneArea>Details</NavPaneArea>
+          <NavPaneOrder>10000</NavPaneOrder>
+          <NavigationPropertyName>msdyn_transactioncategory</NavigationPropertyName>
+          <CustomLabels>
+            <CustomLabel description="" languagecode="1033" />
+          </CustomLabels>
+          <RelationshipRoleType>1</RelationshipRoleType>
+        </EntityRelationshipRole>
+        <EntityRelationshipRole>
+          <RelationshipRoleType>0</RelationshipRoleType>
+        </EntityRelationshipRole>
+      </EntityRelationshipRoles>
+    </EntityRelationship>
+    <EntityRelationship Name="msdyn_organizationalunit_projecttask">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IntroducedVersion>1.0.0.1</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>msdyn_organizationalunit</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>Restrict</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <CascadeRollupView>NoCascade</CascadeRollupView>
+      <IsValidForAdvancedFind>1</IsValidForAdvancedFind>
+      <ReferencingAttributeName>msdyn_ResourceOrganizationalUnitId</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Select the organizational unit of the resource who should perform the work." languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+      <EntityRelationshipRoles>
+        <EntityRelationshipRole>
+          <NavPaneDisplayOption>UseCollectionName</NavPaneDisplayOption>
+          <NavPaneArea>Details</NavPaneArea>
+          <NavPaneOrder>10000</NavPaneOrder>
+          <NavigationPropertyName>msdyn_ResourceOrganizationalUnitId</NavigationPropertyName>
+          <CustomLabels>
+            <CustomLabel description="" languagecode="1033" />
+          </CustomLabels>
+          <RelationshipRoleType>1</RelationshipRoleType>
+        </EntityRelationshipRole>
+        <EntityRelationshipRole>
+          <RelationshipRoleType>0</RelationshipRoleType>
+        </EntityRelationshipRole>
+      </EntityRelationshipRoles>
+    </EntityRelationship>
+    <EntityRelationship Name="owner_msdyn_projecttask">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IsCustomizable>1</IsCustomizable>
+      <IntroducedVersion>1.0.0.1</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>Owner</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>NoCascade</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <ReferencingAttributeName>OwnerId</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Owner Id" languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+    </EntityRelationship>
+    <EntityRelationship Name="team_msdyn_projecttask">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IsCustomizable>1</IsCustomizable>
+      <IntroducedVersion>1.0.0.1</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>Team</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>NoCascade</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <ReferencingAttributeName>OwningTeam</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Unique identifier for the team that owns the record." languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+    </EntityRelationship>
+    <EntityRelationship Name="TransactionCurrency_msdyn_projecttask">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IsCustomizable>1</IsCustomizable>
+      <IntroducedVersion>1.0.0.1</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>TransactionCurrency</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>Restrict</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <ReferencingAttributeName>TransactionCurrencyId</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Shows the currency associated with the entity." languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+    </EntityRelationship>
+    <EntityRelationship Name="user_msdyn_projecttask">
+      <EntityRelationshipType>OneToMany</EntityRelationshipType>
+      <IsCustomizable>1</IsCustomizable>
+      <IntroducedVersion>1.0.0.1</IntroducedVersion>
+      <IsHierarchical>0</IsHierarchical>
+      <ReferencingEntityName>msdyn_projecttask</ReferencingEntityName>
+      <ReferencedEntityName>SystemUser</ReferencedEntityName>
+      <CascadeAssign>NoCascade</CascadeAssign>
+      <CascadeDelete>NoCascade</CascadeDelete>
+      <CascadeReparent>NoCascade</CascadeReparent>
+      <CascadeShare>NoCascade</CascadeShare>
+      <CascadeUnshare>NoCascade</CascadeUnshare>
+      <ReferencingAttributeName>OwningUser</ReferencingAttributeName>
+      <RelationshipDescription>
+        <Descriptions>
+          <Description description="Unique identifier for the user that owns the record." languagecode="1033" />
+        </Descriptions>
+      </RelationshipDescription>
+    </EntityRelationship>
+  </EntityRelationships>
+  <OrganizationSettings />
+  <optionsets />
+  <CustomControls />
+  <EntityDataProviders />
+  <Languages>
+    <Language>1033</Language>
+  </Languages>
+</ImportExportXml>
