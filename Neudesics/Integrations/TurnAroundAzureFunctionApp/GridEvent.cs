@@ -91,6 +91,7 @@ namespace TurnAroundAzureFunctionApp
         public string PropertyID { get; set; }
         public string Date1 { get; set; }
         public string Date2 { get; set; }
+        public string Date3 { get; set; }
         public string JobID { get; set; }
         public bool IsForce { get; set; }
         public string FotoNotesID { get; set; }
@@ -121,6 +122,11 @@ namespace TurnAroundAzureFunctionApp
         MARKETING_INSPECTION = 19,
         BI_WEEKLY_INSPECTION = 20,
         MOVE_IN_INSPECTION_COMPLETED = 21,
+        REVISED_COMPLETION_DATE = 22,
+        SCHEDULED_CLOSING_DATE = 23,
+        DUE_DILLIGENCE_DEADLINE = 24,
+        DD_INSPECTION_APPROVED = 25,
+        CLOSING_DOCS_APPROVED = 26,
         MOVE_OUT_DATE_CHANGED = 1001,
         OFFER_ACCEPTED = 201,
         IR_ASSIGN_PROJECT_MANAGER = 202,
@@ -141,7 +147,12 @@ namespace TurnAroundAzureFunctionApp
         IR_HERO_SHOT_PICTURE = 217,
         IR_MARKETING_INSPECTION = 218,
         IR_BI_WEEKLY_INSPECTION = 219,
-        IR_MOVE_IN_INSPECTION_COMPLETED = 220
+        IR_MOVE_IN_INSPECTION_COMPLETED = 220,
+        IR_REVISED_COMPLETION_DATE = 222,
+        IR_SCHEDULED_CLOSING_DATE = 223,
+        IR_DUE_DILLIGENCE_DEADLINE = 224,
+        IR_DD_INSPECTION_APPROVED = 225,
+        IR_CLOSING_DOCS_APPROVED = 226,
     }
 
 }
