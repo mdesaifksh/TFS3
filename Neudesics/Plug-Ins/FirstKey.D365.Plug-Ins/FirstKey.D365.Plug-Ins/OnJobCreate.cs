@@ -4,6 +4,9 @@ using System;
 
 namespace FirstKey.D365.Plug_Ins
 {
+    /// <summary>
+    /// On Job Create/Update PlugIn
+    /// </summary>
     public class OnJobCreate : IPlugin
     {
         const string RENOWALK_URL = "https://hdapps.homedepot.com/RenoWalk/#/admin/property/";
