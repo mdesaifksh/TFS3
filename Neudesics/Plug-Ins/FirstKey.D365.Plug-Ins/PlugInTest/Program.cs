@@ -13,11 +13,15 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using Microsoft.Xrm.Sdk.Query;
+using System.Text.RegularExpressions;
 
 namespace PlugInTest
 {
+
     class Program
     {
+
+
         private static CrmServiceClient _client;
         static IOrganizationService _service;
 
@@ -25,9 +29,15 @@ namespace PlugInTest
         {
             try
             {
+                string str = @"1.1.1.1";
+
+                str = str.RemoveAllButFirst(".");
+
                 using (_client = new CrmServiceClient(ConfigurationManager.ConnectionStrings["CRMConnectionString"].ConnectionString))
                 {
                     _service = (IOrganizationService)_client.OrganizationWebProxyClient != null ? (IOrganizationService)_client.OrganizationWebProxyClient : (IOrganizationService)_client.OrganizationServiceProxy;
+
+
 
                     //Do stuff
                     WhoAmIResponse res = (WhoAmIResponse)_client.Execute(new WhoAmIRequest());

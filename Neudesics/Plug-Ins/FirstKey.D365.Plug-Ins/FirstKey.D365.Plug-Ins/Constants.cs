@@ -76,6 +76,7 @@ namespace FirstKey.D365.Plug_Ins
             public const string RentlyLockBox = "fkh_rentlylockbox";
             public const string RentlyLockBoxNote = "fkh_rentlylockboxnote";
             public const string Owner = "ownerid";
+            public const string Sequence = "fkh_sequence";
         }
 
         public class TaskIdentifiers

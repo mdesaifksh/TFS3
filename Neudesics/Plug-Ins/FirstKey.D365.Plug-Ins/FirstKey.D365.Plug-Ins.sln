@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlugInTest", "PlugInTest\Pl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firstkey.D365.WorkflowActivity", "Firstkey.D365.WorkflowActivity\Firstkey.D365.WorkflowActivity.csproj", "{87A3830F-58DA-4CE9-B581-7A411AB1B2CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeUserAccessMode", "ChangeUserAccessMode\ChangeUserAccessMode.csproj", "{54909DC6-D4E4-4791-B5BD-6097F2E8F965}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{87A3830F-58DA-4CE9-B581-7A411AB1B2CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87A3830F-58DA-4CE9-B581-7A411AB1B2CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87A3830F-58DA-4CE9-B581-7A411AB1B2CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{54909DC6-D4E4-4791-B5BD-6097F2E8F965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{54909DC6-D4E4-4791-B5BD-6097F2E8F965}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{54909DC6-D4E4-4791-B5BD-6097F2E8F965}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{54909DC6-D4E4-4791-B5BD-6097F2E8F965}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
