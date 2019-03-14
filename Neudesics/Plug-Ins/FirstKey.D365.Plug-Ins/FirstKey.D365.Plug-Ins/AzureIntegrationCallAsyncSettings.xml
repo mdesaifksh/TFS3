@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ProjectTemplateSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Mappings>
+    <Mapping>
+      <Name>TURNPROCESS_PROJECT_TEMPLATE</Name>
+      <Key>23A38E60-C0D0-E811-A96E-000D3A16ACEE</Key>
+    </Mapping>
+    <Mapping>
+      <Name>INITIALRENOVATION_PROJECT_TEMPLATE</Name>
+      <Key>1DD49D5F-D3D6-E811-A96D-000D3A16A650</Key>
+    </Mapping>
+  </Mappings>
+</ProjectTemplateSettings>
