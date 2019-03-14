@@ -8,9 +8,36 @@ FKH.FieldAndProjectServices.ProjectForm = {
     onFormLoad: function () {
         var template = Xrm.Page.getAttribute("msdyn_projecttemplate").getValue();
         if (template != null && template[0] != null && template[0].name != null && template[0].name == "Turn Process") {
-            Xrm.Page.getAttribute("fkh_reasonformoveout").setVisible(true);
+            Xrm.Page.getControl("fkh_reasonformoveout").setVisible(true);
         } else {
-            Xrm.Page.getAttribute("fkh_reasonformoveout").setVisible(false);
+            Xrm.Page.getControl("fkh_reasonformoveout").setVisible(false);
+        }
+        FKH.FieldAndProjectServices.ProjectForm.onFormLoad_ImportMobileOtherReasonsForDelay();
+    },
+
+    onFormLoad_ImportMobileOtherReasonsForDelay: function () {
+        var OtherReasonsForDelayText = Xrm.Page.getAttribute("fkh_otherreasonsfordelaytext").getValue();
+        var OtherReasonsForDelay = Xrm.Page.getAttribute("fkh_otherreasonsfordelay").getValue();
+        if (OtherReasonsForDelayText != OtherReasonsForDelay){
+            if (OtherReasonsForDelayText != null && OtherReasonsForDelayText != undefined && OtherReasonsForDelayText != "") {
+                var reasons = OtherReasonsForDelayText.split(";");
+                var intReasons = [];
+                for (var i = 0; i < reasons.length; i++) {
+                    intReasons[i] = parseInt(reasons[i]);
+                }
+                Xrm.Page.getAttribute("fkh_otherreasonsfordelay").setValue(intReasons);
+                //Xrm.Page.getAttribute("fkh_otherreasonsfordelay").setValue([963850001,963850003]);
+            } else {
+                Xrm.Page.getAttribute("fkh_otherreasonsfordelay").setValue(null);
+            }
+        }
+    },
+
+    onChange_OtherReasonsForDelayToMobile: function () {
+        var OtherReasonsForDelayText = Xrm.Page.getAttribute("fkh_otherreasonsfordelaytext").getValue();
+        var OtherReasonsForDelay = Xrm.Page.getAttribute("fkh_otherreasonsfordelay").getValue();
+        if (OtherReasonsForDelayText != OtherReasonsForDelay){
+            Xrm.Page.getAttribute("fkh_otherreasonsfordelaytext").setValue(String(OtherReasonsForDelay).replace(",",";"));
         }
     },
 
