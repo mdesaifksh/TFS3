@@ -115,25 +115,28 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
     },
 
     isVisible_MarkComplete: function () {
-        if (Xrm.Page.getAttribute("msdyn_subject") != null && Xrm.Page.getAttribute("msdyn_subject").getValue() != null) {
-            var taskName = Xrm.Page.getAttribute("msdyn_subject").getValue();
-            var taskStatus = Xrm.Page.getAttribute("statuscode").getValue();
-            if (taskStatus != 963850001) {//Completed
-                switch (taskName) {
-                    case 'Pre-Move-Out Inspection':
-                    case 'Move-Out Inspection':
-                    case 'Budget Start':
-                    case 'Budget Approval':
-                    case 'Vendor(s) Says Job Started':
-                    case 'Vendor Says Job Started':
-                    case 'Vendor Says Job\'s Complete':
-                    case 'Hero Shot Picture':
-                    case 'Marketing Inspection':
-                    case 'Bi-Weekly Inspection':
-                    case 'Move-In Inspection':
-                        return true;
-                    default:
-                        return false;
+        var thisProjectTaskId = Xrm.Page.data.entity.getId().toString().replace("{", "").replace("}", "");
+        if (FKH.FieldAndProjectServices.ProjectTaskRibbon.predecessorsAreComplete(thisProjectTaskId)) {
+            if (Xrm.Page.getAttribute("msdyn_subject") != null && Xrm.Page.getAttribute("msdyn_subject").getValue() != null) {
+                var taskName = Xrm.Page.getAttribute("msdyn_subject").getValue();
+                var taskStatus = Xrm.Page.getAttribute("statuscode").getValue();
+                if (taskStatus != 963850001) {//Completed
+                    switch (taskName) {
+                        case 'Pre-Move-Out Inspection':
+                        case 'Move-Out Inspection':
+                        case 'Budget Start':
+                        case 'Budget Approval':
+                        case 'Vendor(s) Says Job Started':
+                        case 'Vendor Says Job Started':
+                        case 'Vendor Says Job\'s Complete':
+                        case 'Hero Shot Picture':
+                        case 'Marketing Inspection':
+                        case 'Bi-Weekly Inspection':
+                        case 'Move-In Inspection':
+                            return true;
+                        default:
+                            return false;
+                    }
                 }
             }
         }
@@ -765,6 +768,35 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
     dateDiffInMinutes: function (startDate, endDate) {
         return Math.floor((endDate - startDate) / (1000 * 60));
+    },
+
+    predecessorsAreComplete: function (thisProjectTaskId) {
+        predecessorsAreComplete = true;
+        var req = new XMLHttpRequest();
+        req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttaskdependencies?$expand=msdyn_PredecessorTask($select=statuscode)&$filter=_msdyn_successortask_value eq " + thisProjectTaskId, false);
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("Accept", "application/json");
+        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
+        req.onreadystatechange = function() {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+                if (this.status === 200) {
+                    var results = JSON.parse(this.response);
+                    for (var i = 0; i < results.value.length; i++) {
+                        var predecessorStatusReason = results.value[i]["msdyn_PredecessorTask"]["statuscode"];
+                        if(predecessorStatusReason != null && predecessorStatusReason != 963850001 /*Completed*/ && predecessorStatusReason != 2 /*Inactive*/){
+                            predecessorsAreComplete = false;
+                        }
+                    }
+                } else {
+                    Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.predecessorsAreComplete:  " + this.response);
+                }
+            }
+        };
+        req.send();
+        return predecessorsAreComplete;
     }
 };
 
