@@ -8,8 +8,23 @@
 	<meta name="viewport" content="initial-scale=1, user-scalable=no" />
 	<script src="JSBridge.js"></script>
 </head>
-<body>
+<body onload="onFormLoad()">
 	<script>
+
+        function onFormLoad(entityForm){
+            MobileCRM.bridge.alert("onLoad");
+            MobileCRM.UI.EntityForm.requestObject(
+                function (entityForm) {
+                    //entityForm.entity.properties.msdyn_description = "Unknown";
+                    MobileCRM.bridge.alert("onLoad: " + entityForm.entity.properties.msdyn_description);
+                    predecessorsAreComplete(entityForm, entityForm.entity.id);
+                },
+                function (err) {
+                    MobileCRM.bridge.alert("An error occurred: " + err);
+                },
+                null
+            );
+        }
 
         Date.prototype.addDays = function(days) {
             var date = new Date(this.valueOf());
@@ -60,7 +75,10 @@
         );
 
         function markDoneActions(entityForm){
-            if (entityForm.entity.properties.msdyn_subject != null){
+            MobileCRM.bridge.alert("Mark Done: " + entityForm.entity.properties.msdyn_description);
+            if (entityForm.entity.properties.msdyn_description != "Complete"){
+                MobileCRM.bridge.alert("This task cannot be completed until its predecessors have been completed.");
+            } else if (entityForm.entity.properties.msdyn_subject != null) {
                 var thisTaskName = entityForm.entity.properties.msdyn_subject;
                 var thisProjectTaskId = entityForm.entity.id;
                 var thisProjectId = entityForm.entity.properties.msdyn_project.id;
@@ -532,6 +550,42 @@
         function updateProjectTaskDependency(oldPredecessorTaskId,newPredecessorTaskId) {
             var entity = new MobileCRM.FetchXml.Entity("msdyn_projecttaskdependency");
 
+        }
+        
+        function predecessorsAreComplete (entityForm, thisProjectTaskId) {
+            var entity = new MobileCRM.FetchXml.Entity("msdyn_projecttaskdependency");
+            entity.addAttribute("msdyn_projecttaskdependencyid");
+            entity.addAttribute("msdyn_predecessortask");
+
+            entity.filter = new MobileCRM.FetchXml.Filter();
+            entity.filter.where("msdyn_successortask", "eq", thisProjectTaskId);
+
+            var fetch = new MobileCRM.FetchXml.Fetch(entity);
+            fetch.execute("Array", function (result) {
+                    entityForm.entity.properties.msdyn_description = "Complete";
+                    MobileCRM.bridge.alert("Set Complete: " + entityForm.entity.properties.msdyn_description);
+                    for (var i in result) {
+                        MobileCRM.DynamicEntity.loadById(
+                            "msdyn_projecttask",
+                            result[i][1].id,
+                            function (taskEntity) {
+                                if(taskEntity.properties["statuscode"] != 963850001 /*Completed*/ && taskEntity.properties["statuscode"] != 2 /*Inactive*/) {
+                                    entityForm.entity.properties.msdyn_description = "Incomplete";
+                                    MobileCRM.bridge.alert("Set Incomplete: " + entityForm.entity.properties.msdyn_description);
+                                }
+                            },
+                            function (error) {
+                                MobileCRM.bridge.alert("An error occurred: " + error);
+                            }, null
+                        );
+                    }
+                    MobileCRM.UI.EntityForm.save();
+                },
+                function (error) {
+                   MobileCRM.bridge.alert("Error has occurred " + err);
+                },
+                null
+            );
         }
 
         function Createguid() {
