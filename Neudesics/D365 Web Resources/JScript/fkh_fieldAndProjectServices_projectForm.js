@@ -9,8 +9,12 @@ FKH.FieldAndProjectServices.ProjectForm = {
         var template = Xrm.Page.getAttribute("msdyn_projecttemplate").getValue();
         if (template != null && template[0] != null && template[0].name != null && template[0].name == "Turn Process") {
             Xrm.Page.getControl("fkh_reasonformoveout").setVisible(true);
+            if (Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfreno") != null) Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfreno").setVisible(false);
+            if (Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfturn") != null) Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfturn").setVisible(true);
         } else {
             Xrm.Page.getControl("fkh_reasonformoveout").setVisible(false);
+            if (Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfreno") != null) Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfreno").setVisible(true);
+            if (Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfturn") != null) Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfturn").setVisible(false);
         }
         FKH.FieldAndProjectServices.ProjectForm.onFormLoad_ImportMobileOtherReasonsForDelay();
     },
