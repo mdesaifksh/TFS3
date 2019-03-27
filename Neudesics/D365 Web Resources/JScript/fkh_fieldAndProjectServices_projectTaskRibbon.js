@@ -16,7 +16,6 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
                     break;
                 case 'Move-Out Inspection':
-                    Xrm.Page.getAttribute("msdyn_actualstart").setValue(new Date());
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Budget Start', thisProjectId);
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Corporate Renewals', thisProjectId);
@@ -95,10 +94,11 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
     },
 
     completeThisTask: function () {
+        var currentDatetime = new Date();
         if (Xrm.Page.getAttribute("msdyn_actualstart").getValue() == null) {
-            Xrm.Page.getAttribute("msdyn_actualstart").setValue(new Date());
+            Xrm.Page.getAttribute("msdyn_actualstart").setValue(currentDatetime.setHours(currentDatetime.getHours(), currentDatetime.getMinutes()-1, 0));
         }
-        Xrm.Page.getAttribute("msdyn_actualend").setValue(new Date());
+        Xrm.Page.getAttribute("msdyn_actualend").setValue(currentDatetime.setHours(currentDatetime.getHours(), currentDatetime.getMinutes(), 0));
         Xrm.Page.getAttribute("msdyn_progress").setValue(100);
         Xrm.Page.getAttribute("msdyn_progress").setSubmitMode("always");
         var startDate = Xrm.Page.getAttribute("msdyn_actualstart").getValue();
@@ -243,13 +243,14 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                     for (var i = 0; i < results.value.length; i++) {
                         var entity = {};
                         var startDate;
+                        var currentDatetime = new Date().toISOString();
                         if (results.value[i]["msdyn_actualstart"] == null) {
-                            entity.msdyn_actualstart = new Date().toISOString();
+                            entity.msdyn_actualstart = currentDatetime;
                             startDate = new Date();
                         } else {
                             startDate = new Date(results.value[i]["msdyn_actualstart"]);
                         }
-                        entity.msdyn_actualend = new Date().toISOString();
+                        entity.msdyn_actualend = currentDatetime;
                         endDate = new Date();
                         var minutesBetween = FKH.FieldAndProjectServices.ProjectTaskRibbon.dateDiffInMinutes(startDate, endDate);
                         try {
@@ -767,7 +768,9 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
     },
 
     dateDiffInMinutes: function (startDate, endDate) {
-        return Math.floor((endDate - startDate) / (1000 * 60));
+        minutesDiff = Math.floor((endDate - startDate) / (1000 * 60));
+        if (minutesDiff < 0) {minutesDiff = 0;}
+        return minutesDiff;
     },
 
     predecessorsAreComplete: function (thisProjectTaskId) {
