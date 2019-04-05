@@ -20,16 +20,16 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Budget Start', thisProjectId);
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Corporate Renewals', thisProjectId);
                     break;
-                case 'Budget Start':
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Budget Approval', thisProjectId);
-                    break;
-                case 'Budget Approval':
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Job Assignment to Vendor(s) in Contract Creator', thisProjectId);
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Job Assignment to Vendor(s)', thisProjectId);
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Offer Rejected or Approved', thisProjectId);
-                    break;
+                // case 'Budget Start':
+                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
+                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Budget Approval', thisProjectId);
+                //     break;
+                // case 'Budget Approval':
+                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
+                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Job Assignment to Vendor(s) in Contract Creator', thisProjectId);
+                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Job Assignment to Vendor(s)', thisProjectId);
+                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Offer Rejected or Approved', thisProjectId);
+                //     break;
                 case 'Vendor(s) Says Job Started':
                 case 'Vendor Says Job Started':
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
@@ -124,8 +124,8 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                     switch (taskName) {
                         case 'Pre-Move-Out Inspection':
                         case 'Move-Out Inspection':
-                        case 'Budget Start':
-                        case 'Budget Approval':
+                        // case 'Budget Start':
+                        // case 'Budget Approval':
                         case 'Vendor(s) Says Job Started':
                         case 'Vendor Says Job Started':
                         case 'Vendor Says Job\'s Complete':
