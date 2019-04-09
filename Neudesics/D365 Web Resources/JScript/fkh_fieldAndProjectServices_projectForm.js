@@ -7,14 +7,20 @@ if (typeof (FKH.FieldAndProjectServices) == "undefined") {
 FKH.FieldAndProjectServices.ProjectForm = {
     onFormLoad: function () {
         var template = Xrm.Page.getAttribute("msdyn_projecttemplate").getValue();
+        var moveOutDate = Xrm.Page.getControl("fkh_currentresidentmoveoutdate");
+        var daysSinceMoveOut = Xrm.Page.getControl("fkh_dayssincemoveout");
         if (template != null && template[0] != null && template[0].name != null && template[0].name == "Turn Process") {
             Xrm.Page.getControl("fkh_reasonformoveout").setVisible(true);
             if (Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfreno") != null) Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfreno").setVisible(false);
             if (Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfturn") != null) Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfturn").setVisible(true);
+            if (moveOutDate != null) moveOutDate.setVisible(true);
+            if (daysSinceMoveOut != null) daysSinceMoveOut.setVisible(true);
         } else {
             Xrm.Page.getControl("fkh_reasonformoveout").setVisible(false);
             if (Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfreno") != null) Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfreno").setVisible(true);
             if (Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfturn") != null) Xrm.Page.ui.tabs.get("Summary").sections.get("unitqvfturn").setVisible(false);
+            if (moveOutDate != null) moveOutDate.setVisible(false);
+            if (daysSinceMoveOut != null) daysSinceMoveOut.setVisible(false);
         }
         FKH.FieldAndProjectServices.ProjectForm.onFormLoad_ImportMobileOtherReasonsForDelay();
     },
