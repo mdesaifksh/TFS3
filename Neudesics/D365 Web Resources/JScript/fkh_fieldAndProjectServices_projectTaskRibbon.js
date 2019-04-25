@@ -9,6 +9,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
     onClick_MarkComplete: function () {
         if (Xrm.Page.getAttribute("msdyn_subject") != null && Xrm.Page.getAttribute("msdyn_subject").getValue() != null) {
             var thisTaskName = Xrm.Page.getAttribute("msdyn_subject").getValue();
+            var contractID = Xrm.Page.getAttribute("fkh_contractid").getValue();
             var thisProjectTaskId = Xrm.Page.data.entity.getId().toString().replace("{", "").replace("}", "");
             var thisProjectId = Xrm.Page.getAttribute("msdyn_project").getValue()[0].id.toString().replace("{", "").replace("}", "");
             switch (thisTaskName) {
@@ -17,35 +18,35 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                     break;
                 case 'Move-Out Inspection':
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Budget Start', thisProjectId);
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Corporate Renewals', thisProjectId);
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Budget Start', thisProjectId, null);
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Corporate Renewals', thisProjectId, null);
                     break;
                 // case 'Budget Start':
                 //     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
-                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Budget Approval', thisProjectId);
+                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Budget Approval', thisProjectId, null);
                 //     break;
                 // case 'Budget Approval':
                 //     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
-                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Job Assignment to Vendor(s) in Contract Creator', thisProjectId);
-                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Job Assignment to Vendor(s)', thisProjectId);
-                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Offer Rejected or Approved', thisProjectId);
+                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Job Assignment to Vendor(s) in Contract Creator', thisProjectId, null);
+                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Job Assignment to Vendor(s)', thisProjectId, null);
+                //     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Offer Rejected or Approved', thisProjectId, null);
                 //     break;
                 case 'Vendor(s) Says Job Started':
                 case 'Vendor Says Job Started':
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Work in Progress', thisProjectId);
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Work in Progress', thisProjectId, contractID);
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage(thisTaskName);
                     break;
                 case 'Work In Progress':
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Vendor Says Job\'s Complete', thisProjectId);
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Quality Control Inspection', thisProjectId);
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Vendor Says Job\'s Complete', thisProjectId, contractID);
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Quality Control Inspection', thisProjectId, contractID);
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage('Vendor Says Job\'s Complete');
                     break;
                 case 'Vendor Says Job\'s Complete':
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Work In Progress', thisProjectId);
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Quality Control Inspection', thisProjectId);
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Work In Progress', thisProjectId, contractID);
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Quality Control Inspection', thisProjectId, contractID);
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage(thisTaskName);
                     break;
                 case 'Hero Shot Picture':
@@ -65,7 +66,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                     break;
                 case 'Move-In Inspection':
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
-                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Bi-Weekly Inspection', thisProjectId);
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Bi-Weekly Inspection', thisProjectId, null);
                     isComplete = FKH.FieldAndProjectServices.ProjectTaskRibbon.isTaskComplete('Hero Shot Picture', thisProjectId);
                     if (isComplete) {
                         FKH.FieldAndProjectServices.ProjectTaskRibbon.completeProject(thisProjectId);
@@ -78,13 +79,11 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
     },
 
     onClick_StartTask: function () {
-        debugger;
         var thisTaskName = Xrm.Page.getAttribute("msdyn_subject").getValue();
         FKH.FieldAndProjectServices.ProjectTaskRibbon.startThisTask();
         switch (thisTaskName) {
             case 'Vendor(s) Says Job Started':
             case 'Vendor Says Job Started':
-                debugger;
                 FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage(thisTaskName);
                 break;
 
@@ -93,9 +92,10 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
     onClick_Pass: function () {
         var thisProjectId = Xrm.Page.getAttribute("msdyn_project").getValue()[0].id;
+        var contractID = Xrm.Page.getAttribute("fkh_contractid").getValue();
         FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
-        FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Job Completed', thisProjectId);
-        FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Marketing Inspection', thisProjectId);
+        FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Job Completed', thisProjectId, contractID);
+        FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Marketing Inspection', thisProjectId, null);
         FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage('Job Completed');
         Xrm.Page.data.refresh(true);
     },
@@ -149,6 +149,8 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                     case 'Bi-Weekly Inspection':
                     case 'Move-In Inspection':
                         return true;
+                    case 'Quality Control Inspection':
+                        return false;
                     default:
                         Xrm.Page.ui.clearFormNotification("wardAuto");
                         Xrm.Page.ui.setFormNotification("This project task is completed automatically and cannot be completed manually.", "WARNING", "wardAuto");
@@ -199,20 +201,40 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
             var taskName = Xrm.Page.getAttribute("msdyn_subject").getValue();
             var taskStatus = Xrm.Page.getAttribute("statuscode").getValue();
             if (taskStatus != 963850001) {//Completed
-                switch (taskName) {
-                    case 'Quality Control Inspection':
-                        return true;
-                    default:
-                        return false;
+                var thisProjectTaskId = Xrm.Page.data.entity.getId().toString().replace("{", "").replace("}", "");
+                if (FKH.FieldAndProjectServices.ProjectTaskRibbon.predecessorsAreComplete(thisProjectTaskId)) {
+                    switch (taskName) {
+                        case 'Quality Control Inspection':
+                            return true;
+                        default:
+                            return false;
+                    }
+                } else {
+                    switch (taskName) {
+                        case 'Quality Control Inspection':
+                            Xrm.Page.ui.clearFormNotification("warnPred");
+                            Xrm.Page.ui.setFormNotification("This project task cannot be completed until its predecessor has been completed.", "WARNING", "warnPred");
+                            return false;
+                        default:
+                            return false;
+                    }
                 }
             }
         }
         return false;
     },
 
-    startTask: function (taskName, projectId) {
+    startTask: function (taskName, projectId, contractID) {
         var getReq = new XMLHttpRequest();
-        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart,msdyn_progress,statuscode,msdyn_projecttaskid&$filter=_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2", true);
+        var filter = "";
+        if (contractID != null) {
+            //filter = "_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and fkh_contractid eq '" + contractID + "' and statuscode ne 963850001 and statuscode ne 2";
+            filter = "_msdyn_project_value eq " + projectId + " and contains(msdyn_subject, '" + taskName.replace("'", "%") + "') and fkh_contractid eq '" + contractID + "' and statuscode ne 963850001 and statuscode ne 2";
+        } else {
+            filter = "_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2";
+        }
+        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart,msdyn_progress,statuscode,msdyn_projecttaskid&$filter=" + filter, true);
+        //getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart,msdyn_progress,statuscode,msdyn_projecttaskid&$filter=_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2", true);
         getReq.setRequestHeader("OData-MaxVersion", "4.0");
         getReq.setRequestHeader("OData-Version", "4.0");
         getReq.setRequestHeader("Accept", "application/json");
@@ -267,9 +289,17 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
         getReq.send();
     },
 
-    completeTask: function (taskName, projectId) {
+    completeTask: function (taskName, projectId, contractID) {
         var getReq = new XMLHttpRequest();
-        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart&$filter=_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2", true);
+        var filter = "";
+        if (contractID != null) {
+            //filter = "_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + (taskName == "Vendor Says Job's Complete" ? "Vendor Says Job\'s Complete" : taskName) + "' and fkh_contractid eq '" + contractID + "' and statuscode ne 963850001 and statuscode ne 2";
+            filter = "_msdyn_project_value eq " + projectId + " and contains(msdyn_subject, '" + taskName.replace("'", "%") + "') and fkh_contractid eq '" + contractID + "' and statuscode ne 963850001 and statuscode ne 2";
+        } else {
+            filter = "_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2";
+        }
+        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart&$filter=" + filter, true);
+        //getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart&$filter=_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2", true);
         getReq.setRequestHeader("OData-MaxVersion", "4.0");
         getReq.setRequestHeader("OData-Version", "4.0");
         getReq.setRequestHeader("Accept", "application/json");
@@ -380,7 +410,6 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
     },
 
     publishMessage: function (thisTaskName) {
-        debugger;
         //alert("Publish Message");
         var unit = Xrm.Page.getAttribute('fkh_unitid').getValue();
         var taskIdentifier = Xrm.Page.getAttribute('fkh_taskidentifierid').getValue();
@@ -544,9 +573,9 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                                         alert('No Jobs found for Property.');
                                     }
                                 },
-                                function (error) {
-                                    Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage:  " + error.message);
-                                }
+                                    function (error) {
+                                        Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage:  " + error.message);
+                                    }
                                 );
                         }
                     }
@@ -564,7 +593,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
     createReWorkTasks: function (thisProjectTaskId, thisProjectId) {
         var getReq = new XMLHttpRequest();
-        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks(" + thisProjectTaskId + ")?$select=fkh_accessnotes,fkh_lockboxremoved,fkh_mechanicallockbox,fkh_mechanicallockboxnote,fkh_propertygatecode,fkh_rentlylockbox,fkh_rentlylockboxnote,_fkh_taskidentifierid_value,_fkh_unitid_value,msdyn_costestimatecontour,msdyn_effort,msdyn_effortcontour,msdyn_effortestimateatcomplete,msdyn_progress,_msdyn_project_value,msdyn_remaininghours,_msdyn_resourceorganizationalunitid_value,msdyn_resourceutilization,msdyn_salesestimatecontour,msdyn_scheduledend,msdyn_scheduleddurationminutes,msdyn_scheduledhours,msdyn_scheduledstart,msdyn_subject,msdyn_wbsid,_ownerid_value,statuscode", true);
+        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks(" + thisProjectTaskId + ")?$select=_msdyn_parenttask_value,fkh_contractid,_msdyn_assignedteammembers_value,fkh_accessnotes,fkh_lockboxremoved,fkh_mechanicallockbox,fkh_mechanicallockboxnote,fkh_propertygatecode,fkh_rentlylockbox,fkh_rentlylockboxnote,_fkh_taskidentifierid_value,_fkh_unitid_value,msdyn_costestimatecontour,msdyn_effort,msdyn_effortcontour,msdyn_effortestimateatcomplete,msdyn_progress,_msdyn_project_value,msdyn_remaininghours,_msdyn_resourceorganizationalunitid_value,msdyn_resourceutilization,msdyn_salesestimatecontour,msdyn_scheduledend,msdyn_scheduleddurationminutes,msdyn_scheduledhours,msdyn_scheduledstart,msdyn_subject,msdyn_wbsid,_ownerid_value,statuscode", true);
         getReq.setRequestHeader("OData-MaxVersion", "4.0");
         getReq.setRequestHeader("OData-Version", "4.0");
         getReq.setRequestHeader("Accept", "application/json");
@@ -623,6 +652,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                         }
 
                         entity.fkh_accessnotes = parentTask["fkh_accessnotes"];
+                        entity.fkh_contractid = parentTask["fkh_contractid"];
                         entity.fkh_lockboxremoved = parentTask["fkh_lockboxremoved"];
                         entity.fkh_mechanicallockbox = parentTask["fkh_mechanicallockbox"];
                         entity.fkh_mechanicallockboxnote = parentTask["fkh_mechanicallockboxnote"];
@@ -646,6 +676,8 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                         entity.statuscode = 1;//Not Started
                         entity["fkh_TaskIdentifierId@odata.bind"] = "/fkh_taskidentifiers(" + _fkh_taskidentifierid_value + ")";
                         entity["fkh_UnitId@odata.bind"] = "/po_units(" + parentTask["_fkh_unitid_value"] + ")";
+                        entity["msdyn_AssignedTeamMembers@odata.bind"] = "/msdyn_projectteams(" + parentTask["_msdyn_assignedteammembers_value"] + ")";
+                        entity["msdyn_parenttask@odata.bind"] = "/msdyn_projecttasks(" + parentTask["_msdyn_parenttask_value"] + ")";
                         entity["msdyn_project@odata.bind"] = "/msdyn_projects(" + parentTask["_msdyn_project_value"] + ")";
                         entity["msdyn_ResourceOrganizationalUnitId@odata.bind"] = "/msdyn_organizationalunits(" + parentTask["_msdyn_resourceorganizationalunitid_value"] + ")";
                         entity["ownerid@odata.bind"] = "/systemusers(" + parentTask["_ownerid_value"] + ")";
