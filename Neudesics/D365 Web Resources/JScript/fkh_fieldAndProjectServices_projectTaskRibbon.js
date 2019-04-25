@@ -36,6 +36,12 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Work in Progress', thisProjectId);
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage(thisTaskName);
                     break;
+                case 'Work In Progress':
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Vendor Says Job\'s Complete', thisProjectId);
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.startTask('Quality Control Inspection', thisProjectId);
+                    FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage('Vendor Says Job\'s Complete');
+                    break;
                 case 'Vendor Says Job\'s Complete':
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeThisTask();
                     FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask('Work In Progress', thisProjectId);
@@ -72,8 +78,17 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
     },
 
     onClick_StartTask: function () {
+        debugger;
+        var thisTaskName = Xrm.Page.getAttribute("msdyn_subject").getValue();
         FKH.FieldAndProjectServices.ProjectTaskRibbon.startThisTask();
-        Xrm.Page.data.refresh(true);
+        switch (thisTaskName) {
+            case 'Vendor(s) Says Job Started':
+            case 'Vendor Says Job Started':
+                debugger;
+                FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage(thisTaskName);
+                break;
+
+        }
     },
 
     onClick_Pass: function () {
@@ -96,9 +111,9 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
     completeThisTask: function () {
         var currentDatetime = new Date();
         if (Xrm.Page.getAttribute("msdyn_actualstart").getValue() == null) {
-            Xrm.Page.getAttribute("msdyn_actualstart").setValue(currentDatetime.setHours(currentDatetime.getHours(), currentDatetime.getMinutes()-1, 0));
+            Xrm.Page.getAttribute("msdyn_actualstart").setValue(new Date(currentDatetime.setHours(currentDatetime.getHours(), currentDatetime.getMinutes() - 1, 0)));
         }
-        Xrm.Page.getAttribute("msdyn_actualend").setValue(currentDatetime.setHours(currentDatetime.getHours(), currentDatetime.getMinutes(), 0));
+        Xrm.Page.getAttribute("msdyn_actualend").setValue(new Date(currentDatetime.setHours(currentDatetime.getHours(), currentDatetime.getMinutes(), 0)));
         Xrm.Page.getAttribute("msdyn_progress").setValue(100);
         Xrm.Page.getAttribute("msdyn_progress").setSubmitMode("always");
         var startDate = Xrm.Page.getAttribute("msdyn_actualstart").getValue();
@@ -116,27 +131,51 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
     isVisible_MarkComplete: function () {
         var thisProjectTaskId = Xrm.Page.data.entity.getId().toString().replace("{", "").replace("}", "");
-        if (FKH.FieldAndProjectServices.ProjectTaskRibbon.predecessorsAreComplete(thisProjectTaskId)) {
-            if (Xrm.Page.getAttribute("msdyn_subject") != null && Xrm.Page.getAttribute("msdyn_subject").getValue() != null) {
-                var taskName = Xrm.Page.getAttribute("msdyn_subject").getValue();
-                var taskStatus = Xrm.Page.getAttribute("statuscode").getValue();
-                if (taskStatus != 963850001) {//Completed
-                    switch (taskName) {
-                        case 'Pre-Move-Out Inspection':
-                        case 'Move-Out Inspection':
-                        // case 'Budget Start':
-                        // case 'Budget Approval':
-                        case 'Vendor(s) Says Job Started':
-                        case 'Vendor Says Job Started':
-                        case 'Vendor Says Job\'s Complete':
-                        case 'Hero Shot Picture':
-                        case 'Marketing Inspection':
-                        case 'Bi-Weekly Inspection':
-                        case 'Move-In Inspection':
-                            return true;
-                        default:
-                            return false;
-                    }
+        var taskName = Xrm.Page.getAttribute("msdyn_subject").getValue();
+        var taskStatus = Xrm.Page.getAttribute("statuscode").getValue();
+        if (Xrm.Page.getAttribute("msdyn_subject") != null && Xrm.Page.getAttribute("msdyn_subject").getValue() != null && taskStatus != 963850001 /*Completed*/) {
+            if (FKH.FieldAndProjectServices.ProjectTaskRibbon.predecessorsAreComplete(thisProjectTaskId)) {
+                switch (taskName) {
+                    case 'Pre-Move-Out Inspection':
+                    case 'Move-Out Inspection':
+                    // case 'Budget Start':
+                    // case 'Budget Approval':
+                    case 'Vendor(s) Says Job Started':
+                    case 'Vendor Says Job Started':
+                    case 'Work In Progress':
+                    case 'Vendor Says Job\'s Complete':
+                    case 'Hero Shot Picture':
+                    case 'Marketing Inspection':
+                    case 'Bi-Weekly Inspection':
+                    case 'Move-In Inspection':
+                        return true;
+                    default:
+                        Xrm.Page.ui.clearFormNotification("wardAuto");
+                        Xrm.Page.ui.setFormNotification("This project task is completed automatically and cannot be completed manually.", "WARNING", "wardAuto");
+                        return false;
+                }
+            } else {
+                switch (taskName) {
+                    case 'Pre-Move-Out Inspection':
+                    case 'Move-Out Inspection':
+                    // case 'Budget Start':
+                    // case 'Budget Approval':
+                    case 'Vendor(s) Says Job Started':
+                    case 'Vendor Says Job Started':
+                    case 'Work In Progress':
+                    case 'Vendor Says Job\'s Complete':
+                    case 'Hero Shot Picture':
+                    case 'Marketing Inspection':
+                    case 'Bi-Weekly Inspection':
+                    case 'Move-In Inspection':
+                        Xrm.Page.ui.clearFormNotification("warnPred");
+                        Xrm.Page.ui.setFormNotification("This project task cannot be completed until its predecessor has been completed.", "WARNING", "warnPred");
+                        break;
+                    case 'Quality Control Inspection':
+                        break;
+                    default:
+                        Xrm.Page.ui.clearFormNotification("wardAuto");
+                        Xrm.Page.ui.setFormNotification("This project task is completed automatically and cannot be completed manually.", "WARNING", "wardAuto");
                 }
             }
         }
@@ -173,7 +212,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
     startTask: function (taskName, projectId) {
         var getReq = new XMLHttpRequest();
-        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart,msdyn_progress,statuscode,msdyn_projecttaskid&$filter=_msdyn_project_value eq " + projectId + " and  msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2", true);
+        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart,msdyn_progress,statuscode,msdyn_projecttaskid&$filter=_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2", true);
         getReq.setRequestHeader("OData-MaxVersion", "4.0");
         getReq.setRequestHeader("OData-Version", "4.0");
         getReq.setRequestHeader("Accept", "application/json");
@@ -230,7 +269,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
     completeTask: function (taskName, projectId) {
         var getReq = new XMLHttpRequest();
-        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart&$filter=_msdyn_project_value eq " + projectId + " and  msdyn_subject eq '" + taskName + "' and  statuscode ne 963850001 and statuscode ne 2", true);
+        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart&$filter=_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2", true);
         getReq.setRequestHeader("OData-MaxVersion", "4.0");
         getReq.setRequestHeader("OData-Version", "4.0");
         getReq.setRequestHeader("Accept", "application/json");
@@ -341,7 +380,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
     },
 
     publishMessage: function (thisTaskName) {
-
+        debugger;
         //alert("Publish Message");
         var unit = Xrm.Page.getAttribute('fkh_unitid').getValue();
         var taskIdentifier = Xrm.Page.getAttribute('fkh_taskidentifierid').getValue();
@@ -350,7 +389,6 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
         var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         var dateTime = date + ' ' + time;
 
-        debugger;
         if (unit !== null && taskIdentifier !== null) {
             var isInitialRenoProcess = taskIdentifier[0].name.startsWith("IR : ");
             Xrm.WebApi.retrieveRecord("po_units", unit[0].id.replace('{', '').replace('}', ''), "?$select=po_unitid,po_unitidnum,fkh_sfcode").then(
@@ -360,93 +398,157 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                         //var taskIdentifierName = taskIdentifier[0].name;
                         //alert(result.po_unitidnum);
                         //Retrieve Job from Unit...
-                        var queryOption = "$select=fkh_jobstatus,_fkh_vendor_value,fkh_renowalkid&$filter=_fkh_unit_value eq " + unit[0].id.replace('{', '').replace('}', '') + " and  fkh_renowalkid ne null";
-                        var unitcode = null;
-                        if (result.po_unitidnum !== null && result.po_unitidnum !== '' && result.po_unitidnum !== undefined)
-                            unitcode = result.po_unitidnum;
-                        else if (result.fkh_sfcode !== null && result.fkh_sfcode !== '' && result.fkh_sfcode !== undefined)
-                            unitcode = result.fkh_sfcode;
-                        //execute the query and get the results
-                        Xrm.WebApi.retrieveMultipleRecords("fkh_jobs", queryOption)
-                            .then(function (data) {
-                                if (data.entities.length > 0) {
-                                    var renowalkID = data.entities[0]["fkh_renowalkid"];
-                                    var datapayLoad = '', incomingDataPayLoad = '';
-                                    switch (thisTaskName) {
-                                        case 'Vendor(s) Says Job Started':
-                                        case 'Vendor Says Job Started':
-                                            datapayLoad =
-                                                {
-                                                    "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': " + (isInitialRenoProcess ? "'IR : VENDORS_SAYS_JOB_STARTED'" : "'Turn Process : VENDORS_SAYS_JOB_STARTED'") + ", 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + unitcode + "', 'JobID' : '" + renowalkID + "', 'Event': " + (isInitialRenoProcess ? "210" : "11") + ", 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
-                                                    "fkh_direction": true,
-                                                    "fkh_name": isInitialRenoProcess ? "IR : VENDORS_SAYS_JOB_STARTED" : "Turn Process : VENDORS_SAYS_JOB_STARTED"
-                                                };
-                                            break;
-                                        case 'Vendor Says Job\'s Complete':
-                                            datapayLoad =
-                                                {
-                                                    "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': " + (isInitialRenoProcess ? "'IR : VENDOR_SAYS_JOBS_COMPLETE'" : "'Turn Process : VENDOR_SAYS_JOBS_COMPLETE'") + ", 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + unitcode + "', 'JobID' : '" + renowalkID + "', 'Event': " + (isInitialRenoProcess ? "214" : "15") + ", 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
-                                                    "fkh_direction": true,
-                                                    "fkh_name": isInitialRenoProcess ? "IR : VENDOR_SAYS_JOBS_COMPLETE" : "Turn Process : VENDOR_SAYS_JOBS_COMPLETE"
-                                                };
-                                            incomingDataPayLoad =
-                                                {
-                                                    "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': " + (isInitialRenoProcess ? "'IR : VENDOR_SAYS_JOBS_COMPLETE'" : "'Turn Process : VENDOR_SAYS_JOBS_COMPLETE'") + ", 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + unitcode + "', 'JobID' : '" + renowalkID + "', 'Event': " + (isInitialRenoProcess ? "214" : "15") + ", 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
-                                                    "fkh_direction": false,
-                                                    "fkh_name": isInitialRenoProcess ? "IR : VENDOR_SAYS_JOBS_COMPLETE" : "Turn Process : VENDOR_SAYS_JOBS_COMPLETE"
-                                                };
-                                            break;
-                                        case 'Job Completed':
-                                            datapayLoad =
-                                                {
-                                                    "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': " + (isInitialRenoProcess ? "'IR : JOB_COMPLETED'" : "'Turn Process : JOB_COMPLETED'") + ", 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + unitcode + "', 'JobID' : '" + renowalkID + "', 'Event': " + (isInitialRenoProcess ? "216" : "17") + ", 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
-                                                    "fkh_direction": true,
-                                                    "fkh_name": isInitialRenoProcess ? "IR : JOB_COMPLETED" : "Turn Process : JOB_COMPLETED"
-                                                };
-                                            break;
 
+                        if (thisTaskName === "Vendor(s) Says Job Started" || thisTaskName === "Vendor Says Job Started") {
+                            Process.callAction("fkh_VendorSaysJobStarted",
+                                [
+                                    {
+                                        key: "Target",
+                                        type: Process.Type.EntityReference,
+                                        value: { id: Xrm.Page.data.entity.getId().replace('{', '').replace('}', ''), entityType: 'msdyn_projecttask' }
                                     }
-                                    if (datapayLoad !== '') {
-                                        Xrm.WebApi.createRecord("fkh_azureintegrationcalls", datapayLoad).then(
-                                            function success(result) {
-                                                console.log("Azure Integration Call created with ID: " + result.id);
-                                                // perform operations on record creation
-                                            },
-                                            function (error) {
-                                                console.log("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage:  " + error.message);
-                                                alert("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage:  " + error.message);
-                                                // handle error conditions
-                                            }
-                                        );
+                                ],
+                                function (params) {
+                                    //debugger;
+                                    // Success                      
+                                    if (params.length > 0) {
+                                        if (params[0].key === "IsSuccess" && params[0].value === "true") {
+                                            Xrm.Page.data.refresh(false).then(function successCallback() {
+                                                Xrm.Page.ui.refreshRibbon(); Xrm.Page.data.refresh();
+                                            });
+                                        }
+                                        else {
+                                            if (params[1].key === "ErrorMessage" && params[1].value !== null && params[1].value !== "" && params[1].value !== undefined)
+                                                alert("Error : " + params[1].value);
+                                        }
+                                        Xrm.Page.data.refresh(true);
                                     }
-                                    if (incomingDataPayLoad !== '') {
-                                        Xrm.WebApi.createRecord("fkh_azureintegrationcalls", incomingDataPayLoad).then(
-                                            function success(result) {
-                                                console.log("Azure Integration Call created with ID: " + result.id);
-                                                // perform operations on record creation
-                                            },
-                                            function (error) {
-                                                console.log("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage:  " + error.message);
-                                                alert("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage:  " + error.message);
-                                                // handle error conditions
-                                            }
-                                        );
+                                    else {
+                                        Xrm.Page.data.refresh(true);
+                                        Xrm.Page.ui.refreshRibbon();
                                     }
-
-
+                                },
+                                function (e) {
+                                    // Error
+                                    alert("Error!", e, null, "ERROR", 500, 200);
+                                    Xrm.Page.data.refresh(true);
+                                    Xrm.Page.ui.refreshRibbon();
                                 }
-                                else {
-                                    alert('No Jobs found for Property.');
+                            );
+                        }
+                        else if (thisTaskName === "Job Completed") {
+                            Process.callAction("fkh_ContractCompleted",
+                                [
+                                    {
+                                        key: "Target",
+                                        type: Process.Type.EntityReference,
+                                        value: { id: Xrm.Page.data.entity.getId().replace('{', '').replace('}', ''), entityType: 'msdyn_projecttask' }
+                                    }
+                                ],
+                                function (params) {
+                                    //debugger;
+                                    // Success                      
+                                    if (params.length > 0) {
+                                        if (params[0].key === "IsSuccess" && params[0].value === "true") {
+                                            Xrm.Page.data.refresh(false).then(function successCallback() {
+                                                Xrm.Page.ui.refreshRibbon(); Xrm.Page.data.refresh();
+                                            });
+                                        }
+                                        else {
+                                            if (params[1].key === "ErrorMessage" && params[1].value !== null && params[1].value !== "" && params[1].value !== undefined)
+                                                alert("Error : " + params[1].value);
+                                        }
+                                        Xrm.Page.data.refresh(true);
+                                    }
+                                    else {
+                                        Xrm.Page.data.refresh(true);
+                                        Xrm.Page.ui.refreshRibbon();
+                                    }
+                                },
+                                function (e) {
+                                    // Error
+                                    alert("Error!", e, null, "ERROR", 500, 200);
+                                    Xrm.Page.data.refresh(true);
+                                    Xrm.Page.ui.refreshRibbon();
                                 }
-                            },
+                            );
+                        }
+                        else {
+                            var queryOption = "$select=fkh_jobstatus,_fkh_vendor_value,fkh_renowalkid&$filter=_fkh_unit_value eq " + unit[0].id.replace('{', '').replace('}', '') + " and  fkh_renowalkid ne null";
+                            var unitcode = null;
+                            if (result.po_unitidnum !== null && result.po_unitidnum !== '' && result.po_unitidnum !== undefined)
+                                unitcode = result.po_unitidnum;
+                            else if (result.fkh_sfcode !== null && result.fkh_sfcode !== '' && result.fkh_sfcode !== undefined)
+                                unitcode = result.fkh_sfcode;
+                            //execute the query and get the results
+                            Xrm.WebApi.retrieveMultipleRecords("fkh_jobs", queryOption)
+                                .then(function (data) {
+                                    if (data.entities.length > 0) {
+                                        var renowalkID = data.entities[0]["fkh_renowalkid"];
+                                        var datapayLoad = '', incomingDataPayLoad = '';
+                                        switch (thisTaskName) {
+                                            case 'Vendor Says Job\'s Complete':
+                                                datapayLoad =
+                                                    {
+                                                        "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': " + (isInitialRenoProcess ? "'IR : VENDOR_SAYS_JOBS_COMPLETE'" : "'Turn Process : VENDOR_SAYS_JOBS_COMPLETE'") + ", 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + unitcode + "', 'JobID' : '" + renowalkID + "', 'Event': " + (isInitialRenoProcess ? "214" : "15") + ", 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
+                                                        "fkh_direction": true,
+                                                        "fkh_name": isInitialRenoProcess ? "IR : VENDOR_SAYS_JOBS_COMPLETE" : "Turn Process : VENDOR_SAYS_JOBS_COMPLETE"
+                                                    };
+                                                incomingDataPayLoad =
+                                                    {
+                                                        "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': " + (isInitialRenoProcess ? "'IR : VENDOR_SAYS_JOBS_COMPLETE'" : "'Turn Process : VENDOR_SAYS_JOBS_COMPLETE'") + ", 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + unitcode + "', 'JobID' : '" + renowalkID + "', 'Event': " + (isInitialRenoProcess ? "214" : "15") + ", 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
+                                                        "fkh_direction": false,
+                                                        "fkh_name": isInitialRenoProcess ? "IR : VENDOR_SAYS_JOBS_COMPLETE" : "Turn Process : VENDOR_SAYS_JOBS_COMPLETE"
+                                                    };
+                                                break;
+                                            case 'Job Completed':
+                                                datapayLoad =
+                                                    {
+                                                        "fkh_eventdata": "[{'id': '" + Createguid() + "', 'eventType': 'allEvents', 'subject': " + (isInitialRenoProcess ? "'IR : JOB_COMPLETED'" : "'Turn Process : JOB_COMPLETED'") + ", 'eventTime': '" + dateTime + "', 'data': { 'PropertyID': '" + unitcode + "', 'JobID' : '" + renowalkID + "', 'Event': " + (isInitialRenoProcess ? "216" : "17") + ", 'Date1': '" + dateTime + "', 'IsForce': false}, 'Topic': '' }]",
+                                                        "fkh_direction": true,
+                                                        "fkh_name": isInitialRenoProcess ? "IR : JOB_COMPLETED" : "Turn Process : JOB_COMPLETED"
+                                                    };
+                                                break;
+
+                                        }
+                                        if (datapayLoad !== '') {
+                                            Xrm.WebApi.createRecord("fkh_azureintegrationcalls", datapayLoad).then(
+                                                function success(result) {
+                                                    console.log("Azure Integration Call created with ID: " + result.id);
+                                                    // perform operations on record creation
+                                                },
+                                                function (error) {
+                                                    console.log("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage:  " + error.message);
+                                                    alert("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage:  " + error.message);
+                                                    // handle error conditions
+                                                }
+                                            );
+                                        }
+                                        if (incomingDataPayLoad !== '') {
+                                            Xrm.WebApi.createRecord("fkh_azureintegrationcalls", incomingDataPayLoad).then(
+                                                function success(result) {
+                                                    console.log("Azure Integration Call created with ID: " + result.id);
+                                                    // perform operations on record creation
+                                                },
+                                                function (error) {
+                                                    console.log("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage:  " + error.message);
+                                                    alert("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage:  " + error.message);
+                                                    // handle error conditions
+                                                }
+                                            );
+                                        }
+
+
+                                    }
+                                    else {
+                                        alert('No Jobs found for Property.');
+                                    }
+                                },
                                 function (error) {
                                     Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.publishMessage:  " + error.message);
                                 }
-                            );
-
-
-
-
+                                );
+                        }
                     }
 
                     //console.log(`Retrieved values: Name: ${result.name}, Revenue: ${result.revenue}`);
@@ -489,13 +591,13 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
         var nexttaskNameToCreate = "";
 
         var req = new XMLHttpRequest();
-        req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=_fkh_taskidentifierid_value&$filter=_msdyn_project_value eq " + thisProjectId.replace("{","").replace("}","") + " and  msdyn_subject eq '" + taskNameToCreate.replace("'","''") + "'", true);
+        req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=_fkh_taskidentifierid_value&$filter=_msdyn_project_value eq " + thisProjectId.replace("{", "").replace("}", "") + " and  msdyn_subject eq '" + taskNameToCreate.replace("'", "''") + "'", true);
         req.setRequestHeader("OData-MaxVersion", "4.0");
         req.setRequestHeader("OData-Version", "4.0");
         req.setRequestHeader("Accept", "application/json");
         req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
         req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
-        req.onreadystatechange = function() {
+        req.onreadystatechange = function () {
             if (this.readyState === 4) {
                 req.onreadystatechange = null;
                 if (this.status === 200) {
@@ -519,7 +621,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                                 break;
                             default:
                         }
-                
+
                         entity.fkh_accessnotes = parentTask["fkh_accessnotes"];
                         entity.fkh_lockboxremoved = parentTask["fkh_lockboxremoved"];
                         entity.fkh_mechanicallockbox = parentTask["fkh_mechanicallockbox"];
@@ -547,7 +649,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                         entity["msdyn_project@odata.bind"] = "/msdyn_projects(" + parentTask["_msdyn_project_value"] + ")";
                         entity["msdyn_ResourceOrganizationalUnitId@odata.bind"] = "/msdyn_organizationalunits(" + parentTask["_msdyn_resourceorganizationalunitid_value"] + ")";
                         entity["ownerid@odata.bind"] = "/systemusers(" + parentTask["_ownerid_value"] + ")";
-                
+
                         var updateReq = new XMLHttpRequest();
                         updateReq.open("POST", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks", true);
                         updateReq.setRequestHeader("OData-MaxVersion", "4.0");
@@ -769,36 +871,38 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
     dateDiffInMinutes: function (startDate, endDate) {
         minutesDiff = Math.floor((endDate - startDate) / (1000 * 60));
-        if (minutesDiff < 0) {minutesDiff = 0;}
+        if (minutesDiff < 0) { minutesDiff = 0; }
         return minutesDiff;
     },
 
     predecessorsAreComplete: function (thisProjectTaskId) {
         predecessorsAreComplete = true;
-        var req = new XMLHttpRequest();
-        req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttaskdependencies?$expand=msdyn_PredecessorTask($select=statuscode)&$filter=_msdyn_successortask_value eq " + thisProjectTaskId, false);
-        req.setRequestHeader("OData-MaxVersion", "4.0");
-        req.setRequestHeader("OData-Version", "4.0");
-        req.setRequestHeader("Accept", "application/json");
-        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-        req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
-        req.onreadystatechange = function() {
-            if (this.readyState === 4) {
-                req.onreadystatechange = null;
-                if (this.status === 200) {
-                    var results = JSON.parse(this.response);
-                    for (var i = 0; i < results.value.length; i++) {
-                        var predecessorStatusReason = results.value[i]["msdyn_PredecessorTask"]["statuscode"];
-                        if(predecessorStatusReason != null && predecessorStatusReason != 963850001 /*Completed*/ && predecessorStatusReason != 2 /*Inactive*/){
-                            predecessorsAreComplete = false;
+        if (thisProjectTaskId != null && String(thisProjectTaskId) != "") {
+            var req = new XMLHttpRequest();
+            req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttaskdependencies?$expand=msdyn_PredecessorTask($select=statuscode)&$filter=_msdyn_successortask_value eq " + thisProjectTaskId, false);
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
+            req.onreadystatechange = function () {
+                if (this.readyState === 4) {
+                    req.onreadystatechange = null;
+                    if (this.status === 200) {
+                        var results = JSON.parse(this.response);
+                        for (var i = 0; i < results.value.length; i++) {
+                            var predecessorStatusReason = results.value[i]["msdyn_PredecessorTask"]["statuscode"];
+                            if (predecessorStatusReason != null && predecessorStatusReason != 963850001 /*Completed*/ && predecessorStatusReason != 2 /*Inactive*/) {
+                                predecessorsAreComplete = false;
+                            }
                         }
+                    } else {
+                        Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.predecessorsAreComplete:  " + this.response);
                     }
-                } else {
-                    Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.predecessorsAreComplete:  " + this.response);
                 }
-            }
-        };
-        req.send();
+            };
+            req.send();
+        }
         return predecessorsAreComplete;
     }
 };
