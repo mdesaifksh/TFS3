@@ -206,6 +206,39 @@ namespace FirstKey.D365.Plug_Ins
             }
         }
 
+        public static EntityCollection RetrieveJobsByRenowalkId(ITracingService tracer, IOrganizationService service, string renowalkID)
+        {
+            try
+            {
+                QueryExpression Query = new QueryExpression
+                {
+                    EntityName = Constants.Jobs.LogicalName,
+                    ColumnSet = new ColumnSet(true),
+                    Criteria = new FilterExpression
+                    {
+                        FilterOperator = LogicalOperator.And,
+                        Conditions =
+                    {
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.Jobs.RenowalkID,
+                            Operator = ConditionOperator.Equal,
+                            Values = { renowalkID }
+                        }
+                    }
+                    },
+                    TopCount = 100
+                };
+
+                return service.RetrieveMultiple(Query);
+            }
+            catch (Exception Ex)
+            {
+                tracer.Trace($"Error in RetrieveJobsByRenowalkId. Error Message : {Ex.Message}. Error Trace : {Ex.StackTrace}");
+                return new EntityCollection();
+            }
+        }
+
         public static Entity RetrieveUnitByUnitId(ITracingService tracer, IOrganizationService service, string unitID)
         {
             QueryExpression Query = new QueryExpression
@@ -282,9 +315,25 @@ namespace FirstKey.D365.Plug_Ins
             if (!DateTime.TryParse(gridEvent.data.Date2, out moveOutDate))
             {
                 if (unitEntity.Attributes.Contains(Constants.Units.MoveOutDate))
+                {
                     moveOutDate = unitEntity.GetAttributeValue<DateTime>(Constants.Units.MoveOutDate);
+                }
             }
             moveOutDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, unitEntity.GetAttributeValue<DateTime>(Constants.Units.MoveOutDate));
+            if (projectTemplateEntity.GetAttributeValue<string>(Constants.Projects.Subject).Equals("Turn Process", StringComparison.OrdinalIgnoreCase))
+            {
+                projectEntity[Constants.Projects.CurrentResidentMoveOutDate] = moveOutDate;
+                projectEntity[Constants.Projects.ScheduledJobStartDate] = moveOutDate;
+                projectEntity[Constants.Projects.ScheduledJobCompletionDate] = moveOutDate.AddDays(5);
+            }
+            else
+            {
+                if (unitEntity.Attributes.Contains(Constants.Units.ScheduledAcquisitionDate)){
+                    DateTime schStartDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, unitEntity.GetAttributeValue<DateTime>(Constants.Units.ScheduledAcquisitionDate));
+                    projectEntity[Constants.Projects.ScheduledJobStartDate] = schStartDate;
+                    projectEntity[Constants.Projects.ScheduledJobCompletionDate] = schStartDate.AddDays(10);
+                }
+            }
             if (moveOutDate > startDate)
                 projectEntity[Constants.Projects.DueDate] = moveOutDate.AddHours(24);
 
@@ -368,6 +417,47 @@ namespace FirstKey.D365.Plug_Ins
             return service.RetrieveMultiple(queryExpression);
         }
 
+        public static Entity CloneEntitySandbox(Entity entityToClone)
+        {
+            var newEntity = new Entity(entityToClone.LogicalName);
+            var systemAttributes = new List<string>();
+            systemAttributes.Add("createdon");
+            systemAttributes.Add("createdby");
+            systemAttributes.Add("modifiedon");
+            systemAttributes.Add("modifiedby");
+            systemAttributes.Add("owninguser");
+            systemAttributes.Add("owningbusinessunit");
+
+
+            foreach (var attribute in entityToClone.Attributes
+                .Where(x => x.Key != entityToClone.LogicalName + "id")
+                .Where(x => !systemAttributes.Contains(x.Key)))
+            {
+
+                switch (attribute.Value.GetType().Name)
+                {
+                    case "Money":
+                        var m = attribute.Value as Money;
+                        newEntity[attribute.Key] = new Money(m.Value);
+                        break;
+                    case "EntityReference":
+                        var er = attribute.Value as EntityReference;
+                        newEntity[attribute.Key] = new EntityReference(er.LogicalName, er.Id);
+                        break;
+                    case "OptionSetValue":
+                        var os = attribute.Value as OptionSetValue;
+                        newEntity[attribute.Key] = new OptionSetValue(os.Value);
+                        break;
+                    default:
+                        newEntity[attribute.Key] = attribute.Value;
+                        break;
+                }
+
+            }
+
+            return newEntity;
+        }
+
 
         public static EntityCollection RetrieveAllOpenProjectTaskByProject(ITracingService tracer, IOrganizationService service, EntityReference projectEntityRefernce, bool isChildTask = false)
         {
@@ -417,6 +507,47 @@ namespace FirstKey.D365.Plug_Ins
             queryExpression.LinkEntities.Add(linkEntity);
             queryExpression.TopCount = new int?(10);
             return service.RetrieveMultiple(queryExpression);
+        }
+
+        public static EntityCollection RetrieveAllProjectTaskIncludingChildByProjectAndTaskIdentifier(ITracingService tracer, IOrganizationService service, EntityReference projectEntityRefernce, EntityReference projectTemplateEntityReference, int TaskIdentifier, string WBSId = null)
+        {
+            QueryExpression queryExpression = new QueryExpression(Constants.ProjectTasks.LogicalName)
+            {
+                ColumnSet = new ColumnSet(true)
+            };
+            queryExpression.Criteria.AddCondition(new ConditionExpression(Constants.ProjectTasks.Project, ConditionOperator.Equal, projectEntityRefernce.Id));
+
+            LinkEntity linkEntity = new LinkEntity(Constants.ProjectTasks.LogicalName, Constants.TaskIdentifiers.LogicalName, Constants.ProjectTasks.TaskIdentifier, Constants.TaskIdentifiers.PrimaryKey, JoinOperator.Inner)
+            {
+                Columns = new ColumnSet(true),
+                EntityAlias = "TI"
+            };
+            if (TaskIdentifier > 0)
+                linkEntity.LinkCriteria.AddCondition(new ConditionExpression(Constants.TaskIdentifiers.IdentifierNumber, ConditionOperator.Equal, TaskIdentifier));
+            if (!string.IsNullOrEmpty(WBSId))
+                linkEntity.LinkCriteria.AddCondition(new ConditionExpression(Constants.TaskIdentifiers.WBSID, ConditionOperator.Equal, WBSId));
+            if (projectTemplateEntityReference != null)
+            {
+                linkEntity.LinkCriteria.AddCondition(new ConditionExpression(Constants.TaskIdentifiers.ProjectTemplateId, ConditionOperator.Equal, projectTemplateEntityReference.Id));
+            }
+            queryExpression.LinkEntities.Add(linkEntity);
+            queryExpression.TopCount = new int?(10);
+            queryExpression.Orders.Add(new OrderExpression(Constants.ProjectTasks.ParentTask, OrderType.Ascending));
+            queryExpression.Orders.Add(new OrderExpression(Constants.ProjectTasks.ContractID, OrderType.Ascending));
+            return service.RetrieveMultiple(queryExpression);
+        }
+
+
+        public static void CalculateRollup(IOrganizationService _service, string fieldName, EntityReference targetRef)
+        {
+
+            //  Execute the Request
+            CalculateRollupFieldRequest req = new CalculateRollupFieldRequest()
+            {
+                FieldName = fieldName,
+                Target = targetRef
+            };
+            CalculateRollupFieldResponse resp = (CalculateRollupFieldResponse)_service.Execute(req);
         }
 
         public static DateTime RetrieveLocalTimeFromUTCTime(IOrganizationService service, int timeZoneCode, DateTime utcTime)
@@ -527,6 +658,59 @@ namespace FirstKey.D365.Plug_Ins
             }
 
         }
+
+        public static EntityCollection RetrieveJobVenodrsByRenowalkID(ITracingService tracer, IOrganizationService service, string renowalkID)
+        {
+            QueryExpression Query = new QueryExpression
+            {
+                EntityName = Constants.JobVendors.LogicalName,
+                ColumnSet = new ColumnSet(true),
+                Criteria = new FilterExpression
+                {
+                    FilterOperator = LogicalOperator.And,
+                    Conditions =
+                    {
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.JobVendors.StartDate,
+                            Operator = ConditionOperator.NotNull
+                        },
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.JobVendors.EndDate,
+                            Operator = ConditionOperator.NotNull
+                        },
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.JobVendors.VendorID,
+                            Operator = ConditionOperator.NotNull
+                        }
+                    }
+                },
+                TopCount = 1000,
+                Orders = { new OrderExpression(Constants.JobVendors.StartDate, OrderType.Ascending) }
+            };
+
+            LinkEntity vendorlinkEntity = new LinkEntity(Constants.JobVendors.LogicalName, Constants.Vendors.LogicalName, Constants.JobVendors.VendorID, Constants.Vendors.PrimaryKey, JoinOperator.Inner)
+            {
+                Columns = new ColumnSet(Constants.Vendors.PrimaryKey, Constants.Vendors.AccountCode, Constants.Vendors.Name),
+                EntityAlias = "V"
+            };
+            vendorlinkEntity.LinkCriteria.AddCondition(new ConditionExpression(Constants.Vendors.AccountCode, ConditionOperator.NotNull));
+            Query.LinkEntities.Add(vendorlinkEntity);
+
+            LinkEntity joblinkEntity = new LinkEntity(Constants.JobVendors.LogicalName, Constants.Jobs.LogicalName, Constants.JobVendors.JobID, Constants.Jobs.PrimaryKey, JoinOperator.Inner)
+            {
+                Columns = new ColumnSet(Constants.Jobs.PrimaryKey, Constants.Jobs.RenowalkID),
+                EntityAlias = "J"
+            };
+            joblinkEntity.LinkCriteria.AddCondition(new ConditionExpression(Constants.Jobs.RenowalkID, ConditionOperator.Equal, renowalkID));
+            Query.LinkEntities.Add(joblinkEntity);
+
+
+            return service.RetrieveMultiple(Query);
+        }
+
     }
 
 }

@@ -62,8 +62,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AzureIntegrationCallAsync.cs" />
+    <Compile Include="ChangeOrderCreate.cs" />
+    <Compile Include="ChangeOrderItemCreate.cs" />
     <Compile Include="CommonMethods.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="ContractCompleted.cs" />
     <Compile Include="D365ToAzureIntegrationCallPlugin.cs" />
     <Compile Include="GridEvent.cs" />
     <Compile Include="JobStatusChange.cs" />
@@ -72,16 +75,21 @@
     <Compile Include="OnJobCreate.cs" />
     <Compile Include="OnProjectManagerChange.cs" />
     <Compile Include="OnRevisedCompletionDateChange.cs" />
+    <Compile Include="OnRevisedStartDateChange.cs" />
     <Compile Include="ProjectTaskPreOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestApproval.cs" />
     <Compile Include="UpdateProjectTakUnitInformation.cs" />
+    <Compile Include="VendorSaysJobStarted.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FirstKey.D365.Plug-Ins.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AzureIntegrationCallAsyncSettings.xml" />
+    <Content Include="AzureIntegrationCallAsyncSettings.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

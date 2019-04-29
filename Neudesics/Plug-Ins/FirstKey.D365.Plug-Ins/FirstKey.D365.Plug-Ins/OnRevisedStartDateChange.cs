@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 namespace FirstKey.D365.Plug_Ins
 {
-    public class OnRevisedCompletionDateChange : IPlugin
+    public class OnRevisedStartDateChange : IPlugin
     {
         #region Secure/Unsecure Configuration Setup
         private string _secureConfig = null;
@@ -16,7 +16,7 @@ namespace FirstKey.D365.Plug_Ins
         private const string TURNPROCESS_PROJECT_TEMPLATE = "TURNPROCESS_PROJECT_TEMPLATE";
         private const string INITIALRENOVATION_PROJECT_TEMPLATE = "INITIALRENOVATION_PROJECT_TEMPLATE";
 
-        public OnRevisedCompletionDateChange(string unsecureConfig, string secureConfig)
+        public OnRevisedStartDateChange(string unsecureConfig, string secureConfig)
         {
             _secureConfig = secureConfig;
             _unsecureConfig = unsecureConfig;
@@ -46,6 +46,7 @@ namespace FirstKey.D365.Plug_Ins
             if (!context.InputParameters.Contains(Constants.TARGET)) { return; }
             if (((Entity)context.InputParameters[Constants.TARGET]).LogicalName != Constants.Projects.LogicalName)
                 return;
+
             try
             {
                 switch (context.MessageName)
@@ -58,7 +59,7 @@ namespace FirstKey.D365.Plug_Ins
                         break;
                 }
 
-                if (projectEntity == null || context.Depth > 1)
+                if (projectEntity == null || context.Depth > 3)
                 {
                     tracer.Trace($"Project entity is Null OR Context Depth is higher than 1. Actual Depth is : {context.Depth}");
                     return;
@@ -71,26 +72,23 @@ namespace FirstKey.D365.Plug_Ins
                     if (propertyEntity is Entity && (propertyEntity.Attributes.Contains(Constants.Units.UnitId) || propertyEntity.Attributes.Contains(Constants.Units.SFCode)))
                     {
                         tracer.Trace($"Unit found with Unit ID {propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId)}");
-                        if (projectEntity.Attributes.Contains(Constants.Projects.RevisedCompletionDate) && projectEntity.Attributes.Contains(Constants.Projects.RenowalkID))
+                        if (projectEntity.Attributes.Contains(Constants.Projects.RevisedStartDate) && projectEntity.Attributes.Contains(Constants.Projects.RenowalkID))
                             CreateOutGoingAzureIntegrationCallRecord(service, tracer, projectEntity, projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), projectTemplateSettings, (propertyEntity.Attributes.Contains(Constants.Units.UnitId)) ? propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId) : propertyEntity.GetAttributeValue<string>(Constants.Units.SFCode));
                         else
-                            tracer.Trace("Project Record does NOT have Revised Completion Date or Renowalk ID.");
+                            tracer.Trace("Project Record does NOT have Revised Start Date or Renowalk ID.");
 
                     }
                     else
                         tracer.Trace("Property Entity Record Not Found.");
                 }
                 else
-                    tracer.Trace("Project entity Object not found OR Project Entity does not have Unit or does not have Project Template.");
-
-                //TODO: Do stuff
+                    tracer.Trace("Project entity Object not found OR Project Entity does not have Unit or does not have Project Template.");                //TODO: Do stuff
             }
             catch (Exception e)
             {
                 tracer.Trace(e.Message + e.StackTrace);
             }
         }
-
         private void CreateOutGoingAzureIntegrationCallRecord(IOrganizationService _service, ITracingService tracer, Entity projectEntity, EntityReference projectTemplateEntityReference, ProjectTemplateSettings projectTemplateSettings, string propertyID)
         {
             Mapping mapping = (
@@ -108,15 +106,15 @@ namespace FirstKey.D365.Plug_Ins
                 gridEventDataPayload.EventType = "allEvents";
                 gridEventDataPayload.Id = Guid.NewGuid().ToString();
                 if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
-                    gridEventDataPayload.Subject = $"Turn Process : {Events.REVISED_COMPLETION_DATE.ToString()}";
+                    gridEventDataPayload.Subject = $"Turn Process : {Events.REVISED_START_DATE.ToString()}";
                 else
-                    gridEventDataPayload.Subject = $"Initial Renovation : {Events.IR_REVISED_COMPLETION_DATE.ToString()}";
+                    gridEventDataPayload.Subject = $"Initial Renovation : {Events.IR_REVISED_START_DATE.ToString()}";
                 gridEventDataPayload.data = new DataPayLoad();
-                gridEventDataPayload.data.Date1 = projectEntity.GetAttributeValue<DateTime>(Constants.Projects.RevisedCompletionDate).ToString();
+                gridEventDataPayload.data.Date1 = projectEntity.GetAttributeValue<DateTime>(Constants.Projects.RevisedStartDate).ToString();
                 if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
-                    gridEventDataPayload.data.Event = Events.REVISED_COMPLETION_DATE;
+                    gridEventDataPayload.data.Event = Events.REVISED_START_DATE;
                 else
-                    gridEventDataPayload.data.Event = Events.IR_REVISED_COMPLETION_DATE;
+                    gridEventDataPayload.data.Event = Events.IR_REVISED_START_DATE;
                 gridEventDataPayload.data.IsForce = false;
                 gridEventDataPayload.data.PropertyID = propertyID;
                 gridEventDataPayload.data.EmailID = string.Empty;
@@ -130,9 +128,9 @@ namespace FirstKey.D365.Plug_Ins
                 azIntCallEntity[Constants.AzureIntegrationCalls.EventData] = CommonMethods.Serialize(gridEventDataPayloadList);
                 azIntCallEntity[Constants.AzureIntegrationCalls.Direction] = true;
                 if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
-                    azIntCallEntity[Constants.AzureIntegrationCalls.EventName] = Events.REVISED_COMPLETION_DATE.ToString();
+                    azIntCallEntity[Constants.AzureIntegrationCalls.EventName] = Events.REVISED_START_DATE.ToString();
                 else
-                    azIntCallEntity[Constants.AzureIntegrationCalls.EventName] = Events.IR_REVISED_COMPLETION_DATE.ToString();
+                    azIntCallEntity[Constants.AzureIntegrationCalls.EventName] = Events.IR_REVISED_START_DATE.ToString();
                 _service.Create(azIntCallEntity);
 
             }

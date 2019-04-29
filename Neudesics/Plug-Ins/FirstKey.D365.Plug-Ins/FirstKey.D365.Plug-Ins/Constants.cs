@@ -26,8 +26,53 @@ namespace FirstKey.D365.Plug_Ins
             public const string StateCode = "statecode";
         }
 
-        public class Projects
+        public class BookableResources {
+            //bookableresource
+            public const string LogicalName = "bookableresource";
+            public const string PrimaryKey = "bookableresourceid";
+
+            public const string AccountID = "accountid";
+            public const string ContactID = "contactid";
+            public const string HourlyRate = "msdyn_hourlyrate";
+            /// <summary>
+            /// Value: 1, Label: Generic
+            /// Value: 2, Label: Contact
+            /// Value: 3, Label: User
+            /// Value: 4, Label: Equipment
+            /// Value: 5, Label: Account
+            /// Value: 6, Label: Crew
+            /// Value: 7, Label: Facility
+            /// Value: 8, Label: Pool
+            /// </summary>
+            public const string ResourceType = "resourcetype";
+            public const string TimeZone = "timezone";
+            public const string Name = "name";
+            public const string OwnerID = "ownerid";
+        }
+
+        public class ProjectTeams
         {
+            public const string LogicalName = "msdyn_projectteam";
+            public const string PrimaryKey = "msdyn_projectteamid";
+
+            public const string BookableResource = "msdyn_bookableresourceid";
+            public const string Project = "msdyn_project";
+            public const string OwnerID = "ownerid";
+            public const string Name = "msdyn_name";
+        }
+
+        public class Vendors
+        {
+            public const string LogicalName = "account";
+            public const string PrimaryKey = "accountid";
+
+            public const string Name = "name";
+            public const string AccountCode = "po_accountcode";
+        }
+
+
+            public class Projects
+        { 
             public const string LogicalName = "msdyn_project";
             public const string PrimaryKey = "msdyn_projectid";
 
@@ -47,7 +92,13 @@ namespace FirstKey.D365.Plug_Ins
             public const string TotalInvoiced = "fkh_totalinvoiced";
             public const string Process = "processid";
             public const string RevisedCompletionDate = "fkh_revisedjobcompletiondate";
+            public const string RevisedStartDate = "fkh_revisedjobstartdate";
             public const string InitialJSONDataPayLoad = "fkh_initialjsondatapayload";
+            public const string CurrentResidentMoveOutDate = "fkh_currentresidentmoveoutdate";
+            public const string ActualJobStartDate = "fkh_actualjobstartdate";
+            public const string ActualJobEndDate = "fkh_actualjobenddate";
+            public const string ScheduledJobStartDate = "fkh_estimatedjobstartdate";
+            public const string ScheduledJobCompletionDate = "fkh_estimatedjobcompletiondate";
         }
 
         public class ProjectTasks
@@ -77,9 +128,32 @@ namespace FirstKey.D365.Plug_Ins
             public const string RentlyLockBoxNote = "fkh_rentlylockboxnote";
             public const string Owner = "ownerid";
             public const string Sequence = "fkh_sequence";
+            //Entity Reference to Project Team
+            public const string AssignedTeamMembers = "msdyn_assignedteammembers";
+            public const string ScheduledDurationMinutes = "msdyn_scheduleddurationminutes";
+            public const string CurrentResidenceMoveOutDate = "fkh_currentresidentmoveoutdate";
+            public const string ContractID = "fkh_contractid";
         }
 
-        public class TaskIdentifiers
+        public class ProjectTasksDependencies
+        {
+            public const string LogicalName = "msdyn_projecttaskdependency";
+            public const string PrimaryKey = "msdyn_projecttaskdependencyid";
+
+            /// <summary>
+            /// Value: 192350000, Label: Finish-to-Start
+            /// Value: 192350001, Label: Start-to-Start
+            /// Value: 192350002, Label: Finish-to-Finish
+            /// Value: 192350004, Label: Start-to-Finish
+            /// </summary>
+            public const string LinkType = "msdyn_linktype";
+            public const string PredecessorTask = "msdyn_predecessortask";
+            public const string SuccessorTask = "msdyn_successortask";
+            public const string Project = "msdyn_project";
+
+        }
+
+            public class TaskIdentifiers
         {
             public const string LogicalName = "fkh_taskidentifier";
             public const string PrimaryKey = "fkh_taskidentifierid";
@@ -120,6 +194,19 @@ namespace FirstKey.D365.Plug_Ins
             public const string VendorID = "fkh_account_jobvendorinid";
         }
 
+        public static class Emails
+        {
+            public const string LogicalName = "email";
+            public const string PrimaryKey = "activityid";
+
+            public const string To = "to";
+            public const string From = "from";
+            public const string DirectionCode = "directioncode";
+            public const string RegardingObject = "regardingobjectid";
+            public const string Subject = "subject";
+            public const string Description = "description";
+        }
+
         public class SystemUsers
         {
             public const string LogicalName = "systemuser";
@@ -149,6 +236,8 @@ namespace FirstKey.D365.Plug_Ins
             public const string RentlyLockBoxNote = "po_rentlylockboxnote";
             public const string UnitAddressLine1 = "po_unitaddline1";
             public const string UnitSyncToMobile = "fkh_synctomobile";
+            public const string ScheduledAcquisitionDate = "fkh_scheduledacquisitiondate";
+            public const string Market = "po_unitmarket";
 
         }
 
@@ -185,6 +274,104 @@ namespace FirstKey.D365.Plug_Ins
             public const string ScheduledStart = "scheduledstart";
             public const string ScheduledEnd = "scheduledend";
             public const string CreatedOn = "createdon";
+        }
+
+        public class ChangeOrders
+        {
+            public const string LogicalName = "fkh_changeorder";
+            public const string PrimaryKey = "fkh_changeorderid";
+
+            public const string Name = "fkh_name";
+            public const string ProjectID = "fkh_projectid";
+            public const string TotalAmount = "fkh_totalamount";
+            public const string Reason = "fkh_reasons";
+            public const string Requestor = "fkh_requestorid";
+            /// <summary>
+            /// Value: 963850000, Label: 0 - 1500
+            /// Value: 963850001, Label: 1500 - 2500
+            /// Value: 963850002, Label: 2500 - 10000
+            /// Value: 963850003, Label: 10000 - 50000
+            /// Value: 963850004, Label: 50000 - 100000
+            /// Value: 963850005, Label: >100000
+            /// </summary>
+            public const string PendingApprovalLevel= "fkh_pendingapprovallevel";
+            public const string Revision = "fkh_revision";
+            public const string Unit = "fkh_unitid";
+        }
+
+        public class ChangeOrderItems
+        {
+            public const string LogicalName = "fkh_changeorderitem";
+            public const string PrimaryKey = "fkh_changeorderitemid";
+
+            public const string Name = "fkh_name";
+            public const string ChangeOrder = "fkh_changeorderid";
+            public const string Amount = "fkh_amount";
+            public const string Vendor = "fkh_vendorid";
+            public const string JobCategory = "fkh_jobcategoryid";
+
+        }
+
+        public class BudgetApprovers
+        {
+            public const string LogicalName = "fkh_budgetapprover";
+            public const string PrimaryKey = "fkh_budgetapproverid";
+
+            /// <summary>
+            /// Value: 963850000, Label: 0 - 1500
+            /// Value: 963850001, Label: 1500 - 2500
+            /// Value: 963850002, Label: 2500 - 10000
+            /// Value: 963850003, Label: 10000 - 50000
+            /// Value: 963850004, Label: 50000 - 100000
+            /// Value: 963850005, Label: >100000
+            /// </summary>
+            public const string Level = "fkh_level";
+            /// <summary>
+            /// Value: 936710000, Label: Atlanta
+            /// Value: 936710023, Label: Birmingham
+            /// Value: 936710024, Label: California
+            /// Value: 936710025, Label: Charleston
+            /// Value: 936710015, Label: Charlotte
+            /// Value: 936710001, Label: Chicago
+            /// Value: 936710003, Label: Cincinnati
+            /// Value: 936710004, Label: Columbus
+            /// Value: 936710017, Label: Dallas
+            /// Value: 936710026, Label: Florida
+            /// Value: 936710006, Label: Ft Myers
+            /// Value: 936710029, Label: Greensboro
+            /// Value: 936710016, Label: Houston
+            /// Value: 936710002, Label: Indianapolis
+            /// Value: 936710007, Label: Jacksonville
+            /// Value: 936710010, Label: Kansas City
+            /// Value: 936710013, Label: Las Vegas
+            /// Value: 936710020, Label: Louisville
+            /// Value: 936710012, Label: Memphis
+            /// Value: 936710005, Label: Miami
+            /// Value: 936710027, Label: Minneapolis
+            /// Value: 936710022, Label: NA
+            /// Value: 936710008, Label: Orlando
+            /// Value: 936710028, Label: Pennsylvania
+            /// Value: 936710014, Label: Phoenix
+            /// Value: 936710030, Label: Pittsburgh
+            /// Value: 936710019, Label: Raleigh
+            /// Value: 936710018, Label: San Antonio
+            /// Value: 936710011, Label: St Louis
+            /// Value: 936710009, Label: Tampa
+            /// Value: 936710021, Label: Winston-Salem            
+            /// </summary>
+            public const string Market = "fkh_market";
+            public const string ApproverID = "fkh_approverid";
+            public const string RequesterID = "fkh_requestorid";
+
+
+        }
+
+        public static class CustomActionParam
+        {
+            public const string IsSuccess = "IsSuccess";
+            public const string ErrorMessage = "ErrorMessage";
+            public const string Revision = "Revision";
+            public const string ServerUrl = "ServerUrl";
         }
 
     }

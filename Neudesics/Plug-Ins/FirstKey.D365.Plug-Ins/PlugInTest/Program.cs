@@ -23,19 +23,38 @@ namespace PlugInTest
 
 
         private static CrmServiceClient _client;
-        static IOrganizationService _service;
+        static IOrganizationService service;
+        private const string TURNPROCESS_PROJECT_TEMPLATE = "TURNPROCESS_PROJECT_TEMPLATE";
+        private const string INITIALRENOVATION_PROJECT_TEMPLATE = "INITIALRENOVATION_PROJECT_TEMPLATE";
 
         public static void Main(string[] args)
         {
             try
             {
-                string str = @"1.1.1.1";
+                //string str = @"1.1.1.1";
 
-                str = str.RemoveAllButFirst(".");
+                //str = str.RemoveAllButFirst(".");
+
+                //decimal decSequence = 0;
+                //if (decimal.TryParse(str, out decSequence))
+                //    Console.WriteLine(decSequence);
+
+                string date1 = "2019-03-24T12:00:00";
+                //string date2 = "2019-04-30T06:00:00";
+                //DateTime dt1, dt2;
+                //DateTime.TryParse(date1, out dt1);
+                //DateTime.TryParse(date2, out dt2);
+                //dt2 = dt2.AddDays(-37);
+                //Console.WriteLine(dt2.ToString());
+                //Console.WriteLine(dt1.Date.ToString());
+                //Console.WriteLine(dt2.Date.ToString());
+                //Console.WriteLine((dt2.Date > dt1.Date) ? "Date2" : "Date1");
+
+
 
                 using (_client = new CrmServiceClient(ConfigurationManager.ConnectionStrings["CRMConnectionString"].ConnectionString))
                 {
-                    _service = (IOrganizationService)_client.OrganizationWebProxyClient != null ? (IOrganizationService)_client.OrganizationWebProxyClient : (IOrganizationService)_client.OrganizationServiceProxy;
+                    service = (IOrganizationService)_client.OrganizationWebProxyClient != null ? (IOrganizationService)_client.OrganizationWebProxyClient : (IOrganizationService)_client.OrganizationServiceProxy;
 
 
 
@@ -45,32 +64,39 @@ namespace PlugInTest
                     Console.WriteLine($"Organization Unique Name : {_client.ConnectedOrgUniqueName}");
                     Console.WriteLine($"Organization Display Name : {_client.ConnectedOrgFriendlyName}");
 
-                    string emailSubject = "Test Email From Malhar To Test Email Case Issue";
-                    string TicketTitle = "INC-10637-2019 - Test Email From Malhar To Test Email Case Issue";
+                    //string emailSubject = "Test Email From Malhar To Test Email Case Issue";
+                    //string TicketTitle = "INC-10637-2019 - Test Email From Malhar To Test Email Case Issue";
 
-                    bool strcontains = TicketTitle.Contains(emailSubject);
+                    //bool strcontains = TicketTitle.Contains(emailSubject);
                     //CreateOutGoingAzureIntegrationCallRecord();
 
-                   
+
                     CrmContext con = new CrmContext();
-                    ITracingService tracingService = new NullCrmTracingService();
+                    ITracingService tracer = new NullCrmTracingService();
 
-                    
-                   XmlSerializer serializer = new XmlSerializer(typeof(ProjectTemplateSettings));
 
-                   ProjectTemplateSettings settings;
-                   using (var fs = new FileStream("AzureIntegrationCallAsyncSettings.xml", FileMode.Open))
-                   {
-                       // Uses the Deserialize method to restore the object's state   
-                       // with data from the XML document. 
-                       settings = (ProjectTemplateSettings)serializer.Deserialize(fs);
-                   }
+                    XmlSerializer serializer = new XmlSerializer(typeof(ProjectTemplateSettings));
+
+                    ProjectTemplateSettings projectTemplateSettings;
+                    using (var fs = new FileStream("AzureIntegrationCallAsyncSettings.xml", FileMode.Open))
+                    {
+                        // Uses the Deserialize method to restore the object's state   
+                        // with data from the XML document. 
+                        projectTemplateSettings = (ProjectTemplateSettings)serializer.Deserialize(fs);
+                    }
                     /*
                     //CommonMethods.ChangeEntityStatus(tracingService, _service, new EntityReference(Constants.Projects.LogicalName, new Guid("556C6EE4-E8E2-E811-A976-000D3A1A42B9")),1,2);
 
                     //Entity test = RetrieveProjectTemplateTask(new EntityReference("msdyn_project", new Guid("23A38E60-C0D0-E811-A96E-000D3A16ACEE")), "1");
                      */
-                    //Entity azureIntegrationCallEntity = _client.Retrieve(Constants.AzureIntegrationCalls.LogicalName, new Guid("04D177A1-323D-E911-A953-000D3A1D5D5A"), new Microsoft.Xrm.Sdk.Query.ColumnSet(true));
+                    //Entity azureIntegrationCallEntity = _client.Retrieve(Constants.AzureIntegrationCalls.LogicalName, new Guid("74E3FDA8-0A66-E911-A959-000D3A1D5D58"), new Microsoft.Xrm.Sdk.Query.ColumnSet(true));
+                    //AzureIntegrationCallAsync.ProcessIncomingIntegrationCall(tracer, service, azureIntegrationCallEntity, projectTemplateSettings);
+
+                    Entity tmp = _client.Retrieve(Constants.ChangeOrders.LogicalName, new Guid("91C9AFBD-B966-E911-A959-000D3A1D52E7"), new ColumnSet(true));
+
+
+                    //EntityReference projectTaskEntityReference = new EntityReference(Constants.ProjectTasks.LogicalName, new Guid("4394DED3-C163-E911-A959-000D3A1D5D58"));
+                    //VendorSaysJobStarted.ExecuteContext(tracer, service, projectTaskEntityReference, projectTemplateSettings);
 
                     //con.InputParameters[Constants.TARGET] = azureIntegrationCallEntity;
                     //List<GridEvent<DataPayLoad>> GridEventList = CommonMethods.Deserialize<List<GridEvent<DataPayLoad>>>(azureIntegrationCallEntity.GetAttributeValue<string>("fkh_eventdata").Replace('\'','"'));
@@ -79,10 +105,53 @@ namespace PlugInTest
                     //    DateTime eventDate;
                     //    DateTime.TryParse(turnAround.EventTime, out eventDate);
                     //}
+                    //B7DF24CE-4952-E911-A959-000D3A1D5D58
+                    //service.Delete(Constants.Projects.LogicalName, new Guid("F951E43C-D254-E911-A959-000D3A1D5D22"));
+                    //return;
 
-                    //AzureIntegrationCallAsync.ProcessIncomingIntegrationCall(tracingService, _service, azureIntegrationCallEntity, settings);
+                    //service.Delete(Constants.ProjectTasks.LogicalName, new Guid("85ED936E-B854-E911-A959-000D3A1D5D22"));
+                    //service.Delete(Constants.ProjectTasks.LogicalName, new Guid("3043F06D-B854-E911-A959-000D3A1D52E7"));
+                    //service.Delete(Constants.ProjectTasks.LogicalName, new Guid("C74B2566-B854-E911-A955-000D3A1D5D5A"));
+                    //service.Delete(Constants.ProjectTasks.LogicalName, new Guid("95621E6C-B854-E911-A955-000D3A1D5D5A"));
 
-                    CalculateTurnSchStartandEndDate();
+                    //Entity jobEntity = service.Retrieve(Constants.Jobs.LogicalName, new Guid("317FCCE2-3121-E911-A952-000D3A1D52E7"), new ColumnSet(true));
+                    //if (jobEntity is Entity)
+                    //{
+                    //    EntityCollection projectEntityCollection = new EntityCollection();
+                    //    if (jobEntity.Attributes.Contains(Constants.Jobs.RenowalkID))
+                    //        projectEntityCollection = CommonMethods.RetrieveActivtProjectByRenowalkId(tracer, service, jobEntity.GetAttributeValue<string>(Constants.Jobs.RenowalkID));
+                    //    if (projectEntityCollection.Entities.Count == 0 && jobEntity.Attributes.Contains(Constants.Jobs.Unit))
+                    //        projectEntityCollection = CommonMethods.RetrieveActivtProjectByUnitId(tracer, service, jobEntity.GetAttributeValue<EntityReference>(Constants.Jobs.Unit));
+                    //    foreach (Entity projectEntity in projectEntityCollection.Entities)
+                    //    {
+                    //        if (projectEntity.Attributes.Contains(Constants.Projects.ProjectTemplate))
+                    //        {
+                    //            Mapping mapping = (
+                    //                from m in projectTemplateSettings.Mappings
+                    //                where m.Key.Equals(projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate).Id.ToString(), StringComparison.OrdinalIgnoreCase)
+                    //                select m).FirstOrDefault<Mapping>();
+                    //            if (mapping is Mapping)
+                    //            {
+                    //                tracer.Trace($"Project Template is : {mapping.Name}");
+                    //                int timeZoneCode = CommonMethods.RetrieveCurrentUsersSettings(service);
+
+                    //                if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
+                    //                {
+                    //                    EntityCollection jobVendorsEntityCollection = JobStatusChange.RetrieveJobVenodrsByJob(tracer, service, jobEntity.ToEntityReference());
+                    //                    if (jobVendorsEntityCollection.Entities.Count > 0)
+                    //                    {
+                    //                        tracer.Trace($"Project Template is : {mapping.Name}");
+
+                    //                        //JobStatusChange.CreateVendorProjectTask(tracer, service, projectEntity, jobVendorsEntityCollection, mapping, timeZoneCode);
+                    //                        JobStatusChange.CalculateTurnSchStartandEndDate(tracer, service, projectEntity, jobEntity, mapping, timeZoneCode);
+                    //                    }
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+
+
+                    //CalculateTurnSchStartandEndDate();
 
 
 
@@ -92,8 +161,9 @@ namespace PlugInTest
 
 
                     Console.WriteLine($"Press any key to exit.");
-                    Console.Read();
+                        Console.Read();
 
+                    //}
                 }
             }
             catch (FaultException<OrganizationServiceFault> ex)
@@ -128,7 +198,7 @@ namespace PlugInTest
                 Orders = { new OrderExpression(Constants.JobVendors.StartDate, OrderType.Ascending) }
             };
 
-            EntityCollection jobVendorsEntityCollection = _service.RetrieveMultiple(Query);
+            EntityCollection jobVendorsEntityCollection = service.RetrieveMultiple(Query);
 
             Entity startDateEntity = jobVendorsEntityCollection.Entities.Where(e => e.Attributes.Contains(Constants.JobVendors.StartDate)).OrderBy(e => e.Attributes[Constants.JobVendors.StartDate]).FirstOrDefault();
             Entity endDateEntity = jobVendorsEntityCollection.Entities.Where(e => e.Attributes.Contains(Constants.JobVendors.EndDate)).OrderByDescending(e => e.Attributes[Constants.JobVendors.EndDate]).FirstOrDefault();
@@ -158,10 +228,10 @@ namespace PlugInTest
             azIntCallEntity[Constants.AzureIntegrationCalls.Direction] = true;
             azIntCallEntity[Constants.AzureIntegrationCalls.EventName] = Events.JOB_COMPLETED.ToString();
 
-            _service.Create(azIntCallEntity);
+            service.Create(azIntCallEntity);
         }
 
-        
+
 
         //[DataContract]
         //public class GridEvent<T>
@@ -194,7 +264,7 @@ namespace PlugInTest
         //    [DataMember]
         //    public bool IsForce { get; set; }
         //}
-        
+
 
     }
 }

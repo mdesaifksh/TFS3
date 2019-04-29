@@ -9,6 +9,7 @@ namespace PlugInTest
         public void Trace(string format, params object[] args)
         {
             //do nothing
+            Console.WriteLine(format);
         }
     }
     public class CrmContext : IPluginExecutionContext

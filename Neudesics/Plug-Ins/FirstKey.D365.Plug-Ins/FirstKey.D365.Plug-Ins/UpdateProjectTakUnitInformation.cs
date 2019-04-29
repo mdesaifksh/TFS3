@@ -54,30 +54,197 @@ namespace FirstKey.D365.Plug_Ins
                     {
                         Entity tmpEntity = new Entity(projectTaskEntity.LogicalName);
                         tmpEntity.Id = projectTaskEntity.Id;
-
+                        bool isUpdateRequired = false;
                         //Access Notes
                         if (unitEntity.Attributes.Contains(Constants.Units.AccessNotes))
-                            tmpEntity[Constants.ProjectTasks.AccessNotes] = unitEntity.GetAttributeValue<string>(Constants.Units.AccessNotes);
+                        {
+                            if (!string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.AccessNotes)))
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.AccessNotes) && unitEntity.GetAttributeValue<string>(Constants.Units.AccessNotes).Equals(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.AccessNotes)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.AccessNotes] = unitEntity.GetAttributeValue<string>(Constants.Units.AccessNotes);
+                                    isUpdateRequired = true;
+                                }
+                            }
+                            else
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.AccessNotes) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.AccessNotes)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.AccessNotes] = null;
+                                    isUpdateRequired = true;
+                                }
+                            }
+                        }
                         //LockBox Removed
                         if (unitEntity.Attributes.Contains(Constants.Units.LockBoxRemoved))
-                            tmpEntity[Constants.ProjectTasks.LockBoxRemoved] = unitEntity.GetAttributeValue<DateTime>(Constants.Units.LockBoxRemoved);
+                        {
+                            if (!string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.LockBoxRemoved)))
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.LockBoxRemoved) && unitEntity.GetAttributeValue<string>(Constants.Units.LockBoxRemoved).Equals(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.LockBoxRemoved)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.LockBoxRemoved] = unitEntity.GetAttributeValue<DateTime>(Constants.Units.LockBoxRemoved);
+                                    isUpdateRequired = true;
+                                }
+                            }
+                            else
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.LockBoxRemoved) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.LockBoxRemoved)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.LockBoxRemoved] = null;
+                                    isUpdateRequired = true;
+                                }
+                            }
+                        }
                         //Mechanical Lockbox
                         if (unitEntity.Attributes.Contains(Constants.Units.MechanicalLockBox))
-                            tmpEntity[Constants.ProjectTasks.MechanicalLockBox] = unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBox);
+                        {
+                            if (!string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBox)))
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.MechanicalLockBox) && unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBox).Equals(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.MechanicalLockBox)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.MechanicalLockBox] = unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBox);
+                                    isUpdateRequired = true;
+                                }
+                            }
+                            else
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.MechanicalLockBox) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.MechanicalLockBox)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.MechanicalLockBox] = null;
+                                    isUpdateRequired = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (projectTaskEntity.Attributes.Contains(Constants.Units.MechanicalLockBox) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.MechanicalLockBox)))
+                            {
+                                tmpEntity[Constants.ProjectTasks.MechanicalLockBox] = null;
+                                isUpdateRequired = true;
+                            }
+                        }
                         //Mechanical Lockbox Note
                         if (unitEntity.Attributes.Contains(Constants.Units.MechanicalLockBoxNote))
-                            tmpEntity[Constants.ProjectTasks.MechanicalLockBoxNote] = unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBoxNote);
+                        {
+                            if (!string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBoxNote)))
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.MechanicalLockBoxNote) &&
+                                    unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBoxNote).Equals(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.MechanicalLockBoxNote)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.MechanicalLockBoxNote] = unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBoxNote);
+                                    isUpdateRequired = true;
+                                }
+                            }
+                            else
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.MechanicalLockBoxNote) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.MechanicalLockBoxNote)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.MechanicalLockBoxNote] = null;
+                                    isUpdateRequired = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (projectTaskEntity.Attributes.Contains(Constants.Units.MechanicalLockBoxNote) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.MechanicalLockBoxNote)))
+                            {
+                                tmpEntity[Constants.ProjectTasks.MechanicalLockBoxNote] = null;
+                                isUpdateRequired = true;
+                            }
+                        }
                         //Property Gate Code
                         if (unitEntity.Attributes.Contains(Constants.Units.PropertyGateCode))
-                            tmpEntity[Constants.ProjectTasks.PropertyGateCode] = unitEntity.GetAttributeValue<string>(Constants.Units.PropertyGateCode);
+                        {
+                            if (!string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBoxNote)))
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.MechanicalLockBoxNote) &&
+                                    unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBoxNote).Equals(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.MechanicalLockBoxNote)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.PropertyGateCode] = unitEntity.GetAttributeValue<string>(Constants.Units.PropertyGateCode);
+                                    isUpdateRequired = true;
+                                }
+                            }
+                            else
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.MechanicalLockBoxNote) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.MechanicalLockBoxNote)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.MechanicalLockBoxNote] = null;
+                                    isUpdateRequired = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (projectTaskEntity.Attributes.Contains(Constants.Units.MechanicalLockBoxNote) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.MechanicalLockBoxNote)))
+                            {
+                                tmpEntity[Constants.ProjectTasks.MechanicalLockBoxNote] = null;
+                                isUpdateRequired = true;
+                            }
+                        }
                         //Rently Lockbox
                         if (unitEntity.Attributes.Contains(Constants.Units.RentlyLockBox))
-                            tmpEntity[Constants.ProjectTasks.RentlyLockBox] = unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBox);
-                        //Access Notes
+                        {
+                            if (!string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBox)))
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.RentlyLockBox) &&
+                                    unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBox).Equals(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.RentlyLockBox)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.RentlyLockBox] = unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBox);
+                                    isUpdateRequired = true;
+                                }
+                            }
+                            else
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.RentlyLockBox) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.RentlyLockBox)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.RentlyLockBox] = null;
+                                    isUpdateRequired = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (projectTaskEntity.Attributes.Contains(Constants.Units.RentlyLockBox) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.RentlyLockBox)))
+                            {
+                                tmpEntity[Constants.ProjectTasks.RentlyLockBox] = null;
+                                isUpdateRequired = true;
+                            }
+                        }                        //Rently Lock Box Note
                         if (unitEntity.Attributes.Contains(Constants.Units.RentlyLockBoxNote))
-                            tmpEntity[Constants.ProjectTasks.RentlyLockBoxNote] = unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBoxNote);
-
-                        orgRequestCollection.Add(new UpdateRequest() { Target = tmpEntity });
+                        {
+                            if (!string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBoxNote)))
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.RentlyLockBoxNote) &&
+                                    unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBoxNote).Equals(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.RentlyLockBoxNote)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.RentlyLockBoxNote] = unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBoxNote);
+                                    isUpdateRequired = true;
+                                }
+                            }
+                            else
+                            {
+                                if (projectTaskEntity.Attributes.Contains(Constants.Units.RentlyLockBoxNote) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.RentlyLockBoxNote)))
+                                {
+                                    tmpEntity[Constants.ProjectTasks.RentlyLockBoxNote] = null;
+                                    isUpdateRequired = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (projectTaskEntity.Attributes.Contains(Constants.Units.RentlyLockBoxNote) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.RentlyLockBoxNote)))
+                            {
+                                tmpEntity[Constants.ProjectTasks.RentlyLockBoxNote] = null;
+                                isUpdateRequired = true;
+                            }
+                        }
+                        if (isUpdateRequired)
+                            orgRequestCollection.Add(new UpdateRequest() { Target = tmpEntity });
+                        else
+                        {
+                            tracer.Trace($"No updates available to update Unit Info. Existing loop. and plugin.");
+                            break;
+                        }
                         cnt++;
                         if (cnt > 998)
                         {

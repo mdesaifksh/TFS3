@@ -44,6 +44,13 @@ namespace FirstKey.D365.Plug_Ins
 
                 if (projectTaskEntity is Entity && projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.Project) && projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.WBSID))
                 {
+                    
+                    string strSequence = projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.WBSID);
+                    strSequence = strSequence.RemoveAllButFirst(".");
+                    decimal decSequence = 0;
+                    if(decimal.TryParse(strSequence,out decSequence))
+                        projectTaskEntity[Constants.ProjectTasks.Sequence] = decSequence;
+                    
 
                     tracer.Trace($"Project Task contains Project as well as WBSID.");
                     Entity projectEntity = service.Retrieve(projectTaskEntity.GetAttributeValue<EntityReference>(Constants.ProjectTasks.Project).LogicalName,
@@ -85,25 +92,25 @@ namespace FirstKey.D365.Plug_Ins
                             projectTaskEntity[Constants.ProjectTasks.UnitId] = unitEntity.ToEntityReference();
 
                             //Access Notes
-                            if (unitEntity.Attributes.Contains(Constants.Units.AccessNotes))
+                            if (unitEntity.Attributes.Contains(Constants.Units.AccessNotes) && !string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.AccessNotes)))
                                 projectTaskEntity[Constants.ProjectTasks.AccessNotes] = unitEntity.GetAttributeValue<string>(Constants.Units.AccessNotes);
                             //LockBox Removed
-                            if (unitEntity.Attributes.Contains(Constants.Units.LockBoxRemoved))
+                            if (unitEntity.Attributes.Contains(Constants.Units.LockBoxRemoved) && !string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.LockBoxRemoved)))
                                 projectTaskEntity[Constants.ProjectTasks.LockBoxRemoved] = unitEntity.GetAttributeValue<DateTime>(Constants.Units.LockBoxRemoved);
                             //Mechanical Lockbox
-                            if (unitEntity.Attributes.Contains(Constants.Units.MechanicalLockBox))
+                            if (unitEntity.Attributes.Contains(Constants.Units.MechanicalLockBox) && !string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBox)))
                                 projectTaskEntity[Constants.ProjectTasks.MechanicalLockBox] = unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBox);
                             //Mechanical Lockbox Note
-                            if (unitEntity.Attributes.Contains(Constants.Units.MechanicalLockBoxNote))
+                            if (unitEntity.Attributes.Contains(Constants.Units.MechanicalLockBoxNote) && !string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBoxNote)))
                                 projectTaskEntity[Constants.ProjectTasks.MechanicalLockBoxNote] = unitEntity.GetAttributeValue<string>(Constants.Units.MechanicalLockBoxNote);
                             //Property Gate Code
-                            if (unitEntity.Attributes.Contains(Constants.Units.PropertyGateCode))
+                            if (unitEntity.Attributes.Contains(Constants.Units.PropertyGateCode) && !string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.PropertyGateCode)))
                                 projectTaskEntity[Constants.ProjectTasks.PropertyGateCode] = unitEntity.GetAttributeValue<string>(Constants.Units.PropertyGateCode);
                             //Rently Lockbox
-                            if (unitEntity.Attributes.Contains(Constants.Units.RentlyLockBox))
+                            if (unitEntity.Attributes.Contains(Constants.Units.RentlyLockBox) && !string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBox)))
                                 projectTaskEntity[Constants.ProjectTasks.RentlyLockBox] = unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBox);
                             //Access Notes
-                            if (unitEntity.Attributes.Contains(Constants.Units.RentlyLockBoxNote))
+                            if (unitEntity.Attributes.Contains(Constants.Units.RentlyLockBoxNote) && !string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBoxNote)))
                                 projectTaskEntity[Constants.ProjectTasks.RentlyLockBoxNote] = unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBoxNote);
 
                             if (projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.TaskIdentifier) && !string.IsNullOrEmpty(projectTaskEntity.GetAttributeValue<EntityReference>(Constants.ProjectTasks.TaskIdentifier).Name))
@@ -114,7 +121,6 @@ namespace FirstKey.D365.Plug_Ins
                                 {
                                     DateTime scheduledStartDate, scheduledEndDate;
                                     DateTime Date2 = unitStatusChange;
-                                    bool date2Found = true;
                                     if (projectEntity.Attributes.Contains(Constants.Projects.InitialJSONDataPayLoad))
                                     {
                                         try
@@ -126,20 +132,17 @@ namespace FirstKey.D365.Plug_Ins
                                                 if (!DateTime.TryParse(dataPayLoad.Date2, out Date2))
                                                 {
                                                     Date2 = unitStatusChange;
-                                                    date2Found = false;
                                                 }
                                                 tracer.Trace($"Initial Data PayLoad Date 2. {Date2.ToString()}");
                                             }
                                             else
                                             {
                                                 Date2 = unitStatusChange;
-                                                date2Found = false;
                                             }
                                         }
                                         catch (Exception ex)
                                         {
                                             tracer.Trace($"Error Thrown during Deserialing Initial Data PayLoad :  {projectEntity.GetAttributeValue<string>(Constants.Projects.InitialJSONDataPayLoad)} {Environment.NewLine} Error : {ex.Message}");
-                                            date2Found = false;
                                         }
                                     }
                                     //DateTime SchStartDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, projectTaskEntity.GetAttributeValue<DateTime>(Constants.ProjectTasks.ScheduledStart));
@@ -163,8 +166,9 @@ namespace FirstKey.D365.Plug_Ins
                                             //Date2 = (Date2.AddDays(-37) > DateTime.Now) ? ((Date2.AddDays(-37) > unitStatusChange) ? Date2.AddDays(-37) : unitStatusChange.AddHours(24)) : ((unitStatusChange > DateTime.Now) ? unitStatusChange.AddHours(24) : DateTime.Now);
                                             tracer.Trace($"Scheduled Start Date : {unitStatusChange}");
                                             tracer.Trace($"Scheduled End Date : {scheduledEndDate}");
-                                            projectTaskEntity[Constants.ProjectTasks.ActualStart] = unitStatusChange;
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = Date2;
+                                            projectTaskEntity[Constants.ProjectTasks.ActualStart] = unitStatusChange;//(unitStatusChange.Date < scheduledEndDate.Date) ? unitStatusChange : unitStatusChange.AddDays(-1);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = unitStatusChange; // (unitStatusChange.Date < scheduledEndDate.Date) ? unitStatusChange : unitStatusChange.AddDays(-1);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = scheduledEndDate;
                                             projectTaskEntity[Constants.ProjectTasks.Progress] = new decimal(1);
                                             projectTaskEntity[Constants.Status.StatusCode] = new OptionSetValue(963850000);
                                             break;

@@ -90,7 +90,7 @@ namespace FirstKey.D365.Plug_Ins
 
                 if (jobEntity is Entity && projectTemplateSettings is ProjectTemplateSettings)
                 {
-                    tracer.Trace($"Finding Active Project for Unit with ID : {jobEntity.GetAttributeValue<EntityReference>(Constants.Jobs.Unit).Id.ToString()}.");
+                    tracer.Trace($"Finding Active Project using Unit or Renowalk ID.");
                     EntityCollection projectEntityCollection = new EntityCollection();
                     if (jobEntity.Attributes.Contains(Constants.Jobs.RenowalkID))
                         projectEntityCollection = CommonMethods.RetrieveActivtProjectByRenowalkId(tracer, service, jobEntity.GetAttributeValue<string>(Constants.Jobs.RenowalkID));
@@ -110,81 +110,45 @@ namespace FirstKey.D365.Plug_Ins
                             {
                                 tracer.Trace($"Project Template is : {mapping.Name}");
                                 int timeZoneCode = CommonMethods.RetrieveCurrentUsersSettings(service);
-
-                                if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
+                                DateTime currentDateTime = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, DateTime.Now);
+                                tracer.Trace($"Current Date Time : {currentDateTime}");
+                                CalculateTurnSchStartandEndDate(tracer, service, projectEntity, jobEntity, mapping, timeZoneCode);
+                                EntityCollection job_and_contracts_sub_to_yardi_EntityCollection = CommonMethods.RetrieveOpenProjectTaskByProjectAndTaskIdentifier(tracer, service, projectEntity.ToEntityReference(), projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate),
+                                    mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE) ? 10 : 209, mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE) ? "10" : "9");
+                                foreach (Entity e in job_and_contracts_sub_to_yardi_EntityCollection.Entities)
                                 {
-                                    CalculateTurnSchStartandEndDate(tracer, service, projectEntity, jobEntity, mapping, timeZoneCode);
-                                    EntityCollection job_and_contracts_sub_to_yardi_EntityCollection = CommonMethods.RetrieveOpenProjectTaskByProjectAndTaskIdentifier(tracer, service, projectEntity.ToEntityReference(), projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), 10, "10");
-                                    foreach (Entity e in job_and_contracts_sub_to_yardi_EntityCollection.Entities)
+                                    Entity num = new Entity(e.LogicalName)
                                     {
-                                        Entity num = new Entity(e.LogicalName)
-                                        {
-                                            Id = e.Id
-                                        };
-                                        num[Constants.ProjectTasks.ActualStart] = DateTime.Now;
-                                        num[Constants.ProjectTasks.ActualEnd] = DateTime.Now;
-                                        num[Constants.ProjectTasks.ActualDurationInMinutes] = (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart)) ? 0 : (DateTime.Now - e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart)).TotalMinutes;
-                                        num[Constants.ProjectTasks.Progress] = new decimal(100);
-                                        num[Constants.Status.StatusCode] = new OptionSetValue(963850001);
-                                        service.Update(num);
-                                        tracer.Trace("Task for Event : JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI Successfully Updated.");
-                                    }
-
-                                    EntityCollection job_assign_to_vendor_in_cc_EntityCollection = CommonMethods.RetrieveOpenProjectTaskByProjectAndTaskIdentifier(tracer, service, projectEntity.ToEntityReference(), projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), 9, "9");
-                                    foreach (Entity e in job_assign_to_vendor_in_cc_EntityCollection.Entities)
-                                    {
-                                        Entity num = new Entity(e.LogicalName)
-                                        {
-                                            Id = e.Id
-                                        };
-                                        if (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart))
-                                            num[Constants.ProjectTasks.ActualStart] = DateTime.Now;
-                                        num[Constants.ProjectTasks.ActualEnd] = DateTime.Now;
-                                        num[Constants.ProjectTasks.ActualDurationInMinutes] = (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart)) ? 0 : (DateTime.Now - e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart)).TotalMinutes;
-                                        num[Constants.ProjectTasks.Progress] = new decimal(100);
-                                        num[Constants.Status.StatusCode] = new OptionSetValue(963850001);
-                                        service.Update(num);
-                                        tracer.Trace("Task for Event : JOB_ASSIGNMENT_TO_VENDORS_IN_CONTRACT_CREATOR Successfully Updated.");
-                                    }
-
-
-
+                                        Id = e.Id
+                                    };
+                                    num[Constants.ProjectTasks.ActualStart] = currentDateTime;
+                                    num[Constants.ProjectTasks.ActualEnd] = currentDateTime;
+                                    num[Constants.ProjectTasks.ActualDurationInMinutes] = (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart)) ? 0 : (((currentDateTime - e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart)).TotalMinutes > 0) ? (int)Math.Floor((currentDateTime - e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart)).TotalMinutes) : 0);
+                                    //(!e.Attributes.Contains(Constants.ProjectTasks.ActualStart)) ? (int) 0 : (currentDateTime - e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart)).TotalMinutes;
+                                    num[Constants.ProjectTasks.Progress] = new decimal(100);
+                                    num[Constants.Status.StatusCode] = new OptionSetValue(963850001);
+                                    service.Update(num);
+                                    tracer.Trace("Task for Event : JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI Successfully Updated.");
                                 }
-                                else if (mapping.Name.Equals(INITIALRENOVATION_PROJECT_TEMPLATE))
+
+                                EntityCollection job_assign_to_vendor_in_cc_EntityCollection = CommonMethods.RetrieveOpenProjectTaskByProjectAndTaskIdentifier(tracer, service, projectEntity.ToEntityReference(), projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate),
+                                    mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE) ? 9 : 207, mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE) ? "9" : "7");
+                                foreach (Entity e in job_assign_to_vendor_in_cc_EntityCollection.Entities)
                                 {
-                                    EntityCollection job_and_contracts_sub_to_yardi_EntityCollection = CommonMethods.RetrieveOpenProjectTaskByProjectAndTaskIdentifier(tracer, service, projectEntity.ToEntityReference(), projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), 209, "9");
-                                    foreach (Entity e in job_and_contracts_sub_to_yardi_EntityCollection.Entities)
+                                    Entity num = new Entity(e.LogicalName)
                                     {
-                                        Entity num = new Entity(e.LogicalName)
-                                        {
-                                            Id = e.Id
-                                        };
-                                        num[Constants.ProjectTasks.ActualStart] = DateTime.Now;
-                                        num[Constants.ProjectTasks.ActualEnd] = DateTime.Now;
-                                        num[Constants.ProjectTasks.ActualDurationInMinutes] = (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart)) ? 0 : (DateTime.Now - e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart)).TotalMinutes;
-                                        num[Constants.ProjectTasks.Progress] = new decimal(100);
-                                        num[Constants.Status.StatusCode] = new OptionSetValue(963850001);
-                                        service.Update(num);
-                                        tracer.Trace("Task for Event : JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI Successfully Updated.");
-                                    }
-
-                                    EntityCollection job_assign_to_vendor_in_cc_EntityCollection = CommonMethods.RetrieveOpenProjectTaskByProjectAndTaskIdentifier(tracer, service, projectEntity.ToEntityReference(), projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), 207, "7");
-                                    foreach (Entity e in job_assign_to_vendor_in_cc_EntityCollection.Entities)
-                                    {
-                                        Entity num = new Entity(e.LogicalName)
-                                        {
-                                            Id = e.Id
-                                        };
-                                        if (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart))
-                                            num[Constants.ProjectTasks.ActualStart] = DateTime.Now;
-                                        num[Constants.ProjectTasks.ActualEnd] = DateTime.Now;
-                                        num[Constants.ProjectTasks.ActualDurationInMinutes] = (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart)) ? 0 : (DateTime.Now - e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart)).TotalMinutes;
-                                        num[Constants.ProjectTasks.Progress] = new decimal(100);
-                                        num[Constants.Status.StatusCode] = new OptionSetValue(963850001);
-                                        service.Update(num);
-                                        tracer.Trace("Task for Event : JOB_ASSIGNMENT_TO_VENDORS_IN_CONTRACT_CREATOR Successfully Updated.");
-                                    }
+                                        Id = e.Id
+                                    };
+                                    if (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart))
+                                        num[Constants.ProjectTasks.ActualStart] = currentDateTime;
+                                    num[Constants.ProjectTasks.ActualEnd] = currentDateTime;
+                                    num[Constants.ProjectTasks.ActualDurationInMinutes] = (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart)) ? 0 : (((currentDateTime - e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart)).TotalMinutes > 0) ? (int)Math.Floor((currentDateTime - e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart)).TotalMinutes) : 0);
+                                    num[Constants.ProjectTasks.Progress] = new decimal(100);
+                                    num[Constants.Status.StatusCode] = new OptionSetValue(963850001);
+                                    service.Update(num);
+                                    tracer.Trace("Task for Event : JOB_ASSIGNMENT_TO_VENDORS_IN_CONTRACT_CREATOR Successfully Updated.");
                                 }
+
                             }
                         }
                     }
@@ -192,34 +156,41 @@ namespace FirstKey.D365.Plug_Ins
             }
             catch (Exception e)
             {
-                throw new InvalidPluginExecutionException(e.Message);
+                tracer.Trace(e.Message + e.StackTrace);
             }
         }
 
-        private void CalculateTurnSchStartandEndDate(ITracingService tracer, IOrganizationService service, Entity projectEntity, Entity jobEntity, Mapping mapping, int timeZoneCode)
+        public static void CalculateTurnSchStartandEndDate(ITracingService tracer, IOrganizationService service, Entity projectEntity, Entity jobEntity, Mapping mapping, int timeZoneCode)
         {
             if (jobEntity.Attributes.Contains(Constants.Jobs.JobAmount))
             {
                 EntityCollection jobVendorsEntityCollection = RetrieveJobVenodrsByJob(tracer, service, jobEntity.ToEntityReference());
                 if (jobVendorsEntityCollection.Entities.Count > 0)
                 {
+                    Entity startDateEntity = jobVendorsEntityCollection.Entities.Where(e => e.Attributes.Contains(Constants.JobVendors.StartDate)).OrderBy(e => e.Attributes[Constants.JobVendors.StartDate]).FirstOrDefault();
+                    DateTime schJobStartDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, startDateEntity.GetAttributeValue<DateTime>(Constants.JobVendors.StartDate));
                     tracer.Trace($"Project Template is : {mapping.Name}");
 
                     if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
                     {
+                        tracer.Trace("Processing Turn Project...");
                         if (projectEntity.Attributes.Contains(Constants.Projects.Unit))
                         {
                             Entity unitEntity = service.Retrieve(Constants.Units.LogicalName, projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.Unit).Id, new ColumnSet(Constants.Units.MoveOutDate));
                             if (unitEntity is Entity && unitEntity.Attributes.Contains(Constants.Units.MoveOutDate))
                             {
-                                DateTime schJobCompletionDate = unitEntity.GetAttributeValue<DateTime>(Constants.Units.MoveOutDate).AddDays((double)Math.Ceiling(jobEntity.GetAttributeValue<Money>(Constants.Jobs.JobAmount).Value / 700));
-                                Entity startDateEntity = jobVendorsEntityCollection.Entities.Where(e => e.Attributes.Contains(Constants.JobVendors.StartDate)).OrderBy(e => e.Attributes[Constants.JobVendors.StartDate]).FirstOrDefault();
-                                Entity endDateEntity = jobVendorsEntityCollection.Entities.Where(e => e.Attributes.Contains(Constants.JobVendors.StartDate)).OrderByDescending(e => e.Attributes[Constants.JobVendors.EndDate]).FirstOrDefault();
+                                DateTime moveOutDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, unitEntity.GetAttributeValue<DateTime>(Constants.Units.MoveOutDate));
+                                tracer.Trace($"Property Move Out Date  : {moveOutDate}");
+                                DateTime schJobCompletionDate = moveOutDate.AddDays((double)Math.Ceiling(jobEntity.GetAttributeValue<Money>(Constants.Jobs.JobAmount).Value / 700));
 
-                                DateTime startDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, startDateEntity.GetAttributeValue<DateTime>(Constants.JobVendors.StartDate));
-                                DateTime endDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, endDateEntity.GetAttributeValue<DateTime>(Constants.JobVendors.EndDate));
+                                PerformScheduledDateMoveOut(tracer, service, projectEntity, schJobCompletionDate, timeZoneCode, true);
+                                //CreateVendorProjectTask(tracer, service, projectEntity, jobVendorsEntityCollection, mapping, schJobCompletionDate, timeZoneCode);
 
-                                PerformScheduledDateMoveOut(tracer, service, projectEntity, schJobCompletionDate, startDate, endDate, true);
+                                Entity tmpPrj = new Entity(projectEntity.LogicalName);
+                                tmpPrj.Id = projectEntity.Id;
+                                tmpPrj[Constants.Projects.ScheduledJobStartDate] = schJobStartDate;
+                                tmpPrj[Constants.Projects.ScheduledJobCompletionDate] = schJobCompletionDate;
+                                service.Update(tmpPrj);
                             }
                             else
                                 tracer.Trace("Unit Entity does not contain Move Out Date.");
@@ -230,23 +201,59 @@ namespace FirstKey.D365.Plug_Ins
                     }
                     else
                     {
+                        tracer.Trace("Processing Reno Project...");
+                        DateTime schJobCompletionDate = DateTime.Now.ChangeTime(6, 0, 0, 0);
+                        bool schJobCompFound = false;
+                        //First use ESCRO
                         EntityCollection prop_acquired_EntityCollection = CommonMethods.RetrieveAllProjectTaskByProjectAndTaskIdentifier(tracer, service, projectEntity.ToEntityReference(), projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), (int)Events.CLOSE_ESCROW);
                         if (prop_acquired_EntityCollection.Entities.Count > 0)
                         {
                             Entity propAcquiredProjectTaskEntity = prop_acquired_EntityCollection.Entities[0];
-                            if(propAcquiredProjectTaskEntity is Entity && propAcquiredProjectTaskEntity.Attributes.Contains(Constants.ProjectTasks.ActualEnd))
+                            if (propAcquiredProjectTaskEntity is Entity && propAcquiredProjectTaskEntity.Attributes.Contains(Constants.ProjectTasks.ActualEnd))
                             {
-                                Entity startDateEntity = jobVendorsEntityCollection.Entities.Where(e => e.Attributes.Contains(Constants.JobVendors.StartDate)).OrderBy(e => e.Attributes[Constants.JobVendors.StartDate]).FirstOrDefault();
-                                Entity endDateEntity = jobVendorsEntityCollection.Entities.Where(e => e.Attributes.Contains(Constants.JobVendors.StartDate)).OrderByDescending(e => e.Attributes[Constants.JobVendors.EndDate]).FirstOrDefault();
+                                schJobCompletionDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, propAcquiredProjectTaskEntity.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualEnd));
+                                tracer.Trace($"Sched. Job Completion Date from Property Acquired Task End Date : {propAcquiredProjectTaskEntity.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualEnd)}.");
 
-                                DateTime startDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, startDateEntity.GetAttributeValue<DateTime>(Constants.JobVendors.StartDate));
-                                DateTime endDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, endDateEntity.GetAttributeValue<DateTime>(Constants.JobVendors.EndDate));
-                                DateTime schJobCompletionDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, propAcquiredProjectTaskEntity.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualEnd));
-
-                                PerformScheduledDateMoveOut(tracer, service, projectEntity, schJobCompletionDate, startDate, endDate, true);
+                                schJobCompFound = true;
 
                             }
                         }
+                        if (!schJobCompFound)
+                        {
+                            if (projectEntity.Attributes.Contains(Constants.Projects.Unit))
+                            {
+                                Entity unitEntity = service.Retrieve(Constants.Units.LogicalName, projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.Unit).Id, new ColumnSet(Constants.Units.ScheduledAcquisitionDate));
+                                if (unitEntity is Entity && unitEntity.Attributes.Contains(Constants.Units.ScheduledAcquisitionDate))
+                                {
+                                    schJobCompletionDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, unitEntity.GetAttributeValue<DateTime>(Constants.Units.ScheduledAcquisitionDate));
+                                    tracer.Trace($"Sched. Job Completion Date from Unit Acquisition Date : {unitEntity.GetAttributeValue<DateTime>(Constants.Units.ScheduledAcquisitionDate)}.");
+                                    schJobCompFound = true;
+                                }
+                            }
+                        }
+                        if (!schJobCompFound)
+                        {
+                            Entity endDateEntity = jobVendorsEntityCollection.Entities.Where(e => e.Attributes.Contains(Constants.JobVendors.EndDate)).OrderByDescending(e => e.Attributes[Constants.JobVendors.EndDate]).FirstOrDefault();
+                            schJobCompletionDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, endDateEntity.GetAttributeValue<DateTime>(Constants.JobVendors.EndDate)).AddDays(1);
+                            tracer.Trace($"Sched. Job Completion Date from Last Job End Date : {schJobCompletionDate}.");
+                            schJobCompFound = true;
+                        }
+
+
+                        tracer.Trace($"Sched. Job Completion Date before Job Amount Cal Date : {schJobCompletionDate}. Job Amount : {jobEntity.GetAttributeValue<Money>(Constants.Jobs.JobAmount).Value}");
+                        schJobCompletionDate = schJobCompletionDate.AddDays((double)Math.Ceiling(jobEntity.GetAttributeValue<Money>(Constants.Jobs.JobAmount).Value / 700));
+                        tracer.Trace($"Final Sched. Job Completion Date  : {schJobCompletionDate}.");
+
+
+                        Entity tmpPrj = new Entity(projectEntity.LogicalName);
+                        tmpPrj.Id = projectEntity.Id;
+                        tmpPrj[Constants.Projects.ScheduledJobStartDate] = schJobStartDate;
+                        tmpPrj[Constants.Projects.ScheduledJobCompletionDate] = schJobCompletionDate;
+                        service.Update(tmpPrj);
+
+                        PerformScheduledDateMoveOut(tracer, service, projectEntity, schJobCompletionDate, timeZoneCode, false);
+                        //CreateVendorProjectTask(tracer, service, projectEntity, jobVendorsEntityCollection, mapping, schJobCompletionDate, timeZoneCode);
+
                     }
                 }
             }
@@ -256,7 +263,7 @@ namespace FirstKey.D365.Plug_Ins
             }
         }
 
-        private void PerformScheduledDateMoveOut(ITracingService tracer, IOrganizationService service, Entity projectEntity, DateTime schJobCompletionDate, DateTime startDate, DateTime endDate, bool isTurn)
+        private static void PerformScheduledDateMoveOut(ITracingService tracer, IOrganizationService service, Entity projectEntity, DateTime schJobCompletionDate, int timeZoneCode, bool isTurn)
         {
             List<Entity> TaskIndentifierEntityList = CommonMethods.RetrieveActivtTaskIdentifier(tracer, service);
 
@@ -274,39 +281,52 @@ namespace FirstKey.D365.Plug_Ins
 
                         Entity tmpPrjTskEntity = new Entity(projectTaskEntity.LogicalName);
                         tmpPrjTskEntity.Id = projectTaskEntity.Id;
-                        bool requiredUpdate = false;
+                        bool requiredUpdate = false, orgSchStartDateFound = false;
+                        DateTime orgSchStartDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, DateTime.Now); 
+                        if (projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.ScheduledStart))
+                        {
+                            orgSchStartDateFound = true;
+                            orgSchStartDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, projectTaskEntity.GetAttributeValue<DateTime>(Constants.ProjectTasks.ScheduledStart));
+                        }
 
                         if (isTurn)
                         {
                             #region TURN SWITCH
                             switch (taskIdentifierEntity.GetAttributeValue<string>(Constants.TaskIdentifiers.WBSID))
                             {
-                                case "11":          //VENDOR(S) SAYS JOB STARTED
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = startDate;
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = startDate;
-                                    requiredUpdate = true;
-                                    break;
-                                case "12":          //WORK IN PROGRESS
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = startDate;
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = endDate;
-                                    requiredUpdate = true;
-                                    break;
-                                case "13":          //VENDOR SAYS JOB?S COMPLETE
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = endDate;
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = endDate;
-                                    requiredUpdate = true;
-                                    break;
-                                case "14":          //QUALITY CONTROL INSPECTION
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = endDate;
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = (schJobCompletionDate > endDate) ? schJobCompletionDate : endDate.AddDays(1);
-                                    requiredUpdate = true;
-                                    break;
+                                //case "11":          //VENDOR(S) SAYS JOB STARTED
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = startDate;
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = startDate;
+                                //    requiredUpdate = true;
+                                //    break;
+                                //case "12":          //WORK IN PROGRESS
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = startDate;
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = endDate;
+                                //    requiredUpdate = true;
+                                //    break;
+                                //case "13":          //VENDOR SAYS JOB?S COMPLETE
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = endDate;
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = endDate;
+                                //    requiredUpdate = true;
+                                //    break;
+                                //case "14":          //QUALITY CONTROL INSPECTION
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = endDate;
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = (schJobCompletionDate > endDate) ? schJobCompletionDate : endDate.AddDays(1);
+                                //    requiredUpdate = true;
+                                //    break;
                                 case "15":          //JOB COMPLETED
                                     tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = schJobCompletionDate;
                                     tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = schJobCompletionDate;
                                     requiredUpdate = true;
                                     break;
                                 case "16":          //HERO SHOT PICTURE
+                                    if (orgSchStartDateFound)
+                                    {
+                                        tracer.Trace($"Original Scheduled Start Date : {orgSchStartDate}");
+                                        tracer.Trace($"New Sch Job Completion Date : {schJobCompletionDate}");
+                                        if (orgSchStartDate > schJobCompletionDate)
+                                            tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = schJobCompletionDate.AddDays(-1).ChangeTime(6, 0, 0, 0);
+                                    }
                                     tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = schJobCompletionDate;
                                     requiredUpdate = true;
                                     break;
@@ -330,32 +350,39 @@ namespace FirstKey.D365.Plug_Ins
                             #region RENO SWITCH
                             switch (taskIdentifierEntity.GetAttributeValue<string>(Constants.TaskIdentifiers.WBSID))
                             {
-                                case "10":           //IR : VENDORS_SAYS_JOB_STARTED
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = startDate;
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = startDate;
-                                    requiredUpdate = true;
-                                    break;
-                                case "11":           //IR : WORK_IN_PROGRESS
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = startDate;
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = endDate;
-                                    requiredUpdate = true;
-                                    break;
-                                case "12":           //IR : VENDOR_SAYS_JOBS_COMPLETE
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = endDate;
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = endDate;
-                                    requiredUpdate = true;
-                                    break;
-                                case "13":           //IR : QUALITY_CONTROL_INSPECTION
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = endDate;
-                                    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = (schJobCompletionDate > endDate) ? schJobCompletionDate : endDate.AddDays(1);
-                                    requiredUpdate = true;
-                                    break;
+                                //case "10":           //IR : VENDORS_SAYS_JOB_STARTED
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = startDate;
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = startDate;
+                                //    requiredUpdate = true;
+                                //    break;
+                                //case "11":           //IR : WORK_IN_PROGRESS
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = startDate;
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = endDate;
+                                //    requiredUpdate = true;
+                                //    break;
+                                //case "12":           //IR : VENDOR_SAYS_JOBS_COMPLETE
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = endDate;
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = endDate;
+                                //    requiredUpdate = true;
+                                //    break;
+                                //case "13":           //IR : QUALITY_CONTROL_INSPECTION
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = endDate;
+                                //    tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = (schJobCompletionDate > endDate) ? schJobCompletionDate : endDate.AddDays(1);
+                                //    requiredUpdate = true;
+                                //    break;
                                 case "14":           //IR : JOB_COMPLETED
                                     tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = schJobCompletionDate;
                                     tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = schJobCompletionDate;
                                     requiredUpdate = true;
                                     break;
                                 case "15":           //IR : HERO_SHOT_PICTURE
+                                    if (orgSchStartDateFound)
+                                    {
+                                        tracer.Trace($"Original Scheduled Start Date : {orgSchStartDate}");
+                                        tracer.Trace($"New Sch Job Completion Date : {schJobCompletionDate}");
+                                        if (orgSchStartDate > schJobCompletionDate)
+                                            tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = schJobCompletionDate.AddDays(-1).ChangeTime(6, 0, 0, 0);
+                                    }
                                     tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = schJobCompletionDate;
                                     requiredUpdate = true;
                                     break;
@@ -372,9 +399,19 @@ namespace FirstKey.D365.Plug_Ins
                             }
                             #endregion
                         }
-
-                        if (requiredUpdate)
-                            service.Update(tmpPrjTskEntity);
+                        try
+                        {
+                            if (requiredUpdate)
+                            {
+                                tracer.Trace($"Updating Project Task: {projectTaskEntity.GetAttributeValue<EntityReference>(Constants.ProjectTasks.TaskIdentifier).Name}");
+                                service.Update(tmpPrjTskEntity);
+                                tracer.Trace($"Project Task: {projectTaskEntity.GetAttributeValue<EntityReference>(Constants.ProjectTasks.TaskIdentifier).Name} successfully updated.");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            tracer.Trace(ex.Message + ex.StackTrace);
+                        }
 
                     }
                 }
@@ -382,7 +419,7 @@ namespace FirstKey.D365.Plug_Ins
             //
         }
 
-        private EntityCollection RetrieveJobVenodrsByJob(ITracingService tracer, IOrganizationService service, EntityReference jobEntityReference)
+        public static EntityCollection RetrieveJobVenodrsByJob(ITracingService tracer, IOrganizationService service, EntityReference jobEntityReference)
         {
             QueryExpression Query = new QueryExpression
             {
@@ -408,12 +445,26 @@ namespace FirstKey.D365.Plug_Ins
                         {
                             AttributeName = Constants.JobVendors.EndDate,
                             Operator = ConditionOperator.NotNull
+                        },
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.JobVendors.VendorID,
+                            Operator = ConditionOperator.NotNull
                         }
                     }
                 },
                 TopCount = 1000,
                 Orders = { new OrderExpression(Constants.JobVendors.StartDate, OrderType.Ascending) }
             };
+
+            LinkEntity vendorlinkEntity = new LinkEntity(Constants.JobVendors.LogicalName, Constants.Vendors.LogicalName, Constants.JobVendors.VendorID, Constants.Vendors.PrimaryKey, JoinOperator.Inner)
+            {
+                Columns = new ColumnSet(Constants.Vendors.PrimaryKey, Constants.Vendors.AccountCode),
+                EntityAlias = "V"
+            };
+            vendorlinkEntity.LinkCriteria.AddCondition(new ConditionExpression(Constants.Vendors.AccountCode, ConditionOperator.NotNull));
+            Query.LinkEntities.Add(vendorlinkEntity);
+
 
             return service.RetrieveMultiple(Query);
         }

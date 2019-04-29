@@ -92,9 +92,10 @@ namespace FirstKey.D365.Plug_Ins
                 else
                     tracer.Trace("Project entity Object not found OR Project Entity does not have Unit or does not have Project Template.");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new InvalidPluginExecutionException(e.Message);
+                tracer.Trace(ex.Message + ex.StackTrace);
+                //UpdateAzureIntegrationCallErrorDetails(service, azureIntegrationCallEntity.ToEntityReference(), ex.Message + Environment.NewLine + ex.StackTrace);
             }
         }
 

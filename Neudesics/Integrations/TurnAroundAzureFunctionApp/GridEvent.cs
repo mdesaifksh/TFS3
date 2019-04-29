@@ -93,10 +93,25 @@ namespace TurnAroundAzureFunctionApp
         public string Date2 { get; set; }
         public string Date3 { get; set; }
         public string JobID { get; set; }
+        public string Contract_Code { get; set; }
         public bool IsForce { get; set; }
         public string FotoNotesID { get; set; }
         public string RenowalkID { get; set; }
         public string EmailID { get; set; }
+        public string ApprovedBy { get; set; }
+        public List<Contract> Contracts { get; set; }
+    }
+
+    public class Contract
+    {
+        public string Contract_Code { get; set; }
+        public string Vendor_Code { get; set; }
+        public string Category_Code { get; set; }
+        public string Amount { get; set; }
+        public string Start_Date { get; set; }
+        public string ItemID { get; set; }
+        public string ItemDescription { get; set; }
+        public string ItemReason { get; set; }
     }
 
     public enum Events
@@ -127,6 +142,12 @@ namespace TurnAroundAzureFunctionApp
         DUE_DILLIGENCE_DEADLINE = 24,
         DD_INSPECTION_APPROVED = 25,
         CLOSING_DOCS_APPROVED = 26,
+        JOB_CONFIRMED_IN_YARDI = 27,
+        REVISED_START_DATE = 28,
+        MULTI_VENDOR = 29,
+        CHANGE_ORDER = 30,
+        VENDOR_SAYS_CONTRACT_STARTED = 31,
+        VENDOR_SAYS_CONTRACT_COMPLETED = 32,
         MOVE_OUT_DATE_CHANGED = 1001,
         OFFER_ACCEPTED = 201,
         IR_ASSIGN_PROJECT_MANAGER = 202,
@@ -153,6 +174,12 @@ namespace TurnAroundAzureFunctionApp
         IR_DUE_DILLIGENCE_DEADLINE = 224,
         IR_DD_INSPECTION_APPROVED = 225,
         IR_CLOSING_DOCS_APPROVED = 226,
+        IR_JOB_CONFIRMED_IN_YARDI = 227,
+        IR_REVISED_START_DATE = 228,
+        IR_MULTI_VENDOR = 229,
+        IR_CHANGE_ORDER = 230,
+        IR_VENDOR_SAYS_CONTRACT_STARTED = 231,
+        IR_VENDOR_SAYS_CONTRACT_COMPLETED = 232
     }
 
 }
