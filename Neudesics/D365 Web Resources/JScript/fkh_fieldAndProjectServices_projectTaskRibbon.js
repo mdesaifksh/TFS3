@@ -121,12 +121,16 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
         var minutesBetween = FKH.FieldAndProjectServices.ProjectTaskRibbon.dateDiffInMinutes(startDate, endDate);
         Xrm.Page.getAttribute("msdyn_actualdurationminutes").setValue(minutesBetween);
         Xrm.Page.getAttribute("statuscode").setValue(963850001);//Completed
+        FKH.FieldAndProjectServices.ProjectTaskRibbon.completeParentTask(Xrm.Page.getAttribute("msdyn_parenttask").getValue()[0].id.toString().replace("{", "").replace("}", ""), Xrm.Page.data.entity.getId().toString().replace("{", "").replace("}", ""));
     },
 
     startThisTask: function () {
         Xrm.Page.getAttribute("msdyn_actualstart").setValue(new Date());
         Xrm.Page.getAttribute("msdyn_progress").setValue(1);
         Xrm.Page.getAttribute("statuscode").setValue(963850000);//In Progress
+        if (Xrm.Page.getAttribute("msdyn_parenttask") != null && Xrm.Page.getAttribute("msdyn_parenttask").getValue() != null) {
+            FKH.FieldAndProjectServices.ProjectTaskRibbon.startParentTask(Xrm.Page.getAttribute("msdyn_parenttask").getValue()[0].id.toString().replace("{", "").replace("}", ""));
+        }
     },
 
     isVisible_MarkComplete: function () {
@@ -224,17 +228,147 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
         return false;
     },
 
+    startParentTask: function (parentTaskId) {
+        var getReq = new XMLHttpRequest();
+        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart,msdyn_progress,statuscode&$filter=msdyn_projecttaskid eq " + parentTaskId, true);
+        getReq.setRequestHeader("OData-MaxVersion", "4.0");
+        getReq.setRequestHeader("OData-Version", "4.0");
+        getReq.setRequestHeader("Accept", "application/json");
+        getReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        getReq.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                getReq.onreadystatechange = null;
+                if (this.status === 200) {
+                    var results = JSON.parse(this.response);
+                    if (results.value.length != 0) {
+                        var entity = {};
+                        var submitUpdate = false;
+                        if (results.value[0]["msdyn_actualstart"] == null) {
+                            entity.msdyn_actualstart = new Date().toISOString();
+                            submitUpdate = true;
+                        }
+                        if (results.value[0]["msdyn_progress"] == null || results.value[0]["msdyn_progress"] == 0) {
+                            entity.msdyn_progress = 1;
+                            submitUpdate = true;
+                        }
+                        if (results.value[0]["statuscode"] != 963850000) {
+                            entity.statuscode = 963850000; //In Progress
+                            submitUpdate = true;
+                        }
+
+                        if (submitUpdate) {
+                            var updateReq = new XMLHttpRequest();
+                            updateReq.open("PATCH", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks(" + parentTaskId + ")", true);
+                            updateReq.setRequestHeader("OData-MaxVersion", "4.0");
+                            updateReq.setRequestHeader("OData-Version", "4.0");
+                            updateReq.setRequestHeader("Accept", "application/json");
+                            updateReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                            updateReq.onreadystatechange = function () {
+                                if (this.readyState === 4) {
+                                    updateReq.onreadystatechange = null;
+                                    if (this.status === 204) {
+                                        //Success
+                                    } else {
+                                        Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.startParentTask2: " + this.response);
+                                    }
+                                }
+                            };
+                            updateReq.send(JSON.stringify(entity));
+                        }
+                    }
+                } else {
+                    Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.startParentTask1: " + this.response);
+                }
+            }
+        };
+        getReq.send();
+    },
+
+    completeParentTask: function (parentTaskId, thisChildTaskId) {
+        var getReq = new XMLHttpRequest();
+        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart,msdyn_progress,statuscode,msdyn_projecttaskid&$filter=_msdyn_parenttask_value eq " + parentTaskId + " and  msdyn_projecttaskid ne " + thisChildTaskId + " and statuscode ne 963850001 and statuscode ne 2", true);
+        getReq.setRequestHeader("OData-MaxVersion", "4.0");
+        getReq.setRequestHeader("OData-Version", "4.0");
+        getReq.setRequestHeader("Accept", "application/json");
+        getReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        getReq.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                getReq.onreadystatechange = null;
+                if (this.status === 200) {
+                    var results = JSON.parse(this.response);
+                    if (results.value.length == 0) {
+                        var getTaskReq = new XMLHttpRequest();
+                        getTaskReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart&$filter=msdyn_projecttaskid eq " + parentTaskId, true);
+                        getTaskReq.setRequestHeader("OData-MaxVersion", "4.0");
+                        getTaskReq.setRequestHeader("OData-Version", "4.0");
+                        getTaskReq.setRequestHeader("Accept", "application/json");
+                        getTaskReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                        getTaskReq.onreadystatechange = function () {
+                            if (this.readyState === 4) {
+                                getTaskReq.onreadystatechange = null;
+                                if (this.status === 200) {
+                                    var innerResults = JSON.parse(this.response);
+                                    if (innerResults.value.length != 0) {
+                                        var entity = {};
+                                        var startDate;
+                                        var currentDatetime = new Date().toISOString();
+                                        if (innerResults.value[0]["msdyn_actualstart"] == null) {
+                                            entity.msdyn_actualstart = currentDatetime;
+                                            startDate = new Date();
+                                        } else {
+                                            startDate = new Date(innerResults.value[0]["msdyn_actualstart"]);
+                                        }
+                                        entity.msdyn_actualend = currentDatetime;
+                                        endDate = new Date();
+                                        var minutesBetween = FKH.FieldAndProjectServices.ProjectTaskRibbon.dateDiffInMinutes(startDate, endDate);
+                                        try {
+                                            entity.msdyn_actualdurationminutes = minutesBetween;
+                                        } catch (err) {
+                                            Xrm.Utility.alertDialog(err);
+                                        }
+                                        entity.msdyn_progress = 100;
+                                        entity.statuscode = 963850001; //Completed
+
+                                        var updateReq = new XMLHttpRequest();
+                                        updateReq.open("PATCH", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks(" + parentTaskId + ")", true);
+                                        updateReq.setRequestHeader("OData-MaxVersion", "4.0");
+                                        updateReq.setRequestHeader("OData-Version", "4.0");
+                                        updateReq.setRequestHeader("Accept", "application/json");
+                                        updateReq.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                                        updateReq.onreadystatechange = function () {
+                                            if (this.readyState === 4) {
+                                                updateReq.onreadystatechange = null;
+                                                if (this.status === 204) {
+                                                    //Success
+                                                } else {
+                                                    Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.completeParentTask2: " + this.response);
+                                                }
+                                            }
+                                        };
+                                        updateReq.send(JSON.stringify(entity));
+                                    }
+                                } else {
+                                    Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.startParentTask1: " + this.response);
+                                }
+                            }
+                        };
+                        getTaskReq.send();
+                    }
+                } else {
+                    Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.completeParentTask1: " + this.response);
+                }
+            }
+        };
+        getReq.send();
+    },
+
     startTask: function (taskName, projectId, contractID) {
         var getReq = new XMLHttpRequest();
-        var filter = "";
+        var filter = "_msdyn_project_value eq " + projectId + " and contains(msdyn_subject, '" + taskName.replace("'", "%") + "') and statuscode ne 963850001 and statuscode ne 2";
         if (contractID != null) {
-            //filter = "_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and fkh_contractid eq '" + contractID + "' and statuscode ne 963850001 and statuscode ne 2";
-            filter = "_msdyn_project_value eq " + projectId + " and contains(msdyn_subject, '" + taskName.replace("'", "%") + "') and fkh_contractid eq '" + contractID + "' and statuscode ne 963850001 and statuscode ne 2";
-        } else {
-            filter = "_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2";
+            filter += " and fkh_contractid eq '" + contractID + "'";
         }
-        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart,msdyn_progress,statuscode,msdyn_projecttaskid&$filter=" + filter, true);
-        //getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart,msdyn_progress,statuscode,msdyn_projecttaskid&$filter=_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2", true);
+        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=_msdyn_parenttask_value,msdyn_actualstart,msdyn_progress,statuscode,msdyn_projecttaskid&$filter=" + filter, true);
         getReq.setRequestHeader("OData-MaxVersion", "4.0");
         getReq.setRequestHeader("OData-Version", "4.0");
         getReq.setRequestHeader("Accept", "application/json");
@@ -256,7 +390,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                             entity.msdyn_progress = 1;
                             submitUpdate = true;
                         }
-                        if (results.value[i]["statuscode"] != 963850001) {
+                        if (results.value[i]["statuscode"] != 963850000) {
                             entity.statuscode = 963850000; //In Progress
                             submitUpdate = true;
                         }
@@ -279,6 +413,9 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                                 }
                             };
                             updateReq.send(JSON.stringify(entity));
+                            if (results.value[i]["_msdyn_parenttask_value"] != null && results.value[i]["_msdyn_parenttask_value"] != "") {
+                                FKH.FieldAndProjectServices.ProjectTaskRibbon.startParentTask(results.value[i]["_msdyn_parenttask_value"]);
+                            }
                         }
                     }
                 } else {
@@ -291,15 +428,11 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
     completeTask: function (taskName, projectId, contractID) {
         var getReq = new XMLHttpRequest();
-        var filter = "";
+        var filter = "_msdyn_project_value eq " + projectId + " and contains(msdyn_subject, '" + taskName.replace("'", "%") + "') and statuscode ne 963850001 and statuscode ne 2";
         if (contractID != null) {
-            //filter = "_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + (taskName == "Vendor Says Job's Complete" ? "Vendor Says Job\'s Complete" : taskName) + "' and fkh_contractid eq '" + contractID + "' and statuscode ne 963850001 and statuscode ne 2";
-            filter = "_msdyn_project_value eq " + projectId + " and contains(msdyn_subject, '" + taskName.replace("'", "%") + "') and fkh_contractid eq '" + contractID + "' and statuscode ne 963850001 and statuscode ne 2";
-        } else {
-            filter = "_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2";
+            filter += " and fkh_contractid eq '" + contractID + "'";
         }
-        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart&$filter=" + filter, true);
-        //getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=msdyn_actualstart&$filter=_msdyn_project_value eq " + projectId + " and msdyn_subject eq '" + taskName + "' and statuscode ne 963850001 and statuscode ne 2", true);
+        getReq.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=_msdyn_parenttask_value,msdyn_actualstart&$filter=" + filter, true);
         getReq.setRequestHeader("OData-MaxVersion", "4.0");
         getReq.setRequestHeader("OData-Version", "4.0");
         getReq.setRequestHeader("Accept", "application/json");
@@ -347,6 +480,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                             }
                         };
                         updateReq.send(JSON.stringify(entity));
+                        FKH.FieldAndProjectServices.ProjectTaskRibbon.completeParentTask(results.value[i]["_msdyn_parenttask_value"],results.value[i]["msdyn_projecttaskid"])
                     }
                 } else {
                     Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask: " + this.response);
@@ -610,7 +744,6 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
             }
         };
         getReq.send();
-
     },
 
     createNextReWorkTask: function (parentTask, predecessorProjectTaskId, thisProjectId, taskNameToCreate) {
@@ -620,7 +753,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
         var nexttaskNameToCreate = "";
 
         var req = new XMLHttpRequest();
-        req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=_fkh_taskidentifierid_value&$filter=_msdyn_project_value eq " + thisProjectId.replace("{", "").replace("}", "") + " and  msdyn_subject eq '" + taskNameToCreate.replace("'", "''") + "'", true);
+        req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/msdyn_projecttasks?$select=_fkh_taskidentifierid_value,_msdyn_parenttask_value,msdyn_wbsid&$filter=_msdyn_project_value eq " + thisProjectId.replace("{", "").replace("}", "") + " and contains(msdyn_subject, '" + taskNameToCreate.replace("'", "%") + "')", true);
         req.setRequestHeader("OData-MaxVersion", "4.0");
         req.setRequestHeader("OData-Version", "4.0");
         req.setRequestHeader("Accept", "application/json");
@@ -631,21 +764,27 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                 req.onreadystatechange = null;
                 if (this.status === 200) {
                     var results = JSON.parse(this.response);
-                    for (var i = 0; i < results.value.length; i++) {
-                        var _fkh_taskidentifierid_value = results.value[i]["_fkh_taskidentifierid_value"];
+                    var numberOfChildrenPlusParent = results.value.length;
+                    if (numberOfChildrenPlusParent != null && numberOfChildrenPlusParent > 0) {
+                        var _fkh_taskidentifierid_value = results.value[0]["_fkh_taskidentifierid_value"];
+                        var _msdyn_parenttask_value = "";
+                        for (var i = 0; i < results.value.length; i++) {
+                            if (results.value[i]["_msdyn_parenttask_value"] != null && results.value[i]["_msdyn_parenttask_value"] != "") {
+                                _msdyn_parenttask_value = results.value[i]["_msdyn_parenttask_value"];
+                            } else if (results.value[i]["msdyn_wbsid"] != null & String(results.value[i]["msdyn_wbsid"]).indexOf(".") == -1) {
+                                newWbsId = results.value[i]["msdyn_wbsid"] + "." + String(numberOfChildrenPlusParent);
+                            }
+                        }
                         switch (taskNameToCreate) {
                             case 'Work In Progress':
-                                newWbsId = parentTask["msdyn_wbsid"] + ".1";
                                 dueDate = dueDate.addDays(1);
                                 nexttaskNameToCreate = "Vendor Says Job\'s Complete";
                                 break;
                             case 'Vendor Says Job\'s Complete':
-                                newWbsId = parentTask["msdyn_wbsid"] + ".2";
                                 dueDate = dueDate.addDays(2);
                                 nexttaskNameToCreate = "Quality Control Inspection";
                                 break;
                             case 'Quality Control Inspection':
-                                newWbsId = parentTask["msdyn_wbsid"] + ".3";
                                 dueDate = dueDate.addDays(3);
                                 break;
                             default:
@@ -676,10 +815,16 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                         entity.statuscode = 1;//Not Started
                         entity["fkh_TaskIdentifierId@odata.bind"] = "/fkh_taskidentifiers(" + _fkh_taskidentifierid_value + ")";
                         entity["fkh_UnitId@odata.bind"] = "/po_units(" + parentTask["_fkh_unitid_value"] + ")";
-                        entity["msdyn_AssignedTeamMembers@odata.bind"] = "/msdyn_projectteams(" + parentTask["_msdyn_assignedteammembers_value"] + ")";
-                        entity["msdyn_parenttask@odata.bind"] = "/msdyn_projecttasks(" + parentTask["_msdyn_parenttask_value"] + ")";
+                        if (parentTask["_msdyn_assignedteammembers_value"] != null) { 
+                            entity["msdyn_AssignedTeamMembers@odata.bind"] = "/msdyn_projectteams(" + parentTask["_msdyn_assignedteammembers_value"] + ")";
+                        }
+                        if (_msdyn_parenttask_value != "") {
+                            entity["msdyn_parenttask@odata.bind"] = "/msdyn_projecttasks(" + _msdyn_parenttask_value + ")";
+                        }
                         entity["msdyn_project@odata.bind"] = "/msdyn_projects(" + parentTask["_msdyn_project_value"] + ")";
-                        entity["msdyn_ResourceOrganizationalUnitId@odata.bind"] = "/msdyn_organizationalunits(" + parentTask["_msdyn_resourceorganizationalunitid_value"] + ")";
+                        if (parentTask["_msdyn_resourceorganizationalunitid_value"] != null) {
+                            entity["msdyn_ResourceOrganizationalUnitId@odata.bind"] = "/msdyn_organizationalunits(" + parentTask["_msdyn_resourceorganizationalunitid_value"] + ")";
+                        }
                         entity["ownerid@odata.bind"] = "/systemusers(" + parentTask["_ownerid_value"] + ")";
 
                         var updateReq = new XMLHttpRequest();
