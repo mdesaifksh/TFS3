@@ -138,7 +138,11 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
         var taskName = Xrm.Page.getAttribute("msdyn_subject").getValue();
         var taskStatus = Xrm.Page.getAttribute("statuscode").getValue();
         if (Xrm.Page.getAttribute("msdyn_subject") != null && Xrm.Page.getAttribute("msdyn_subject").getValue() != null && taskStatus != 963850001 /*Completed*/) {
-            if (FKH.FieldAndProjectServices.ProjectTaskRibbon.predecessorsAreComplete(thisProjectTaskId)) {
+            if (FKH.FieldAndProjectServices.ProjectTaskRibbon.isParentTask()) {
+                Xrm.Page.ui.clearFormNotification("warnParent");
+                Xrm.Page.ui.setFormNotification("This is a parent-level project task and is started and completed automatically when the tasks underneath it have been started and completed.", "WARNING", "warnParent");
+                return false;
+            } else if (FKH.FieldAndProjectServices.ProjectTaskRibbon.predecessorsAreComplete(thisProjectTaskId)) {
                 switch (taskName) {
                     case 'Pre-Move-Out Inspection':
                     case 'Move-Out Inspection':
@@ -156,8 +160,8 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                     case 'Quality Control Inspection':
                         return false;
                     default:
-                        Xrm.Page.ui.clearFormNotification("wardAuto");
-                        Xrm.Page.ui.setFormNotification("This project task is completed automatically and cannot be completed manually.", "WARNING", "wardAuto");
+                        Xrm.Page.ui.clearFormNotification("warnAuto");
+                        Xrm.Page.ui.setFormNotification("This project task is completed automatically and cannot be completed manually.", "WARNING", "warnAuto");
                         return false;
                 }
             } else {
@@ -195,7 +199,13 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
     isVisible_StartTask: function () {
         var taskStatus = Xrm.Page.getAttribute("statuscode").getValue();
         if (taskStatus == 1/*Not Started*/) {
-            return true;
+            if (FKH.FieldAndProjectServices.ProjectTaskRibbon.isParentTask()) {
+                Xrm.Page.ui.clearFormNotification("warnParent");
+                Xrm.Page.ui.setFormNotification("This is a parent-level project task and is started and completed automatically when the tasks underneath it have been started and completed.", "WARNING", "warnParent");
+                return false;
+            } else {
+                return true;
+            }
         }
         return false;
     },
@@ -206,7 +216,11 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
             var taskStatus = Xrm.Page.getAttribute("statuscode").getValue();
             if (taskStatus != 963850001) {//Completed
                 var thisProjectTaskId = Xrm.Page.data.entity.getId().toString().replace("{", "").replace("}", "");
-                if (FKH.FieldAndProjectServices.ProjectTaskRibbon.predecessorsAreComplete(thisProjectTaskId)) {
+                if (FKH.FieldAndProjectServices.ProjectTaskRibbon.isParentTask()) {
+                    Xrm.Page.ui.clearFormNotification("warnParent");
+                    Xrm.Page.ui.setFormNotification("This is a parent-level project task and is started and completed automatically when the tasks underneath it have been started and completed.", "WARNING", "warnParent");
+                    return false;
+                } else if (FKH.FieldAndProjectServices.ProjectTaskRibbon.predecessorsAreComplete(thisProjectTaskId)) {
                     switch (taskName) {
                         case 'Quality Control Inspection':
                             return true;
@@ -226,6 +240,14 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
             }
         }
         return false;
+    },
+
+    isParentTask: function () {
+        if (Xrm.Page.getAttribute("msdyn_resourceutilization") != null && Xrm.Page.getAttribute("msdyn_resourceutilization").getValue() != null && Xrm.Page.getAttribute("msdyn_resourceutilization").getValue() != "") {
+            return false;
+        } else {
+            return true;
+        }
     },
 
     startParentTask: function (parentTaskId) {
@@ -480,7 +502,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                             }
                         };
                         updateReq.send(JSON.stringify(entity));
-                        FKH.FieldAndProjectServices.ProjectTaskRibbon.completeParentTask(results.value[i]["_msdyn_parenttask_value"],results.value[i]["msdyn_projecttaskid"])
+                        FKH.FieldAndProjectServices.ProjectTaskRibbon.completeParentTask(results.value[i]["_msdyn_parenttask_value"], results.value[i]["msdyn_projecttaskid"])
                     }
                 } else {
                     Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask: " + this.response);
@@ -815,7 +837,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                         entity.statuscode = 1;//Not Started
                         entity["fkh_TaskIdentifierId@odata.bind"] = "/fkh_taskidentifiers(" + _fkh_taskidentifierid_value + ")";
                         entity["fkh_UnitId@odata.bind"] = "/po_units(" + parentTask["_fkh_unitid_value"] + ")";
-                        if (parentTask["_msdyn_assignedteammembers_value"] != null) { 
+                        if (parentTask["_msdyn_assignedteammembers_value"] != null) {
                             entity["msdyn_AssignedTeamMembers@odata.bind"] = "/msdyn_projectteams(" + parentTask["_msdyn_assignedteammembers_value"] + ")";
                         }
                         if (_msdyn_parenttask_value != "") {
