@@ -576,7 +576,7 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
 
         if (unit !== null && taskIdentifier !== null) {
             var isInitialRenoProcess = taskIdentifier[0].name.startsWith("IR : ");
-            Xrm.WebApi.retrieveRecord("po_units", unit[0].id.replace('{', '').replace('}', ''), "?$select=po_unitid,po_unitidnum,fkh_sfcode").then(
+            Xrm.WebApi.retrieveRecord("po_unit", unit[0].id.replace('{', '').replace('}', ''), "?$select=po_unitid,po_unitidnum,fkh_sfcode").then(
                 function success(result) {
                     if ((result.po_unitidnum !== null && result.po_unitidnum !== '' && result.po_unitidnum !== undefined) || (result.fkh_sfcode !== null && result.fkh_sfcode !== '' && result.fkh_sfcode !== undefined)) {
                         //Retrieve Task Identifier...
