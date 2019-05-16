@@ -121,7 +121,9 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
         var minutesBetween = FKH.FieldAndProjectServices.ProjectTaskRibbon.dateDiffInMinutes(startDate, endDate);
         Xrm.Page.getAttribute("msdyn_actualdurationminutes").setValue(minutesBetween);
         Xrm.Page.getAttribute("statuscode").setValue(963850001);//Completed
-        FKH.FieldAndProjectServices.ProjectTaskRibbon.completeParentTask(Xrm.Page.getAttribute("msdyn_parenttask").getValue()[0].id.toString().replace("{", "").replace("}", ""), Xrm.Page.data.entity.getId().toString().replace("{", "").replace("}", ""));
+        if (Xrm.Page.getAttribute("msdyn_parenttask") != null && Xrm.Page.getAttribute("msdyn_parenttask").getValue() != null && Xrm.Page.getAttribute("msdyn_parenttask").getValue()[0] != null) {
+            FKH.FieldAndProjectServices.ProjectTaskRibbon.completeParentTask(Xrm.Page.getAttribute("msdyn_parenttask").getValue()[0].id.toString().replace("{", "").replace("}", ""), Xrm.Page.data.entity.getId().toString().replace("{", "").replace("}", ""));
+        }
     },
 
     startThisTask: function () {
@@ -502,7 +504,9 @@ FKH.FieldAndProjectServices.ProjectTaskRibbon = {
                             }
                         };
                         updateReq.send(JSON.stringify(entity));
-                        FKH.FieldAndProjectServices.ProjectTaskRibbon.completeParentTask(results.value[i]["_msdyn_parenttask_value"], results.value[i]["msdyn_projecttaskid"])
+                        if (results.value[i]["_msdyn_parenttask_value"] != null) {
+                            FKH.FieldAndProjectServices.ProjectTaskRibbon.completeParentTask(results.value[i]["_msdyn_parenttask_value"], results.value[i]["msdyn_projecttaskid"])
+                        }
                     }
                 } else {
                     Xrm.Utility.alertDialog("Error in FKH.FieldAndProjectServices.ProjectTaskRibbon.completeTask: " + this.response);
