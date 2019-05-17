@@ -47,7 +47,7 @@ namespace FirstKey.D365.Plug_Ins
 
         private void ExecuteContext(ITracingService tracer, IOrganizationService service, EntityReference changeOrderEntityReference, int revision)
         {
-            EntityCollection changeOrderItemsEntityCollection = RetrieveChangeOrderItems(tracer, service, changeOrderEntityReference);
+            EntityCollection changeOrderItemsEntityCollection = CommonMethods.RetrieveChangeOrderItems(tracer, service, changeOrderEntityReference);
             foreach (Entity changeOrderItemEntity in changeOrderItemsEntityCollection.Entities)
             {
                 //Change Status to Submitted for Approval. Should be part of Inactive.
@@ -73,7 +73,7 @@ namespace FirstKey.D365.Plug_Ins
                 if (unitEntity is Entity && unitEntity.Attributes.Contains(Constants.Units.Market))
                 {
                     tracer.Trace($"Retrieving Budget Approver.");
-                    EntityCollection budgetApproverEntityCollection = RetrieveAllBudjgetApprovers(tracer, service, unitEntity.GetAttributeValue<OptionSetValue>(Constants.Units.Market).Value, changeOrderEntity.GetAttributeValue<OptionSetValue>(Constants.ChangeOrders.PendingApprovalLevel).Value);
+                    EntityCollection budgetApproverEntityCollection = CommonMethods.RetrieveAllBudjgetApprovers(tracer, service, unitEntity.GetAttributeValue<OptionSetValue>(Constants.Units.Market).Value, changeOrderEntity.GetAttributeValue<OptionSetValue>(Constants.ChangeOrders.PendingApprovalLevel).Value);
                     if (budgetApproverEntityCollection.Entities.Count > 0)
                     {
                         tracer.Trace($"Budget Approver found.");
@@ -94,17 +94,9 @@ namespace FirstKey.D365.Plug_Ins
                                 toEntitycollection.Entities.Add(toParty);
                             }
                         }
-                        string recordUrl = $"{ServerUrl}/main.aspx?etn={changeOrderEntity.LogicalName}&pagetype=entityrecord&id={changeOrderEntity.Id.ToString()}";
-                        tracer.Trace($"Record Url : {recordUrl}");
-                        Entity emailActivity = new Entity(Constants.Emails.LogicalName);
-                        emailActivity[Constants.Emails.Subject] = $"Change Order Submitted for Approval: {changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).Name}";
-                        emailActivity[Constants.Emails.To] = toEntitycollection;
-                        emailActivity[Constants.Emails.From] = fromEntitycollection;
-                        emailActivity[Constants.Emails.DirectionCode] = true;
-                        emailActivity[Constants.Emails.RegardingObject] = changeOrderEntity.ToEntityReference();
-                        emailActivity[Constants.Emails.Description] = $"{changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.Requestor).Name} has submitted a change order for your approval for the project {changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).Name}.<br/> Please review the change order for approval or rejection.<br/><br/> Click here to access the change order. <br/><a href ='{recordUrl}'>{changeOrderEntity.GetAttributeValue<string>(Constants.ChangeOrders.Name)}</a>   ";
 
-                        service.Create(emailActivity);
+                        CommonMethods.SendRequestForApprovalEmail(tracer, service, changeOrderEntity, fromEntitycollection, toEntitycollection, ServerUrl);
+
                     }
                     else
                     {
@@ -117,79 +109,7 @@ namespace FirstKey.D365.Plug_Ins
             }
         }
 
-        private EntityCollection RetrieveChangeOrderItems(ITracingService tracer, IOrganizationService service, EntityReference changeOrderEntityReference)
-        {
-            QueryExpression Query = new QueryExpression
-            {
-                EntityName = Constants.ChangeOrderItems.LogicalName,
-                ColumnSet = new ColumnSet(Constants.ChangeOrderItems.PrimaryKey),
-                Criteria = new FilterExpression
-                {
-                    FilterOperator = LogicalOperator.And,
-                    Conditions =
-                    {
-                        new ConditionExpression
-                        {
-                            AttributeName = Constants.ChangeOrderItems.ChangeOrder,
-                            Operator = ConditionOperator.Equal,
-                            Values = { changeOrderEntityReference.Id }
-                        }
-                    }
-                },
-                TopCount = 100
-            };
-
-            return service.RetrieveMultiple(Query);
-        }
-
-        private EntityCollection RetrieveAllBudjgetApprovers(ITracingService tracer, IOrganizationService service, int market, int approverLevel)
-        {
-            QueryExpression queryExpression = new QueryExpression
-            {
-                EntityName = Constants.BudgetApprovers.LogicalName,
-                ColumnSet = new ColumnSet(true),
-                Criteria = new FilterExpression
-                {
-                    FilterOperator = LogicalOperator.And,
-                    Conditions =
-                    {
-                        new ConditionExpression
-                        {
-                            AttributeName = Constants.BudgetApprovers.ApproverID,
-                            Operator = ConditionOperator.NotNull
-                        },
-                        new ConditionExpression
-                        {
-                            AttributeName = Constants.Status.StateCode,
-                            Operator = ConditionOperator.Equal,
-                            Values = { 0 }
-                        },
-                        new ConditionExpression
-                        {
-                            AttributeName = Constants.BudgetApprovers.Market,
-                            Operator = ConditionOperator.Equal,
-                            Values = { market }
-                        },
-                        new ConditionExpression
-                        {
-                            AttributeName = Constants.BudgetApprovers.Level,
-                            Operator = ConditionOperator.Equal,
-                            Values = { approverLevel }
-                        }
-                    }
-                },
-                TopCount = 100
-            };
-
-            LinkEntity linkEntity = new LinkEntity(Constants.BudgetApprovers.LogicalName, Constants.SystemUsers.LogicalName, Constants.BudgetApprovers.ApproverID, Constants.SystemUsers.PrimaryKey, JoinOperator.Inner)
-            {
-                Columns = new ColumnSet(Constants.SystemUsers.PrimaryEmail, Constants.SystemUsers.UserName),
-                EntityAlias = "U"
-            };
-            queryExpression.LinkEntities.Add(linkEntity);
 
 
-            return service.RetrieveMultiple(queryExpression);
-        }
     }
 }

@@ -51,9 +51,13 @@ namespace FirstKey.D365.Plug_Ins
 
                 if (changeOrderItemsEntity is Entity && changeOrderItemsEntity.Attributes.Contains(Constants.ChangeOrderItems.ChangeOrder))
                 {
+                    tracer.Trace($"change order lookup found.");
                     //Force Calculate Rollup Field
                     CommonMethods.CalculateRollup(service, Constants.ChangeOrders.TotalAmount, changeOrderItemsEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrderItems.ChangeOrder));
                 }
+                else
+                    tracer.Trace($"Change Order Lookup Not Found.");
+
             }
             catch (Exception e)
             {

@@ -182,6 +182,14 @@ namespace FirstKey.D365.Plug_Ins
             public const string JobStatus = "fkh_jobstatus";
         }
 
+        public class JobCategories
+        {
+            public const string LogicalName = "fkh_jobcategory";
+            public const string PrimaryKey = "fkh_jobcategoryid";
+
+            public const string GLCode = "fkh_glcode";
+        }
+
         public class JobVendors
         {
             public const string LogicalName = "fkh_jobvendor";
@@ -297,6 +305,7 @@ namespace FirstKey.D365.Plug_Ins
             public const string PendingApprovalLevel= "fkh_pendingapprovallevel";
             public const string Revision = "fkh_revision";
             public const string Unit = "fkh_unitid";
+            public const string Currency = "transactioncurrencyid";
         }
 
         public class ChangeOrderItems
@@ -309,6 +318,23 @@ namespace FirstKey.D365.Plug_Ins
             public const string Amount = "fkh_amount";
             public const string Vendor = "fkh_vendorid";
             public const string JobCategory = "fkh_jobcategoryid";
+            public const string Description = "fkh_description";
+
+        }
+
+        public class ChangeOrderApprovers
+        {
+            public const string LogicalName = "fkh_changeorderapproval";
+            public const string PrimaryKey = "fkh_changeorderapprovalid";
+
+            public const string Name = "fkh_name";
+            public const string ChangeOrder = "fkh_changeorderid";
+            public const string Revision = "fkh_revision";
+            /// <summary>
+            /// Entity Reference of Budget Approver
+            /// </summary>
+            public const string BudgetApproverID = "fkh_budgetapproverid";
+            public const string Comment = "fkh_comments";
 
         }
 
@@ -361,7 +387,6 @@ namespace FirstKey.D365.Plug_Ins
             /// </summary>
             public const string Market = "fkh_market";
             public const string ApproverID = "fkh_approverid";
-            public const string RequesterID = "fkh_requestorid";
 
 
         }
@@ -372,6 +397,7 @@ namespace FirstKey.D365.Plug_Ins
             public const string ErrorMessage = "ErrorMessage";
             public const string Revision = "Revision";
             public const string ServerUrl = "ServerUrl";
+            public const string Reason = "Reason";
         }
 
     }

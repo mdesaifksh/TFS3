@@ -320,18 +320,22 @@ namespace FirstKey.D365.Plug_Ins
                 }
             }
             moveOutDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, unitEntity.GetAttributeValue<DateTime>(Constants.Units.MoveOutDate));
+            tracer.Trace($"Move Out Date : {moveOutDate}.");
+
             if (projectTemplateEntity.GetAttributeValue<string>(Constants.Projects.Subject).Equals("Turn Process", StringComparison.OrdinalIgnoreCase))
             {
                 projectEntity[Constants.Projects.CurrentResidentMoveOutDate] = moveOutDate;
-                projectEntity[Constants.Projects.ScheduledJobStartDate] = moveOutDate;
-                projectEntity[Constants.Projects.ScheduledJobCompletionDate] = moveOutDate.AddDays(5);
+                tracer.Trace($"Est. Job Start Date : {moveOutDate.ChangeTime(6, 0, 0, 0).AddDays(1)}.");
+                projectEntity[Constants.Projects.ScheduledJobStartDate] = moveOutDate.ChangeTime(6,0,0,0).AddDays(1);
+                tracer.Trace($"Est. Job Complete Date : {moveOutDate.ChangeTime(6, 0, 0, 0).AddDays(6)}.");
+                projectEntity[Constants.Projects.ScheduledJobCompletionDate] = moveOutDate.ChangeTime(6, 0, 0, 0).AddDays(6);
             }
             else
             {
                 if (unitEntity.Attributes.Contains(Constants.Units.ScheduledAcquisitionDate)){
                     DateTime schStartDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, unitEntity.GetAttributeValue<DateTime>(Constants.Units.ScheduledAcquisitionDate));
-                    projectEntity[Constants.Projects.ScheduledJobStartDate] = schStartDate;
-                    projectEntity[Constants.Projects.ScheduledJobCompletionDate] = schStartDate.AddDays(10);
+                    projectEntity[Constants.Projects.ScheduledJobStartDate] = schStartDate.AddDays(1);
+                    projectEntity[Constants.Projects.ScheduledJobCompletionDate] = schStartDate.AddDays(11);
                 }
             }
             if (moveOutDate > startDate)
@@ -516,6 +520,7 @@ namespace FirstKey.D365.Plug_Ins
                 ColumnSet = new ColumnSet(true)
             };
             queryExpression.Criteria.AddCondition(new ConditionExpression(Constants.ProjectTasks.Project, ConditionOperator.Equal, projectEntityRefernce.Id));
+            queryExpression.Criteria.AddCondition(new ConditionExpression(Constants.Status.StatusCode, ConditionOperator.In, new int[] { 1, 963850000 }));
 
             LinkEntity linkEntity = new LinkEntity(Constants.ProjectTasks.LogicalName, Constants.TaskIdentifiers.LogicalName, Constants.ProjectTasks.TaskIdentifier, Constants.TaskIdentifiers.PrimaryKey, JoinOperator.Inner)
             {
@@ -708,6 +713,146 @@ namespace FirstKey.D365.Plug_Ins
             Query.LinkEntities.Add(joblinkEntity);
 
 
+            return service.RetrieveMultiple(Query);
+        }
+
+        public static EntityCollection RetrieveChangeOrderItems(ITracingService tracer, IOrganizationService service, EntityReference changeOrderEntityReference)
+        {
+            QueryExpression Query = new QueryExpression
+            {
+                EntityName = Constants.ChangeOrderItems.LogicalName,
+                ColumnSet = new ColumnSet(true),
+                Criteria = new FilterExpression
+                {
+                    FilterOperator = LogicalOperator.And,
+                    Conditions =
+                    {
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.ChangeOrderItems.ChangeOrder,
+                            Operator = ConditionOperator.Equal,
+                            Values = { changeOrderEntityReference.Id }
+                        }
+                    }
+                },
+                TopCount = 100
+            };
+
+            LinkEntity linkEntity = new LinkEntity(Constants.ChangeOrderItems.LogicalName, Constants.JobCategories.LogicalName, Constants.ChangeOrderItems.JobCategory, Constants.JobCategories.PrimaryKey, JoinOperator.Inner)
+            {
+                Columns = new ColumnSet(Constants.JobCategories.GLCode),
+                EntityAlias = "JC"
+            };
+            Query.LinkEntities.Add(linkEntity);
+
+
+            return service.RetrieveMultiple(Query);
+        }
+        public static EntityCollection RetrieveAllBudjgetApprovers(ITracingService tracer, IOrganizationService service, int market, int approverLevel)
+        {
+            QueryExpression queryExpression = new QueryExpression
+            {
+                EntityName = Constants.BudgetApprovers.LogicalName,
+                ColumnSet = new ColumnSet(true),
+                Criteria = new FilterExpression
+                {
+                    FilterOperator = LogicalOperator.And,
+                    Conditions =
+                    {
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.BudgetApprovers.ApproverID,
+                            Operator = ConditionOperator.NotNull
+                        },
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.Status.StateCode,
+                            Operator = ConditionOperator.Equal,
+                            Values = { 0 }
+                        },
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.BudgetApprovers.Market,
+                            Operator = ConditionOperator.Equal,
+                            Values = { market }
+                        },
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.BudgetApprovers.Level,
+                            Operator = ConditionOperator.Equal,
+                            Values = { approverLevel }
+                        }
+                    }
+                },
+                TopCount = 100
+            };
+
+            LinkEntity linkEntity = new LinkEntity(Constants.BudgetApprovers.LogicalName, Constants.SystemUsers.LogicalName, Constants.BudgetApprovers.ApproverID, Constants.SystemUsers.PrimaryKey, JoinOperator.Inner)
+            {
+                Columns = new ColumnSet(Constants.SystemUsers.PrimaryEmail, Constants.SystemUsers.UserName),
+                EntityAlias = "U"
+            };
+            queryExpression.LinkEntities.Add(linkEntity);
+
+
+            return service.RetrieveMultiple(queryExpression);
+        }
+
+
+        public static void SendRequestForApprovalEmail(ITracingService tracer, IOrganizationService service, Entity changeOrderEntity, EntityCollection fromEntitycollection, EntityCollection toEntitycollection, string ServerUrl)
+        {
+            string recordUrl = $"{ServerUrl}/main.aspx?etn={changeOrderEntity.LogicalName}&pagetype=entityrecord&id={changeOrderEntity.Id.ToString()}";
+            tracer.Trace($"Record Url : {recordUrl}");
+            Entity emailActivity = new Entity(Constants.Emails.LogicalName);
+            emailActivity[Constants.Emails.Subject] = $"Change Order Submitted for Approval: {changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).Name}";
+            emailActivity[Constants.Emails.To] = toEntitycollection;
+            emailActivity[Constants.Emails.From] = fromEntitycollection;
+            emailActivity[Constants.Emails.DirectionCode] = true;
+            emailActivity[Constants.Emails.RegardingObject] = changeOrderEntity.ToEntityReference();
+            emailActivity[Constants.Emails.Description] = $"{changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.Requestor).Name} has submitted a change order for your approval for the project {changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).Name}.<br/> Please review the change order for approval or rejection.<br/><br/> Click here to access the change order. <br/><a href ='{recordUrl}'>{changeOrderEntity.GetAttributeValue<string>(Constants.ChangeOrders.Name)}</a>   ";
+
+            emailActivity.Id = service.Create(emailActivity);
+        }
+
+        public static EntityCollection ApproverOrderList(ITracingService tracer, IOrganizationService service, int level, int market, Guid currentSystemUserID)
+        {
+            QueryExpression Query = new QueryExpression
+            {
+                EntityName = Constants.BudgetApprovers.LogicalName,
+                ColumnSet = new ColumnSet(true),
+                Criteria = new FilterExpression
+                {
+                    FilterOperator = LogicalOperator.And,
+                    Conditions =
+                    {
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.BudgetApprovers.Level,
+                            Operator = ConditionOperator.Equal,
+                            Values = { level }
+                        },
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.BudgetApprovers.Market,
+                            Operator = ConditionOperator.Equal,
+                            Values = { market }
+                        },
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.BudgetApprovers.ApproverID,
+                            Operator = ConditionOperator.Equal,
+                            Values = { currentSystemUserID }
+                        },
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.Status.StateCode,
+                            Operator = ConditionOperator.Equal,
+                            Values = { 0 }
+                        }
+                    }
+                },
+                TopCount = 100,
+            };
             return service.RetrieveMultiple(Query);
         }
 

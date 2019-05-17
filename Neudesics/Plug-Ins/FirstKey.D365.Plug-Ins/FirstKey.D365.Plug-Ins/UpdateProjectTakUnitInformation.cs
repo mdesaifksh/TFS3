@@ -209,7 +209,8 @@ namespace FirstKey.D365.Plug_Ins
                                 tmpEntity[Constants.ProjectTasks.RentlyLockBox] = null;
                                 isUpdateRequired = true;
                             }
-                        }                        //Rently Lock Box Note
+                        }                        
+                        //Rently Lock Box Note
                         if (unitEntity.Attributes.Contains(Constants.Units.RentlyLockBoxNote))
                         {
                             if (!string.IsNullOrEmpty(unitEntity.GetAttributeValue<string>(Constants.Units.RentlyLockBoxNote)))

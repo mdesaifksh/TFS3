@@ -40,6 +40,8 @@ namespace PlugInTest
                 //    Console.WriteLine(decSequence);
 
                 string date1 = "2019-03-24T12:00:00";
+
+                double d = Math.Ceiling(7149.95 / 700);
                 //string date2 = "2019-04-30T06:00:00";
                 //DateTime dt1, dt2;
                 //DateTime.TryParse(date1, out dt1);
@@ -89,11 +91,11 @@ namespace PlugInTest
 
                     //Entity test = RetrieveProjectTemplateTask(new EntityReference("msdyn_project", new Guid("23A38E60-C0D0-E811-A96E-000D3A16ACEE")), "1");
                      */
-                    //Entity azureIntegrationCallEntity = _client.Retrieve(Constants.AzureIntegrationCalls.LogicalName, new Guid("74E3FDA8-0A66-E911-A959-000D3A1D5D58"), new Microsoft.Xrm.Sdk.Query.ColumnSet(true));
+                    //Entity azureIntegrationCallEntity = _client.Retrieve(Constants.AzureIntegrationCalls.LogicalName, new Guid("D4138CEE-8976-E911-A95A-000D3A1D5D22"), new Microsoft.Xrm.Sdk.Query.ColumnSet(true));
                     //AzureIntegrationCallAsync.ProcessIncomingIntegrationCall(tracer, service, azureIntegrationCallEntity, projectTemplateSettings);
 
-                    Entity tmp = _client.Retrieve(Constants.ChangeOrders.LogicalName, new Guid("91C9AFBD-B966-E911-A959-000D3A1D52E7"), new ColumnSet(true));
-
+                    Entity tmp = _client.Retrieve(Constants.ChangeOrders.LogicalName, new Guid("1035F584-7177-E911-A958-000D3A110BBD"), new ColumnSet(true));
+                    ApproveChangeOrder.ExecuteContext(tracer, service, tmp.ToEntityReference(), 0, projectTemplateSettings, res.UserId);
 
                     //EntityReference projectTaskEntityReference = new EntityReference(Constants.ProjectTasks.LogicalName, new Guid("4394DED3-C163-E911-A959-000D3A1D5D58"));
                     //VendorSaysJobStarted.ExecuteContext(tracer, service, projectTaskEntityReference, projectTemplateSettings);
@@ -150,6 +152,7 @@ namespace PlugInTest
                     //        }
                     //    }
 
+                    //}
 
                     //CalculateTurnSchStartandEndDate();
 
@@ -163,7 +166,6 @@ namespace PlugInTest
                     Console.WriteLine($"Press any key to exit.");
                         Console.Read();
 
-                    //}
                 }
             }
             catch (FaultException<OrganizationServiceFault> ex)

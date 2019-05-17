@@ -64,7 +64,7 @@ namespace FirstKey.D365.Plug_Ins
                         break;
                 }
 
-                if (projectEntity == null || context.Depth > 1)
+                if (projectEntity == null || context.Depth > 2)
                 {
                     tracer.Trace($"Project entity is Null OR Context Depth is higher than 1. Actual Depth is : {context.Depth}");
                     return;
@@ -85,6 +85,9 @@ namespace FirstKey.D365.Plug_Ins
                         else
                             tracer.Trace("Project Record does NOT have Project Manager or Renowalk ID.");
 
+                        tracer.Trace("Assigning Project Manager as Owner for each Project Task.");
+                        AssignProjectManagerAsTaskOwner(tracer, service, projectEntity);
+
                     }
                     else
                         tracer.Trace("Property Entity Record Not Found.");
@@ -97,6 +100,56 @@ namespace FirstKey.D365.Plug_Ins
                 tracer.Trace(ex.Message + ex.StackTrace);
                 //UpdateAzureIntegrationCallErrorDetails(service, azureIntegrationCallEntity.ToEntityReference(), ex.Message + Environment.NewLine + ex.StackTrace);
             }
+        }
+
+        private static void AssignProjectManagerAsTaskOwner(ITracingService tracer, IOrganizationService service, Entity projectEntity)
+        {
+            tracer.Trace($"Retrieving All Task for Project.");
+            if (projectEntity.Attributes.Contains(Constants.Projects.ProjectManager))
+            {
+                EntityCollection projectTaskEntityCollection = RetrieveAllProjectTaskByProject(tracer, service, projectEntity.ToEntityReference());
+                foreach (Entity projectTaskEntity in projectTaskEntityCollection.Entities)
+                {
+                    Entity tmpPT = new Entity(projectTaskEntity.LogicalName);
+                    tmpPT.Id = projectTaskEntity.Id;
+                    tmpPT[Constants.ProjectTasks.Owner] = projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectManager);
+
+                    service.Update(tmpPT);
+                }
+            }
+        }
+
+        public static EntityCollection RetrieveAllProjectTaskByProject(ITracingService tracer, IOrganizationService service, EntityReference projectEntityRefernce)
+        {
+            LinkEntity linkEntity = new LinkEntity(Constants.ProjectTasks.LogicalName, Constants.TaskIdentifiers.LogicalName, Constants.ProjectTasks.TaskIdentifier, Constants.TaskIdentifiers.PrimaryKey, JoinOperator.Inner)
+            {
+                Columns = new ColumnSet(true),
+                EntityAlias = "TI"
+            };
+            linkEntity.LinkCriteria.AddCondition(new ConditionExpression(Constants.TaskIdentifiers.IdentifierNumber, ConditionOperator.NotIn, new int[] { 18, 19, 20, 21, 217, 218, 219, 220 }));
+
+            QueryExpression Query = new QueryExpression
+            {
+                EntityName = Constants.ProjectTasks.LogicalName,
+                ColumnSet = new ColumnSet(true),
+                LinkEntities = { linkEntity },
+                Criteria = new FilterExpression
+                {
+                    FilterOperator = LogicalOperator.And,
+                    Conditions =
+                    {
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.ProjectTasks.Project,
+                            Operator = ConditionOperator.Equal,
+                            Values = { projectEntityRefernce.Id }
+                        }
+                    }
+                },
+                TopCount = 100
+            };
+
+            return service.RetrieveMultiple(Query);
         }
 
         private void CreateOutGoingAzureIntegrationCallRecord(IOrganizationService _service, ITracingService tracer, Entity projectEntity, EntityReference projectTemplateEntityReference, ProjectTemplateSettings projectTemplateSettings, string propertyID)

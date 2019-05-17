@@ -63,8 +63,7 @@ namespace FirstKey.D365.Plug_Ins
         public static void ExecuteContext(ITracingService tracer, IOrganizationService service, EntityReference projectTaskEntityReference, ProjectTemplateSettings projectTemplateSettings)
         {
             Entity projectTaskEntity = service.Retrieve(projectTaskEntityReference.LogicalName, projectTaskEntityReference.Id, new ColumnSet(true));
-            if (projectTaskEntity is Entity && projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.ParentTask) && projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.Project)
-                && projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.ContractID))
+            if (projectTaskEntity is Entity && projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.Project))
             {
                 Entity projectEntity = service.Retrieve(projectTaskEntity.GetAttributeValue<EntityReference>(Constants.ProjectTasks.Project).LogicalName, projectTaskEntity.GetAttributeValue<EntityReference>(Constants.ProjectTasks.Project).Id, new ColumnSet(true));
 
@@ -82,36 +81,16 @@ namespace FirstKey.D365.Plug_Ins
                         if (propertyEntity is Entity && (propertyEntity.Attributes.Contains(Constants.Units.UnitId) || propertyEntity.Attributes.Contains(Constants.Units.SFCode)))
                         {
                             Events gridEvent;
-                            EntityCollection entityCollection = RetrieveChildProjectTaskFromParentProjectTask(tracer, service, projectTaskEntity.GetAttributeValue<EntityReference>(Constants.ProjectTasks.ParentTask), projectTaskEntity.ToEntityReference());
-                            if (entityCollection.Entities.Count == 0)
+                            if (projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.ParentTask) && projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.ContractID))
                             {
-                                if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
-                                    gridEvent = Events.VENDOR_SAYS_JOBS_COMPLETE;
-                                else
-                                    gridEvent = Events.IR_VENDOR_SAYS_JOBS_COMPLETE;
-                                //Publish VENDOR_SAYS_JOBS_COMPLETE message to Grid...
-                                CreateOutGoingAzureIntegrationCallRecord(service, tracer, (propertyEntity.Attributes.Contains(Constants.Units.UnitId)) ? propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId) : propertyEntity.GetAttributeValue<string>(Constants.Units.SFCode),
-                                    projectEntity.GetAttributeValue<string>(Constants.Projects.RenowalkID), projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.ContractID), gridEvent,
-                                    projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), projectTemplateSettings);
 
-                                Entity tmpPrj = new Entity(projectEntity.LogicalName);
-                                tmpPrj.Id = projectEntity.Id;
-                                tmpPrj[Constants.Projects.ActualJobEndDate] = DateTime.Now;
-
-                                service.Update(tmpPrj);
-                            }
-                            else
-                            {
-                                int completedCount = entityCollection.Entities.Where(e => e.Attributes.Contains(Constants.Status.StatusCode) && e.GetAttributeValue<OptionSetValue>(Constants.Status.StatusCode).Value == 963850001).Count();
-                                tracer.Trace($"Completed Count : {completedCount}.");
-                                tracer.Trace($"Total Child Task Count : {entityCollection.Entities.Count}.");
-                                if (completedCount == entityCollection.Entities.Count)
+                                EntityCollection entityCollection = RetrieveChildProjectTaskFromParentProjectTask(tracer, service, projectTaskEntity.GetAttributeValue<EntityReference>(Constants.ProjectTasks.ParentTask), projectTaskEntity.ToEntityReference());
+                                if (entityCollection.Entities.Count == 0)
                                 {
                                     if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
                                         gridEvent = Events.VENDOR_SAYS_JOBS_COMPLETE;
                                     else
                                         gridEvent = Events.IR_VENDOR_SAYS_JOBS_COMPLETE;
-
                                     //Publish VENDOR_SAYS_JOBS_COMPLETE message to Grid...
                                     CreateOutGoingAzureIntegrationCallRecord(service, tracer, (propertyEntity.Attributes.Contains(Constants.Units.UnitId)) ? propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId) : propertyEntity.GetAttributeValue<string>(Constants.Units.SFCode),
                                         projectEntity.GetAttributeValue<string>(Constants.Projects.RenowalkID), projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.ContractID), gridEvent,
@@ -123,19 +102,73 @@ namespace FirstKey.D365.Plug_Ins
 
                                     service.Update(tmpPrj);
                                 }
+                                else
+                                {
+                                    int completedCount = entityCollection.Entities.Where(e => e.Attributes.Contains(Constants.Status.StatusCode) && e.GetAttributeValue<OptionSetValue>(Constants.Status.StatusCode).Value == 963850001).Count();
+                                    tracer.Trace($"Completed Count : {completedCount}.");
+                                    tracer.Trace($"Total Child Task Count : {entityCollection.Entities.Count}.");
+                                    if (completedCount == entityCollection.Entities.Count)
+                                    {
+                                        if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
+                                            gridEvent = Events.VENDOR_SAYS_JOBS_COMPLETE;
+                                        else
+                                            gridEvent = Events.IR_VENDOR_SAYS_JOBS_COMPLETE;
+
+                                        //Publish VENDOR_SAYS_JOBS_COMPLETE message to Grid...
+                                        CreateOutGoingAzureIntegrationCallRecord(service, tracer, (propertyEntity.Attributes.Contains(Constants.Units.UnitId)) ? propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId) : propertyEntity.GetAttributeValue<string>(Constants.Units.SFCode),
+                                            projectEntity.GetAttributeValue<string>(Constants.Projects.RenowalkID), projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.ContractID), gridEvent,
+                                            projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), projectTemplateSettings);
+
+                                        Entity tmpPrj = new Entity(projectEntity.LogicalName);
+                                        tmpPrj.Id = projectEntity.Id;
+                                        tmpPrj[Constants.Projects.ActualJobEndDate] = DateTime.Now;
+
+                                        service.Update(tmpPrj);
+                                    }
+                                }
+
+                                if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
+                                    gridEvent = Events.VENDOR_SAYS_CONTRACT_COMPLETED;
+                                else
+                                    gridEvent = Events.IR_VENDOR_SAYS_CONTRACT_COMPLETED;
+
+
+                                //Publish message to Grid
+                                CreateOutGoingAzureIntegrationCallRecord(service, tracer, (propertyEntity.Attributes.Contains(Constants.Units.UnitId)) ? propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId) : propertyEntity.GetAttributeValue<string>(Constants.Units.SFCode),
+                                    projectEntity.GetAttributeValue<string>(Constants.Projects.RenowalkID), projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.ContractID), gridEvent,
+                                    projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), projectTemplateSettings);
                             }
+                            else if (!projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.ParentTask) && !projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.ContractID))
+                            {
+                                tracer.Trace("Only updating Actual Job Complete Date on Project as Task is not Child.");
 
-                            if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
-                                gridEvent = Events.VENDOR_SAYS_CONTRACT_COMPLETED;
-                            else
-                                gridEvent = Events.IR_VENDOR_SAYS_CONTRACT_COMPLETED;
+                                if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
+                                    gridEvent = Events.VENDOR_SAYS_JOBS_COMPLETE;
+                                else
+                                    gridEvent = Events.IR_VENDOR_SAYS_JOBS_COMPLETE;
 
+                                //Publish VENDOR_SAYS_JOBS_COMPLETE message to Grid...
+                                tracer.Trace($"Publishing OutGoing message : {gridEvent.ToString()}.");
+                                CreateOutGoingAzureIntegrationCallRecord(service, tracer, (propertyEntity.Attributes.Contains(Constants.Units.UnitId)) ? propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId) : propertyEntity.GetAttributeValue<string>(Constants.Units.SFCode),
+                                    projectEntity.GetAttributeValue<string>(Constants.Projects.RenowalkID), projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.ContractID), gridEvent,
+                                    projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), projectTemplateSettings);
 
-                            //Publish message to Grid
-                            CreateOutGoingAzureIntegrationCallRecord(service, tracer, (propertyEntity.Attributes.Contains(Constants.Units.UnitId)) ? propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId) : propertyEntity.GetAttributeValue<string>(Constants.Units.SFCode),
-                                projectEntity.GetAttributeValue<string>(Constants.Projects.RenowalkID), projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.ContractID), gridEvent,
-                                projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), projectTemplateSettings);
+                                if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
+                                    gridEvent = Events.VENDOR_SAYS_CONTRACT_COMPLETED;
+                                else
+                                    gridEvent = Events.IR_VENDOR_SAYS_CONTRACT_COMPLETED;
+                                //Publish CONTRACT_COMPLETED message to Grid
+                                tracer.Trace($"Publishing OutGoing message : {gridEvent.ToString()}.");
+                                CreateOutGoingAzureIntegrationCallRecord(service, tracer, (propertyEntity.Attributes.Contains(Constants.Units.UnitId)) ? propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId) : propertyEntity.GetAttributeValue<string>(Constants.Units.SFCode),
+                                    projectEntity.GetAttributeValue<string>(Constants.Projects.RenowalkID), projectTaskEntity.GetAttributeValue<string>(Constants.ProjectTasks.ContractID), gridEvent,
+                                    projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), projectTemplateSettings);
 
+                                Entity tmpPrj = new Entity(projectEntity.LogicalName);
+                                tmpPrj.Id = projectEntity.Id;
+                                tmpPrj[Constants.Projects.ActualJobEndDate] = DateTime.Now;
+
+                                service.Update(tmpPrj);
+                            }
                         }
                     }
                 }

@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApproveChangeOrder.cs" />
     <Compile Include="AzureIntegrationCallAsync.cs" />
     <Compile Include="ChangeOrderCreate.cs" />
     <Compile Include="ChangeOrderItemCreate.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="OnRevisedStartDateChange.cs" />
     <Compile Include="ProjectTaskPreOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RejectChangeOrder.cs" />
     <Compile Include="RequestApproval.cs" />
     <Compile Include="UpdateProjectTakUnitInformation.cs" />
     <Compile Include="VendorSaysJobStarted.cs" />

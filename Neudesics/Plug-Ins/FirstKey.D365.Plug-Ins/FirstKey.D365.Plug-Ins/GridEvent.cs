@@ -71,6 +71,8 @@ namespace FirstKey.D365.Plug_Ins
         public string ItemDescription { get; set; }
         [DataMember]
         public string ItemReason { get; set; }
+        [DataMember]
+        public string ChangeOrder { get; set; }
     }
 
     [DataContract]
@@ -89,7 +91,6 @@ namespace FirstKey.D365.Plug_Ins
         VENDORS_SAYS_JOB_STARTED = 11,
         WORK_IN_PROGRESS = 12,
         VENDOR_REQUESTS_CHANGE_ORDER_IF_NECESSARY = 13,
-        CHANGE_ORDER_APPROVED = 14,
         VENDOR_SAYS_JOBS_COMPLETE = 15,
         QUALITY_CONTROL_INSPECTION = 16,
         JOB_COMPLETED = 17,
@@ -108,22 +109,21 @@ namespace FirstKey.D365.Plug_Ins
         CHANGE_ORDER = 30,
         VENDOR_SAYS_CONTRACT_STARTED = 31,
         VENDOR_SAYS_CONTRACT_COMPLETED = 32,
+        CHANGE_ORDER_APPROVED = 33,
+
         MOVE_OUT_DATE_CHANGED = 1001,
         OFFER_ACCEPTED = 201,
         IR_ASSIGN_PROJECT_MANAGER = 202,
         SCHEDULE_DUE_DILLIGENCE_INSPECTION = 203,
         IR_BUDGET_START = 204,
         IR_BUDGET_APPROVAL = 205,
-
-        OFFER_REJECTED_OR_APPROVAL = 206,
+        OFFER_REJECTED = 206,
         IR_JOB_ASSIGNMENT_TO_VENDORS_IN_CONTRACT_CREATOR = 207,
-
         CLOSE_ESCROW = 208,
         IR_JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI = 209,
         IR_VENDORS_SAYS_JOB_STARTED = 210,
         IR_WORK_IN_PROGRESS = 211,
         IR_VENDOR_REQUESTS_CHANGE_ORDER_IF_NECESSARY = 212,
-        IR_CHANGE_ORDER_APPROVED = 213,
         IR_VENDOR_SAYS_JOBS_COMPLETE = 214,
         IR_QUALITY_CONTROL_INSPECTION = 215,
         IR_JOB_COMPLETED = 216,
@@ -141,6 +141,7 @@ namespace FirstKey.D365.Plug_Ins
         IR_MULTI_VENDOR = 229,
         IR_CHANGE_ORDER = 230,
         IR_VENDOR_SAYS_CONTRACT_STARTED = 231,
-        IR_VENDOR_SAYS_CONTRACT_COMPLETED = 232
+        IR_VENDOR_SAYS_CONTRACT_COMPLETED = 232,
+        IR_CHANGE_ORDER_APPROVED = 233
     }
 }

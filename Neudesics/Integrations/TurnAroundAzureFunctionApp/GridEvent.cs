@@ -112,6 +112,7 @@ namespace TurnAroundAzureFunctionApp
         public string ItemID { get; set; }
         public string ItemDescription { get; set; }
         public string ItemReason { get; set; }
+        public string ChangeOrder { get; set; }
     }
 
     public enum Events
