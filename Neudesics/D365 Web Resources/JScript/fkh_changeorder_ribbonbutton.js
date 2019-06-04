@@ -82,7 +82,7 @@ function Approve() {
             // Success                      
             if (params.length > 0) {
                 if (params[0].key === "IsSuccess" && params[0].value === "true") {
-                    Alert.show("Change Order Submitted for Approval!", "Change Order successfully Submitted for Approval.", null, "SUCCESS", 500, 200);
+                    Alert.show("Change Order Approval!", "Change Order successfully Approved for this Level.", null, "SUCCESS", 500, 200);
                     Xrm.Page.data.refresh(false).then(function successCallback() {
                         Xrm.Page.ui.refreshRibbon(); Xrm.Page.data.refresh();
                     });

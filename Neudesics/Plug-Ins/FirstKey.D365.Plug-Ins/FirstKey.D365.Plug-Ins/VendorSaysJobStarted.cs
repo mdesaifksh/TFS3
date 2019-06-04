@@ -81,6 +81,8 @@ namespace FirstKey.D365.Plug_Ins
                         if (propertyEntity is Entity && (propertyEntity.Attributes.Contains(Constants.Units.UnitId) || propertyEntity.Attributes.Contains(Constants.Units.SFCode)))
                         {
 
+                            int timeZoneCode = CommonMethods.RetrieveCurrentUsersSettings(service);
+                            DateTime currentDateTime = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, DateTime.Now);
                             Events gridEvent;
                             if (projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.ParentTask) && projectTaskEntity.Attributes.Contains(Constants.ProjectTasks.ContractID))
                             {
@@ -99,7 +101,7 @@ namespace FirstKey.D365.Plug_Ins
 
                                     Entity tmpPrj = new Entity(projectEntity.LogicalName);
                                     tmpPrj.Id = projectEntity.Id;
-                                    tmpPrj[Constants.Projects.ActualJobStartDate] = DateTime.Now;
+                                    tmpPrj[Constants.Projects.ActualJobStartDate] = currentDateTime;
 
                                     service.Update(tmpPrj);
                                 }
@@ -122,7 +124,7 @@ namespace FirstKey.D365.Plug_Ins
 
                                         Entity tmpPrj = new Entity(projectEntity.LogicalName);
                                         tmpPrj.Id = projectEntity.Id;
-                                        tmpPrj[Constants.Projects.ActualJobStartDate] = DateTime.Now;
+                                        tmpPrj[Constants.Projects.ActualJobStartDate] = currentDateTime;
 
                                         service.Update(tmpPrj);
                                     }
@@ -165,7 +167,7 @@ namespace FirstKey.D365.Plug_Ins
 
                                 Entity tmpPrj = new Entity(projectTaskEntity.GetAttributeValue<EntityReference>(Constants.ProjectTasks.Project).LogicalName);
                                 tmpPrj.Id = projectTaskEntity.GetAttributeValue<EntityReference>(Constants.ProjectTasks.Project).Id;
-                                tmpPrj[Constants.Projects.ActualJobStartDate] = DateTime.Now;
+                                tmpPrj[Constants.Projects.ActualJobStartDate] = currentDateTime;
 
                                 service.Update(tmpPrj);
                             }

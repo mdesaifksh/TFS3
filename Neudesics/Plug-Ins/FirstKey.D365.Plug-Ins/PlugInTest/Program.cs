@@ -86,16 +86,18 @@ namespace PlugInTest
                         // with data from the XML document. 
                         projectTemplateSettings = (ProjectTemplateSettings)serializer.Deserialize(fs);
                     }
+
+                    //GetAllTimeZonesWithDisplayNameResponse res1 = (GetAllTimeZonesWithDisplayNameResponse) service.Execute(new GetAllTimeZonesWithDisplayNameRequest());
                     /*
                     //CommonMethods.ChangeEntityStatus(tracingService, _service, new EntityReference(Constants.Projects.LogicalName, new Guid("556C6EE4-E8E2-E811-A976-000D3A1A42B9")),1,2);
 
                     //Entity test = RetrieveProjectTemplateTask(new EntityReference("msdyn_project", new Guid("23A38E60-C0D0-E811-A96E-000D3A16ACEE")), "1");
                      */
-                    //Entity azureIntegrationCallEntity = _client.Retrieve(Constants.AzureIntegrationCalls.LogicalName, new Guid("D4138CEE-8976-E911-A95A-000D3A1D5D22"), new Microsoft.Xrm.Sdk.Query.ColumnSet(true));
-                    //AzureIntegrationCallAsync.ProcessIncomingIntegrationCall(tracer, service, azureIntegrationCallEntity, projectTemplateSettings);
+                    Entity azureIntegrationCallEntity = _client.Retrieve(Constants.AzureIntegrationCalls.LogicalName, new Guid("4ADC0514-BF7A-E911-A95A-000D3A1D58E9"), new Microsoft.Xrm.Sdk.Query.ColumnSet(true));
+                    AzureIntegrationCallAsync.ProcessIncomingIntegrationCall(tracer, service, azureIntegrationCallEntity, projectTemplateSettings);
 
-                    Entity tmp = _client.Retrieve(Constants.ChangeOrders.LogicalName, new Guid("1035F584-7177-E911-A958-000D3A110BBD"), new ColumnSet(true));
-                    ApproveChangeOrder.ExecuteContext(tracer, service, tmp.ToEntityReference(), 0, projectTemplateSettings, res.UserId);
+                    //Entity tmp = _client.Retrieve(Constants.ChangeOrders.LogicalName, new Guid("1035F584-7177-E911-A958-000D3A110BBD"), new ColumnSet(true));
+                    //ApproveChangeOrder.ExecuteContext(tracer, service, tmp.ToEntityReference(), 0, projectTemplateSettings, res.UserId);
 
                     //EntityReference projectTaskEntityReference = new EntityReference(Constants.ProjectTasks.LogicalName, new Guid("4394DED3-C163-E911-A959-000D3A1D5D58"));
                     //VendorSaysJobStarted.ExecuteContext(tracer, service, projectTaskEntityReference, projectTemplateSettings);

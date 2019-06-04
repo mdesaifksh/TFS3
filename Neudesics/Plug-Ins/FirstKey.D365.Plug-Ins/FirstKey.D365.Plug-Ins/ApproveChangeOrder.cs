@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -85,7 +86,7 @@ namespace FirstKey.D365.Plug_Ins
             CommonMethods.CalculateRollup(service, Constants.ChangeOrders.TotalAmount, changeOrderEntityReference);
 
             Entity changeOrderEntity = service.Retrieve(changeOrderEntityReference.LogicalName, changeOrderEntityReference.Id, new ColumnSet(true));
-            if (changeOrderEntity is Entity && changeOrderEntity.Attributes.Contains(Constants.ChangeOrders.PendingApprovalLevel) && changeOrderEntity.Attributes.Contains(Constants.ChangeOrders.Unit))
+            if (changeOrderEntity is Entity && changeOrderEntity.Attributes.Contains(Constants.ChangeOrders.PendingApprovalLevel) && changeOrderEntity.Attributes.Contains(Constants.ChangeOrders.Unit) && changeOrderEntity.Attributes.Contains(Constants.ChangeOrders.ProjectTemplateID))
             {
                 if (changeOrderEntity.Attributes.Contains(Constants.Status.StatusCode) && changeOrderEntity.GetAttributeValue<OptionSetValue>(Constants.Status.StatusCode).Value == 963850005)
                 {
@@ -96,7 +97,7 @@ namespace FirstKey.D365.Plug_Ins
                         tracer.Trace("Is Approver is Part of Approve Process");
 
                         EntityCollection approverEntityCollection = CommonMethods.ApproverOrderList(tracer, service, changeOrderEntity.GetAttributeValue<OptionSetValue>(Constants.ChangeOrders.PendingApprovalLevel).Value,
-                            unitEntity.GetAttributeValue<OptionSetValue>(Constants.Units.Market).Value, currentSystemUserID);
+                            unitEntity.GetAttributeValue<OptionSetValue>(Constants.Units.Market).Value, changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectTemplateID), currentSystemUserID);
 
                         if (approverEntityCollection.Entities.Count > 0)
                         {
@@ -108,12 +109,12 @@ namespace FirstKey.D365.Plug_Ins
                             {
                                 //Perform Approve Process.
                                 nextApprovelRequired = IsNextApprovalRequired(tracer, service, changeOrderEntity.GetAttributeValue<Money>(Constants.ChangeOrders.TotalAmount).Value,
-                                    changeOrderEntity.GetAttributeValue<OptionSetValue>(Constants.ChangeOrders.PendingApprovalLevel).Value, out nextApprovalLevel);
+                                    changeOrderEntity.GetAttributeValue<OptionSetValue>(Constants.ChangeOrders.PendingApprovalLevel).Value, changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectTemplateID), projectTemplateSettings, out nextApprovalLevel);
 
                             }
                             if (!nextApprovelRequired)
                             {
-                                /*
+
                                 Entity tmpChangeOrderEntity = new Entity(changeOrderEntity.LogicalName);
                                 tmpChangeOrderEntity.Id = changeOrderEntity.Id;
                                 tmpChangeOrderEntity[Constants.ChangeOrders.PendingApprovalLevel] = null;
@@ -122,15 +123,15 @@ namespace FirstKey.D365.Plug_Ins
                                 //Set Status to Approved...
 
                                 CommonMethods.ChangeEntityStatus(tracer, service, changeOrderEntityReference, 1, 963850006);
-                               */
+
                                 EntityCollection changeOrderItemsEntityCollection = CommonMethods.RetrieveChangeOrderItems(tracer, service, changeOrderEntityReference);
-                                /*
+
                                 foreach (Entity changeOrderItemEntity in changeOrderItemsEntityCollection.Entities)
                                 {
                                     //Change Status to Approved. Should be part of Inactive.
                                     CommonMethods.ChangeEntityStatus(tracer, service, changeOrderItemEntity.ToEntityReference(), 1, 963850002);
                                 }
-                                 */
+
                                 if (changeOrderEntity.Attributes.Contains(Constants.ChangeOrders.ProjectID))
                                 {
                                     Entity projectEntity = service.Retrieve(changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).LogicalName, changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).Id, new ColumnSet(true));
@@ -147,57 +148,85 @@ namespace FirstKey.D365.Plug_Ins
 
 
                                 //Send Confirmation Email...
+                                Entity fromSystemUserEntity = CommonMethods.RetrieveCRMEMailSystemUser(tracer, service);
+                                if (fromSystemUserEntity is Entity)
+                                {
 
-                                EntityCollection fromEntitycollection = new EntityCollection();
-                                Entity fromParty = new Entity(ACTIVITYPARTY_ENTITY_NAME);
-                                fromParty[ACTIVITYPARTY_ATTR_PARTYID] = approverEntityCollection.Entities[0].GetAttributeValue<EntityReference>(Constants.BudgetApprovers.ApproverID);
-                                fromEntitycollection.Entities.Add(fromParty);
+                                    EntityCollection fromEntitycollection = new EntityCollection();
+                                    Entity fromParty = new Entity(ACTIVITYPARTY_ENTITY_NAME);
+                                    fromParty[ACTIVITYPARTY_ATTR_PARTYID] = fromSystemUserEntity.ToEntityReference();
+                                    fromEntitycollection.Entities.Add(fromParty);
 
-                                EntityCollection toEntitycollection = new EntityCollection();
-                                Entity toParty = new Entity(ACTIVITYPARTY_ENTITY_NAME);
-                                toParty[ACTIVITYPARTY_ATTR_PARTYID] = changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.Requestor);
-                                toEntitycollection.Entities.Add(toParty);
+                                    EntityCollection toEntitycollection = new EntityCollection();
+                                    Entity toParty = new Entity(ACTIVITYPARTY_ENTITY_NAME);
+                                    toParty[ACTIVITYPARTY_ATTR_PARTYID] = changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.Requestor);
+                                    toEntitycollection.Entities.Add(toParty);
 
-                                string recordUrl = $"{ServerUrl}/main.aspx?etn={changeOrderEntity.LogicalName}&pagetype=entityrecord&id={changeOrderEntity.Id.ToString()}";
-                                Entity emailActivity = new Entity(Constants.Emails.LogicalName);
-                                emailActivity[Constants.Emails.Subject] = $"Change Order Approved: {changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).Name}";
-                                emailActivity[Constants.Emails.To] = toEntitycollection;
-                                emailActivity[Constants.Emails.From] = fromEntitycollection;
-                                emailActivity[Constants.Emails.DirectionCode] = true;
-                                emailActivity[Constants.Emails.RegardingObject] = changeOrderEntity.ToEntityReference();
-                                emailActivity[Constants.Emails.Description] = $"The change order for the project {changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).Name} has been approved.<br/><br/> Click here to access the change order. <br/><a href ='{recordUrl}'>{changeOrderEntity.GetAttributeValue<string>(Constants.ChangeOrders.Name)}</a>   ";
+                                    string recordUrl = $"{ServerUrl}/main.aspx?etn={changeOrderEntity.LogicalName}&pagetype=entityrecord&id={changeOrderEntity.Id.ToString()}";
+                                    Entity emailActivity = new Entity(Constants.Emails.LogicalName);
+                                    emailActivity[Constants.Emails.Subject] = $"Change Order Approved: {changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).Name}";
+                                    emailActivity[Constants.Emails.To] = toEntitycollection;
+                                    emailActivity[Constants.Emails.From] = fromEntitycollection;
+                                    emailActivity[Constants.Emails.DirectionCode] = true;
+                                    emailActivity[Constants.Emails.RegardingObject] = changeOrderEntity.ToEntityReference();
+                                    emailActivity[Constants.Emails.Description] = $"The change order for the project {changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).Name} has been approved.<br/><br/> Click here to access the change order. <br/><a href ='{recordUrl}'>{changeOrderEntity.GetAttributeValue<string>(Constants.ChangeOrders.Name)}</a>   ";
 
-                                emailActivity.Id = service.Create(emailActivity);
+                                    emailActivity.Id = service.Create(emailActivity);
+                                    try
+                                    {
+                                        //SendEmailResponse emailResponse = CommonMethods.SendEmail(tracer, service, emailActivity.ToEntityReference());
+                                        //if (emailResponse is SendEmailResponse)
+                                        //    tracer.Trace("Email successfully sent.");
+                                        //else
+                                        //    errorMessage = "Operation successfully completed but Email Send failed.";
+                                    }
+                                    catch(Exception ex)
+                                    {
+                                        tracer.Trace(ex.Message + Environment.NewLine + ex.StackTrace);
+                                    }
+                                        
+                                }
+                                else
+                                    errorMessage = $"System User Not found with Email Address : {Constants.CRMEmail}. Operation Successfully performed but Email will not be generated.";
+
 
                             }
                             else
                             {
                                 //Go To Next Approver...
                                 tracer.Trace($"Retrieving Budget Approver.");
-                                EntityCollection budgetApproverEntityCollection = CommonMethods.RetrieveAllBudjgetApprovers(tracer, service, unitEntity.GetAttributeValue<OptionSetValue>(Constants.Units.Market).Value, nextApprovalLevel);
+                                EntityCollection budgetApproverEntityCollection = CommonMethods.RetrieveAllBudjgetApprovers(tracer, service, unitEntity.GetAttributeValue<OptionSetValue>(Constants.Units.Market).Value, nextApprovalLevel, changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectTemplateID));
 
                                 if (budgetApproverEntityCollection.Entities.Count > 0)
                                 {
                                     tracer.Trace($"Budget Approver found.");
 
-                                    EntityCollection fromEntitycollection = new EntityCollection();
-                                    Entity fromParty = new Entity(ACTIVITYPARTY_ENTITY_NAME);
-                                    fromParty.Attributes.Add(ACTIVITYPARTY_ATTR_PARTYID, changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.Requestor));
-                                    fromEntitycollection.Entities.Add(fromParty);
-
-                                    EntityCollection toEntitycollection = new EntityCollection();
-
-                                    foreach (Entity budgetApproverEntity in budgetApproverEntityCollection.Entities)
+                                    Entity fromSystemUserEntity = CommonMethods.RetrieveCRMEMailSystemUser(tracer, service);
+                                    if (fromSystemUserEntity is Entity)
                                     {
-                                        if (budgetApproverEntity.Attributes.Contains("U.internalemailaddress") || budgetApproverEntity.Attributes.Contains("U.domainname"))
-                                        {
-                                            Entity toParty = new Entity(ACTIVITYPARTY_ENTITY_NAME);
-                                            toParty.Attributes.Add(ACTIVITYPARTY_ATTR_PARTYID, budgetApproverEntity.GetAttributeValue<EntityReference>(Constants.BudgetApprovers.ApproverID));
-                                            toEntitycollection.Entities.Add(toParty);
-                                        }
-                                    }
+                                        EntityCollection fromEntitycollection = new EntityCollection();
+                                        Entity fromParty = new Entity(ACTIVITYPARTY_ENTITY_NAME);
+                                        fromParty.Attributes.Add(ACTIVITYPARTY_ATTR_PARTYID, fromSystemUserEntity.ToEntityReference());
+                                        fromEntitycollection.Entities.Add(fromParty);
 
-                                    CommonMethods.SendRequestForApprovalEmail(tracer, service, changeOrderEntity, fromEntitycollection, toEntitycollection, ServerUrl);
+                                        EntityCollection toEntitycollection = new EntityCollection();
+
+                                        foreach (Entity budgetApproverEntity in budgetApproverEntityCollection.Entities)
+                                        {
+                                            if (budgetApproverEntity.Attributes.Contains("U.internalemailaddress") || budgetApproverEntity.Attributes.Contains("U.domainname"))
+                                            {
+                                                Entity toParty = new Entity(ACTIVITYPARTY_ENTITY_NAME);
+                                                toParty.Attributes.Add(ACTIVITYPARTY_ATTR_PARTYID, budgetApproverEntity.GetAttributeValue<EntityReference>(Constants.BudgetApprovers.ApproverID));
+                                                toEntitycollection.Entities.Add(toParty);
+                                            }
+                                        }
+
+                                        CommonMethods.SendRequestForApprovalEmail(tracer, service, changeOrderEntity, fromEntitycollection, toEntitycollection, ServerUrl);
+
+
+                                    }
+                                    else
+                                        errorMessage = $"System User Not found with Email Address : {Constants.CRMEmail}. Operation Successfully performed but Email will not be generated.";
 
                                     Entity tmpChangeOrderEntity = new Entity(changeOrderEntity.LogicalName);
                                     tmpChangeOrderEntity.Id = changeOrderEntity.Id;
@@ -235,7 +264,7 @@ namespace FirstKey.D365.Plug_Ins
             changeOrderApproverEntity[Constants.ChangeOrderApprovers.ChangeOrder] = changeOrderEntity.ToEntityReference();
             changeOrderApproverEntity[Constants.ChangeOrderApprovers.Revision] = changeOrderEntity.GetAttributeValue<int>(Constants.ChangeOrders.Revision);
             changeOrderApproverEntity[Constants.ChangeOrderApprovers.BudgetApproverID] = BudgetApproverEntityReference;
-            changeOrderApproverEntity[Constants.Status.StatusCode] = new OptionSetValue(963850001);     //Approved
+            changeOrderApproverEntity[Constants.Status.StatusCode] = new OptionSetValue(963850000);     //Approved
 
             service.Create(changeOrderApproverEntity);
 
@@ -243,34 +272,48 @@ namespace FirstKey.D365.Plug_Ins
 
 
 
-        private static bool IsNextApprovalRequired(ITracingService tracer, IOrganizationService service, decimal amount, int CurrentApprovalLevel, out int nextApprovalLevel)
+        private static bool IsNextApprovalRequired(ITracingService tracer, IOrganizationService service, decimal amount, int CurrentApprovalLevel, EntityReference projectTemplateEntityReference, ProjectTemplateSettings projectTemplateSettings, out int nextApprovalLevel)
         {
             bool isnextApprovalRequire = false;
             nextApprovalLevel = 0;
-            if (amount > 1500 && CurrentApprovalLevel == 963850000)          //0 - 1500
+            Mapping mapping = (
+                from m in projectTemplateSettings.Mappings
+                where m.Key.Equals(projectTemplateEntityReference.Id.ToString(), StringComparison.OrdinalIgnoreCase)
+                select m).FirstOrDefault<Mapping>();
+
+            if (mapping is Mapping)
             {
-                isnextApprovalRequire = true;
-                nextApprovalLevel = 963850001;
-            }
-            else if (amount > 2500 && CurrentApprovalLevel == 963850001)    //1500 - 2500
-            {
-                isnextApprovalRequire = true;
-                nextApprovalLevel = 963850002;
-            }
-            else if (amount > 10000 && CurrentApprovalLevel == 963850002)    //2500 - 10000
-            {
-                isnextApprovalRequire = true;
-                nextApprovalLevel = 963850003;
-            }
-            else if (amount > 50000 && CurrentApprovalLevel == 963850003)    //10000 - 50000
-            {
-                isnextApprovalRequire = true;
-                nextApprovalLevel = 963850004;
-            }
-            else if (amount > 100000 && CurrentApprovalLevel == 963850004)    //10000 - 50000
-            {
-                isnextApprovalRequire = true;
-                nextApprovalLevel = 963850005;
+                if (mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE))
+                {
+                    if (amount > 1000 && CurrentApprovalLevel == 963850000)          //0 - 1000
+                    {
+                        isnextApprovalRequire = true;
+                        nextApprovalLevel = 963850001;
+                    }
+                    else if (amount > 2000 && CurrentApprovalLevel == 963850001)    //1000 - 2000
+                    {
+                        isnextApprovalRequire = true;
+                        nextApprovalLevel = 963850002;
+                    }
+                    else if (amount > 10000 && CurrentApprovalLevel == 963850002)    //2000 - 10000
+                    {
+                        isnextApprovalRequire = true;
+                        nextApprovalLevel = 963850005;
+                    }
+                }
+                else
+                {
+                    if (amount > 2000 && CurrentApprovalLevel == 963850003)          //0 - 2000
+                    {
+                        isnextApprovalRequire = true;
+                        nextApprovalLevel = 963850002;
+                    }
+                    else if (amount > 10000 && CurrentApprovalLevel == 963850002)    //2000 - 10000
+                    {
+                        isnextApprovalRequire = true;
+                        nextApprovalLevel = 963850005;
+                    }
+                }
             }
             return isnextApprovalRequire;
         }
@@ -326,7 +369,7 @@ namespace FirstKey.D365.Plug_Ins
                         }
                         Contract c = new Contract();
                         c.Amount = changeOrderItemEntity.GetAttributeValue<Money>(Constants.ChangeOrderItems.Amount).Value.ToString();
-                        c.Category_Code = changeOrderItemEntity.GetAttributeValue<AliasedValue>("JC.fkh_glcode").Value.ToString();
+                        c.Category_Code = changeOrderItemEntity.GetAttributeValue<AliasedValue>("JC.fkh_jobcategorycode").Value.ToString();
                         c.Contract_Code = contractCode;
                         c.ItemDescription = changeOrderItemEntity.GetAttributeValue<string>(Constants.ChangeOrderItems.Description);
                         c.Start_Date = DateTime.Now.ToString();
@@ -335,7 +378,7 @@ namespace FirstKey.D365.Plug_Ins
                         else
                         {
                             Entity vendorEntity = _service.Retrieve(changeOrderItemEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrderItems.Vendor).LogicalName, changeOrderItemEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrderItems.Vendor).Id, new ColumnSet(true));
-                            if(vendorEntity is Entity && vendorEntity.Attributes.Contains(Constants.Vendors.AccountCode))
+                            if (vendorEntity is Entity && vendorEntity.Attributes.Contains(Constants.Vendors.AccountCode))
                             {
                                 c.Vendor_Code = vendorEntity.GetAttributeValue<string>(Constants.Vendors.AccountCode);
                                 vendorCodeDictionary.Add(vendorEntity.Id, vendorEntity.GetAttributeValue<string>(Constants.Vendors.AccountCode));

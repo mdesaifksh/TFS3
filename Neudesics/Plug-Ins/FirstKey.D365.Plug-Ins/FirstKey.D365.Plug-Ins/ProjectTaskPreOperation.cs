@@ -238,10 +238,10 @@ namespace FirstKey.D365.Plug_Ins
                                         case "11":          //VENDOR(S) SAYS JOB STARTED
                                             tracer.Trace($"VENDOR(S) SAYS JOB STARTED Date 2. {Date2.ToString()}");
                                             tracer.Trace($"VENDOR(S) SAYS JOB STARTED ScheduledStart. {Date2.AddDays(1).ToString()}");
-                                            tracer.Trace($"VENDOR(S) SAYS JOB STARTED ScheduledEnd. {Date2.AddDays(2).ToString()}");
+                                            tracer.Trace($"VENDOR(S) SAYS JOB STARTED ScheduledEnd. {Date2.AddDays(1).ToString()}");
 
                                             projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = Date2.AddDays(1);
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = Date2.AddDays(2);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = Date2.AddDays(1);
                                             break;
                                         case "12":          //WORK IN PROGRESS
                                             projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = Date2.AddDays(2);
@@ -356,7 +356,7 @@ namespace FirstKey.D365.Plug_Ins
                                             break;
                                         case "8":           //IR : CLOSE_ESCROW
                                             projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate : unitStatusChange.AddDays(6);
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate : unitStatusChange.AddDays(6);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate : unitStatusChange.AddDays(7);
                                             break;
                                         case "9":           //IR : JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI
                                             projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate : unitStatusChange.AddDays(6);
@@ -364,39 +364,39 @@ namespace FirstKey.D365.Plug_Ins
                                             break;
                                         case "10":           //IR : VENDORS_SAYS_JOB_STARTED
                                             projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(1) : unitStatusChange.AddDays(7);
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(1) : unitStatusChange.AddDays(7);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(1) : unitStatusChange.AddDays(8);
                                             break;
                                         case "11":           //IR : WORK_IN_PROGRESS
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(1) : unitStatusChange.AddDays(7);
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(2) : unitStatusChange.AddDays(8);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(1) : unitStatusChange.AddDays(9);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(3) : unitStatusChange.AddDays(10);
                                             break;
                                         case "12":           //IR : VENDOR_SAYS_JOBS_COMPLETE
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(2) : unitStatusChange.AddDays(8);
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(3) : unitStatusChange.AddDays(9);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(9) : unitStatusChange.AddDays(16);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(10) : unitStatusChange.AddDays(17);
                                             break;
                                         case "13":           //IR : QUALITY_CONTROL_INSPECTION
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(3) : unitStatusChange.AddDays(9);
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(4) : unitStatusChange.AddDays(10);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(3) : unitStatusChange.AddDays(17);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(11) : unitStatusChange.AddDays(18);
                                             break;
                                         case "14":           //IR : JOB_COMPLETED
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(4) : unitStatusChange.AddDays(10);
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(4) : unitStatusChange.AddDays(10);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(10) : unitStatusChange.AddDays(17);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(11) : unitStatusChange.AddDays(18);
                                             break;
                                         case "15":           //IR : HERO_SHOT_PICTURE
                                             projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = unitStatusChange;
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(4) : unitStatusChange.AddDays(10);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(11) : unitStatusChange.AddDays(18);
                                             break;
                                         case "16":           //IR : MARKETING_INSPECTION
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(4) : unitStatusChange.AddDays(10);
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(5) : unitStatusChange.AddDays(11);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(11) : unitStatusChange.AddDays(18);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(12) : unitStatusChange.AddDays(19);
                                             break;
                                         case "17":           //IR : BI_WEEKLY_INSPECTION
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(18) : unitStatusChange.AddDays(24);
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(19) : unitStatusChange.AddDays(25);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(24) : unitStatusChange.AddDays(32);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(25) : unitStatusChange.AddDays(33);
                                             break;
                                         case "18":           //IR : MOVE_IN_INSPECTION_COMPLETED
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(49) : unitStatusChange.AddDays(55);
-                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(50) : unitStatusChange.AddDays(56);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledStart] = (schClosingDateFound) ? scheduledClosingDate.AddDays(49) : unitStatusChange.AddDays(49);
+                                            projectTaskEntity[Constants.ProjectTasks.ScheduledEnd] = (schClosingDateFound) ? scheduledClosingDate.AddDays(50) : unitStatusChange.AddDays(50);
                                             break;
                                     }
                                 }

@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirstKey.D365.Plug-Ins", "F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlugInTest", "PlugInTest\PlugInTest.csproj", "{65666DAA-C3FF-4946-89EF-408D929D2C89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firstkey.D365.WorkflowActivity", "Firstkey.D365.WorkflowActivity\Firstkey.D365.WorkflowActivity.csproj", "{87A3830F-58DA-4CE9-B581-7A411AB1B2CA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{65666DAA-C3FF-4946-89EF-408D929D2C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65666DAA-C3FF-4946-89EF-408D929D2C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65666DAA-C3FF-4946-89EF-408D929D2C89}.Release|Any CPU.Build.0 = Release|Any CPU
-		{87A3830F-58DA-4CE9-B581-7A411AB1B2CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{87A3830F-58DA-4CE9-B581-7A411AB1B2CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{87A3830F-58DA-4CE9-B581-7A411AB1B2CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{87A3830F-58DA-4CE9-B581-7A411AB1B2CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

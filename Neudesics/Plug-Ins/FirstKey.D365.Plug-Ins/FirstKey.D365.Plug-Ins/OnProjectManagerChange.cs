@@ -30,6 +30,7 @@ namespace FirstKey.D365.Plug_Ins
             IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
             IOrganizationServiceFactory factory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             IOrganizationService service = factory.CreateOrganizationService(context.UserId);
+            IOrganizationService systemuser_service = factory.CreateOrganizationService(null);
 
             ProjectTemplateSettings projectTemplateSettings = null;
 
@@ -78,10 +79,10 @@ namespace FirstKey.D365.Plug_Ins
                     {
                         tracer.Trace($"Unit found with Unit ID {propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId)}");
                         tracer.Trace("Creating Incoming Integration Record.");
-                        CreateInComingGoingAzureIntegrationCallRecord(service, tracer, (propertyEntity.Attributes.Contains(Constants.Units.UnitId)) ? propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId) : propertyEntity.GetAttributeValue<string>(Constants.Units.SFCode), projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), projectTemplateSettings);
+                        CreateInComingGoingAzureIntegrationCallRecord(systemuser_service, tracer, (propertyEntity.Attributes.Contains(Constants.Units.UnitId)) ? propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId) : propertyEntity.GetAttributeValue<string>(Constants.Units.SFCode), projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), projectTemplateSettings);
                         tracer.Trace("Incoming Integration Record successfully created.");
                         if (projectEntity.Attributes.Contains(Constants.Projects.ProjectManager) && projectEntity.Attributes.Contains(Constants.Projects.RenowalkID))
-                            CreateOutGoingAzureIntegrationCallRecord(service, tracer, projectEntity, projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), projectTemplateSettings, (propertyEntity.Attributes.Contains(Constants.Units.UnitId)) ? propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId) : propertyEntity.GetAttributeValue<string>(Constants.Units.SFCode));
+                            CreateOutGoingAzureIntegrationCallRecord(systemuser_service, tracer, projectEntity, projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), projectTemplateSettings, (propertyEntity.Attributes.Contains(Constants.Units.UnitId)) ? propertyEntity.GetAttributeValue<string>(Constants.Units.UnitId) : propertyEntity.GetAttributeValue<string>(Constants.Units.SFCode));
                         else
                             tracer.Trace("Project Record does NOT have Project Manager or Renowalk ID.");
 

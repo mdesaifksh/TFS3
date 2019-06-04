@@ -70,6 +70,8 @@ namespace FirstKey.D365.Plug_Ins
                 if (projectEntity is Entity && projectEntity.Attributes.Contains(Constants.Projects.ProjectTemplate) && projectEntity.Attributes.Contains(Constants.Projects.Unit) &&
                     projectEntity.Attributes.Contains(Constants.Projects.RenowalkID))
                 {
+                    int timeZoneCode = CommonMethods.RetrieveCurrentUsersSettings(service);
+                    DateTime currentDateTime = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, DateTime.Now);
                     Mapping mapping = (
                         from m in projectTemplateSettings.Mappings
                         where m.Key.Equals(projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate).Id.ToString(), StringComparison.OrdinalIgnoreCase)
@@ -98,7 +100,7 @@ namespace FirstKey.D365.Plug_Ins
 
                                     Entity tmpPrj = new Entity(projectEntity.LogicalName);
                                     tmpPrj.Id = projectEntity.Id;
-                                    tmpPrj[Constants.Projects.ActualJobEndDate] = DateTime.Now;
+                                    tmpPrj[Constants.Projects.ActualJobEndDate] = currentDateTime;
 
                                     service.Update(tmpPrj);
                                 }
@@ -121,7 +123,7 @@ namespace FirstKey.D365.Plug_Ins
 
                                         Entity tmpPrj = new Entity(projectEntity.LogicalName);
                                         tmpPrj.Id = projectEntity.Id;
-                                        tmpPrj[Constants.Projects.ActualJobEndDate] = DateTime.Now;
+                                        tmpPrj[Constants.Projects.ActualJobEndDate] = currentDateTime;
 
                                         service.Update(tmpPrj);
                                     }
@@ -165,7 +167,7 @@ namespace FirstKey.D365.Plug_Ins
 
                                 Entity tmpPrj = new Entity(projectEntity.LogicalName);
                                 tmpPrj.Id = projectEntity.Id;
-                                tmpPrj[Constants.Projects.ActualJobEndDate] = DateTime.Now;
+                                tmpPrj[Constants.Projects.ActualJobEndDate] = currentDateTime;
 
                                 service.Update(tmpPrj);
                             }

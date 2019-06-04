@@ -10,6 +10,7 @@ namespace FirstKey.D365.Plug_Ins
         public const string ERROR_MESSAGE = "ErrorMessage";
         public const string IR_BPF_ID = "DF604C07-AE6B-419D-AEA3-C3B1E402D231";
         public const string TURN_BPF_ID = "D42A0F2F-F98B-4948-92B9-73681E4CCD53";
+        public const string CRMEmail = "CRMEmail@firstkeyhomes.com";
 
         public class Messages
         {
@@ -71,8 +72,8 @@ namespace FirstKey.D365.Plug_Ins
         }
 
 
-            public class Projects
-        { 
+        public class Projects
+        {
             public const string LogicalName = "msdyn_project";
             public const string PrimaryKey = "msdyn_projectid";
 
@@ -181,13 +182,23 @@ namespace FirstKey.D365.Plug_Ins
             /// </summary>
             public const string JobStatus = "fkh_jobstatus";
         }
-
+        /*
         public class JobCategories
         {
             public const string LogicalName = "fkh_jobcategory";
             public const string PrimaryKey = "fkh_jobcategoryid";
 
             public const string GLCode = "fkh_glcode";
+        }
+        */
+        public class PFSJobCategories
+        {
+            public const string LogicalName = "fkh_pfsjobcategory";
+            public const string PrimaryKey = "fkh_pfsjobcategoryid";
+
+            public const string Name = "fkh_name";
+            public const string ProjectTemplate = "fkh_projecttemplate";
+            public const string JobCategoryCode = "fkh_jobcategorycode";
         }
 
         public class JobVendors
@@ -291,16 +302,16 @@ namespace FirstKey.D365.Plug_Ins
 
             public const string Name = "fkh_name";
             public const string ProjectID = "fkh_projectid";
+            public const string ProjectTemplateID = "fkh_projecttemplateid";
             public const string TotalAmount = "fkh_totalamount";
             public const string Reason = "fkh_reasons";
             public const string Requestor = "fkh_requestorid";
             /// <summary>
-            /// Value: 963850000, Label: 0 - 1500
-            /// Value: 963850001, Label: 1500 - 2500
-            /// Value: 963850002, Label: 2500 - 10000
-            /// Value: 963850003, Label: 10000 - 50000
-            /// Value: 963850004, Label: 50000 - 100000
-            /// Value: 963850005, Label: >100000
+            /// Value: 963850000, Label: 0 - 1000
+            /// Value: 963850001, Label: 1000 - 2000
+            /// Value: 963850003, Label: 0 - 2000
+            /// Value: 963850002, Label: 2000 - 10000
+            /// Value: 963850005, Label: >10000
             /// </summary>
             public const string PendingApprovalLevel= "fkh_pendingapprovallevel";
             public const string Revision = "fkh_revision";
@@ -317,7 +328,7 @@ namespace FirstKey.D365.Plug_Ins
             public const string ChangeOrder = "fkh_changeorderid";
             public const string Amount = "fkh_amount";
             public const string Vendor = "fkh_vendorid";
-            public const string JobCategory = "fkh_jobcategoryid";
+            public const string JobCategory = "fkh_pfsjobcategoryid";
             public const string Description = "fkh_description";
 
         }
@@ -386,7 +397,8 @@ namespace FirstKey.D365.Plug_Ins
             /// Value: 936710021, Label: Winston-Salem            
             /// </summary>
             public const string Market = "fkh_market";
-            public const string ApproverID = "fkh_approverid";
+            public const string ApproverID = "fkh_approver";
+            public const string ProjectType = "fkh_projecttype";
 
 
         }

@@ -150,6 +150,7 @@ namespace FirstKey.D365.Plug_Ins
             tracer.Trace($"Retrieving Unit {gridEvent.data.PropertyID} in D365");
             Entity propertyEntity = CommonMethods.RetrieveUnitByUnitId(tracer, service, gridEvent.data.PropertyID);
             int timeZoneCode = CommonMethods.RetrieveCurrentUsersSettings(service);
+            DateTime currentDateTime = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, DateTime.Now);
 
             if (propertyEntity == null)
                 AzureIntegrationCallAsync.UpdateAzureIntegrationCallErrorDetails(service, azureIntCallEntityReference, $"Unit with ID : {gridEvent.data.PropertyID} NOT found in D365 System.", 963850002);
@@ -245,7 +246,6 @@ namespace FirstKey.D365.Plug_Ins
                     DateTime localDate3 = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, date3);
                     tracer.Trace($"local Date 3 : {localDate3}");
 
-
                     switch (gridEvent.data.Event)
                     {
                         #region TURN_PROCESS_EVENTS
@@ -259,6 +259,8 @@ namespace FirstKey.D365.Plug_Ins
 
                                 //prjTemp[Constants.Projects.DueDate] = (localDate1.AddHours(24) > DateTime.Now) ? localDate1.AddHours(24) : DateTime.Now;
                                 prjTemp[Constants.Projects.CurrentResidentMoveOutDate] = localDate1;
+                                prjTemp[Constants.Projects.ScheduledJobStartDate] = localDate1.ChangeTime(6, 0, 0, 0).AddDays(1);
+                                prjTemp[Constants.Projects.ScheduledJobCompletionDate] = localDate1.ChangeTime(6, 0, 0, 0).AddDays(11);
 
                                 service.Update(prjTemp);
 
@@ -341,6 +343,12 @@ namespace FirstKey.D365.Plug_Ins
 
                                 CommonMethods.ChangeEntityStatus(tracer, service, projectEntity.ToEntityReference(), 1, 192350000);
                                 CommonMethods.SetUnitSyncJobFlag(tracer, service, propertyEntity.ToEntityReference(), false);
+                                EntityCollection projectTaskEntityCollection = CommonMethods.RetrieveAllOpenProjectTaskByProject(tracer, service, projectEntity.ToEntityReference());
+
+                                foreach(Entity projectTaskEntity in projectTaskEntityCollection.Entities)
+                                {
+                                    CommonMethods.ChangeEntityStatus(tracer, service, projectTaskEntity.ToEntityReference(), 1, 2);
+                                }
                             }
                             CommonMethods.ChangeEntityStatus(tracer, service, azureIntCallEntityReference, 0, 963850000);
                             #endregion
@@ -359,9 +367,11 @@ namespace FirstKey.D365.Plug_Ins
                                         Id = e.Id
                                     };
                                     num[Constants.ProjectTasks.ActualEnd] = localDate1;
-                                    DateTime actStart = DateTime.Now;
+                                    DateTime actStart = currentDateTime;
                                     if (e.Attributes.Contains(Constants.ProjectTasks.ActualStart))
                                         actStart = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart));
+                                    else
+                                        num[Constants.ProjectTasks.ActualStart] = currentDateTime;
                                     num[Constants.ProjectTasks.ActualDurationInMinutes] = (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart)) ? 0 : (((localDate1 - actStart).TotalMinutes > 0) ? (int)Math.Floor((localDate1 - actStart).TotalMinutes) : 0);
                                     num[Constants.ProjectTasks.Progress] = new decimal(100);
                                     num[Constants.Status.StatusCode] = new OptionSetValue(963850001);
@@ -526,35 +536,44 @@ namespace FirstKey.D365.Plug_Ins
                                 }
                                 else
                                 {
-                                    UpdateAzureIntegrationCallErrorDetails(service, azureIntCallEntityReference, $"Renowalk ID is missing in Data Payload. Actual Data Payload : {CommonMethods.Serialize<DataPayLoad>(gridEvent.data)}", 963850002);
+                                    UpdateAzureIntegrationCallErrorDetails(service, azureIntCallEntityReference, $"Renowalk ID is missing in Project Record. Actual Data Payload : {CommonMethods.Serialize<DataPayLoad>(gridEvent.data)}", 963850002);
                                 }
                             }
                             #endregion
                             break;
                         case Events.JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI:
-                            #region JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI_10
+                        case Events.IR_JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI:
+                            #region JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI_10_209
                             tracer.Trace($"Processing  : {Events.JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI.ToString()} Event.");
                             DateTime jobCreationDate = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, date1);
                             tracer.Trace($"local Date 1 : {jobCreationDate}");
 
                             foreach (Entity projectEntity in projectEntityCollection.Entities)
                             {
-                                EntityCollection job_and_contracts_sub_to_yardi_EntityCollection = CommonMethods.RetrieveOpenProjectTaskByProjectAndTaskIdentifier(tracer, service, projectEntity.ToEntityReference(), projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate), 10, "10");
-                                foreach (Entity e in job_and_contracts_sub_to_yardi_EntityCollection.Entities)
+                                Mapping mapping = (
+                                            from m in settings.Mappings
+                                            where m.Key.Equals(projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate).Id.ToString(), StringComparison.OrdinalIgnoreCase)
+                                            select m).FirstOrDefault<Mapping>();
+                                if (mapping is Mapping)
                                 {
-                                    Entity num = new Entity(e.LogicalName)
+                                    EntityCollection job_and_contracts_sub_to_yardi_EntityCollection = CommonMethods.RetrieveOpenProjectTaskByProjectAndTaskIdentifier(tracer, service, projectEntity.ToEntityReference(), projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.ProjectTemplate),
+                                    mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE) ? 10 : 209, mapping.Name.Equals(TURNPROCESS_PROJECT_TEMPLATE) ? "10" : "9");
+                                    foreach (Entity e in job_and_contracts_sub_to_yardi_EntityCollection.Entities)
                                     {
-                                        Id = e.Id
-                                    };
-                                    num[Constants.ProjectTasks.ActualEnd] = jobCreationDate;
-                                    DateTime actStart = DateTime.Now;
-                                    if (e.Attributes.Contains(Constants.ProjectTasks.ActualStart))
-                                        actStart = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart));
-                                    num[Constants.ProjectTasks.ActualDurationInMinutes] = (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart)) ? 0 : (((localDate1 - actStart).TotalMinutes > 0) ? (int)Math.Floor((localDate1 - actStart).TotalMinutes) : 0);
-                                    num[Constants.ProjectTasks.Progress] = new decimal(100);
-                                    num[Constants.Status.StatusCode] = new OptionSetValue(963850001);
-                                    service.Update(num);
-                                    tracer.Trace("Task for Event : JOB_AND_CONTRACTS_SUBMITTED_TO_YARDI Successfully Updated.");
+                                        Entity num = new Entity(e.LogicalName)
+                                        {
+                                            Id = e.Id
+                                        };
+                                        num[Constants.ProjectTasks.ActualEnd] = jobCreationDate;
+                                        DateTime actStart = DateTime.Now;
+                                        if (e.Attributes.Contains(Constants.ProjectTasks.ActualStart))
+                                            actStart = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart));
+                                        num[Constants.ProjectTasks.ActualDurationInMinutes] = (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart)) ? 0 : (((localDate1 - actStart).TotalMinutes > 0) ? (int)Math.Floor((localDate1 - actStart).TotalMinutes) : 0);
+                                        num[Constants.ProjectTasks.Progress] = new decimal(100);
+                                        num[Constants.Status.StatusCode] = new OptionSetValue(963850001);
+                                        service.Update(num);
+                                        tracer.Trace($"Task for Event : {gridEvent.data.Event.ToString()} Successfully Updated.");
+                                    }
                                 }
                             }
                             CommonMethods.ChangeEntityStatus(tracer, service, azureIntCallEntityReference, 0, 963850000);
@@ -664,7 +683,24 @@ namespace FirstKey.D365.Plug_Ins
                                             select m).FirstOrDefault<Mapping>();
                                         if (mapping is Mapping)
                                         {
-                                            CreateChangeOrderProjectTask(tracer, service, projectEntity, gridEvent.data.Contracts, mapping, timeZoneCode);
+                                            decimal contractAmount = 0, changeOrderAmount = 0;
+                                            if (projectEntity.Attributes.Contains(Constants.Projects.ChangeOrder))
+                                                changeOrderAmount = projectEntity.GetAttributeValue<Money>(Constants.Projects.ChangeOrder).Value;
+                                            string error = CreateChangeOrderProjectTask(tracer, service, projectEntity, gridEvent.data.Contracts, mapping, timeZoneCode, out contractAmount);
+                                            if (string.IsNullOrEmpty(error))
+                                                CommonMethods.ChangeEntityStatus(tracer, service, azureIntCallEntityReference, 0, 963850000);
+                                            else
+                                                AzureIntegrationCallAsync.UpdateAzureIntegrationCallErrorDetails(service, azureIntCallEntityReference, error, 963850001);
+                                            if (contractAmount > 0)
+                                            {
+                                                changeOrderAmount += contractAmount;
+
+                                                Entity tmpEntity = new Entity(projectEntity.LogicalName);
+                                                tmpEntity.Id = projectEntity.Id;
+                                                tmpEntity[Constants.Projects.ChangeOrder] = new Money(changeOrderAmount);
+
+                                                service.Update(tmpEntity);
+                                            }
                                         }
                                     }
                                 }
@@ -1366,10 +1402,11 @@ namespace FirstKey.D365.Plug_Ins
                                     {
                                         Id = e.Id
                                     };
-                                    DateTime actStart = DateTime.Now;
+                                    DateTime actStart = currentDateTime;
                                     if (e.Attributes.Contains(Constants.ProjectTasks.ActualStart))
                                         actStart = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, e.GetAttributeValue<DateTime>(Constants.ProjectTasks.ActualStart));
-
+                                    else
+                                        num[Constants.ProjectTasks.ActualStart] = currentDateTime;
                                     num[Constants.ProjectTasks.ActualEnd] = localDate1;
                                     num[Constants.ProjectTasks.ActualDurationInMinutes] = (!e.Attributes.Contains(Constants.ProjectTasks.ActualStart)) ? 0 : (((localDate1 - actStart).TotalMinutes > 0) ? (int)Math.Floor((localDate1 - actStart).TotalMinutes) : 0);
                                     num[Constants.ProjectTasks.Progress] = new decimal(100);
@@ -1620,6 +1657,21 @@ namespace FirstKey.D365.Plug_Ins
                             foreach (Entity projectEntity in projectEntityCollection.Entities)
                             {
                                 ChangeScheduledDateOnSchClosingDate(tracer, service, projectEntity, TaskIndentifierEntityList, localDate1, timeZoneCode);
+
+                                Entity tmpProjectEntity = new Entity(projectEntity.LogicalName);
+                                tmpProjectEntity.Id = projectEntity.Id;
+                                tmpProjectEntity[Constants.Projects.ScheduledJobStartDate] = localDate1.ChangeTime(6, 0, 0, 0).AddDays(1);
+                                tmpProjectEntity[Constants.Projects.ScheduledJobCompletionDate] = localDate1.ChangeTime(6, 0, 0, 0).AddDays(11);
+
+                                service.Update(tmpProjectEntity);
+                                if (projectEntity.Attributes.Contains(Constants.Projects.Unit))
+                                {
+                                    Entity tmpUnitEntity = new Entity(Constants.Units.LogicalName);
+                                    tmpUnitEntity.Id = projectEntity.GetAttributeValue<EntityReference>(Constants.Projects.Unit).Id;
+                                    tmpUnitEntity[Constants.Units.ScheduledAcquisitionDate] = localDate1;
+
+                                    service.Update(tmpUnitEntity);
+                                }
                             }
                             CommonMethods.ChangeEntityStatus(tracer, service, azureIntCallEntityReference, 0, 963850000);
                             #endregion
@@ -1799,7 +1851,24 @@ namespace FirstKey.D365.Plug_Ins
                                             select m).FirstOrDefault<Mapping>();
                                         if (mapping is Mapping)
                                         {
-                                            CreateChangeOrderProjectTask(tracer, service, projectEntity, gridEvent.data.Contracts, mapping, timeZoneCode);
+                                            decimal contractAmount = 0, changeOrderAmount = 0;
+                                            if (projectEntity.Attributes.Contains(Constants.Projects.ChangeOrder))
+                                                changeOrderAmount = projectEntity.GetAttributeValue<Money>(Constants.Projects.ChangeOrder).Value;
+                                            string error = CreateChangeOrderProjectTask(tracer, service, projectEntity, gridEvent.data.Contracts, mapping, timeZoneCode, out contractAmount);
+                                            if (string.IsNullOrEmpty(error))
+                                                CommonMethods.ChangeEntityStatus(tracer, service, azureIntCallEntityReference, 0, 963850000);
+                                            else
+                                                AzureIntegrationCallAsync.UpdateAzureIntegrationCallErrorDetails(service, azureIntCallEntityReference, error, 963850001);
+                                            if (contractAmount > 0)
+                                            {
+                                                changeOrderAmount += contractAmount;
+
+                                                Entity tmpEntity = new Entity(projectEntity.LogicalName);
+                                                tmpEntity.Id = projectEntity.Id;
+                                                tmpEntity[Constants.Projects.ChangeOrder] = new Money(changeOrderAmount);
+
+                                                service.Update(tmpEntity);
+                                            }
                                         }
                                     }
                                 }
@@ -2149,10 +2218,11 @@ namespace FirstKey.D365.Plug_Ins
         #endregion
 
         #region CHANGE_ORDER
-        private static string CreateChangeOrderProjectTask(ITracingService tracer, IOrganizationService service, Entity projectEntity, List<Contract> contractList, Mapping mapping, int timeZoneCode)
+        private static string CreateChangeOrderProjectTask(ITracingService tracer, IOrganizationService service, Entity projectEntity,
+            List<Contract> contractList, Mapping mapping, int timeZoneCode, out decimal totalAmount)
         {
             string error = string.Empty;
-
+            totalAmount = 0;
             int cnt_vsjs = 0, cnt_wip = 0, cnt_vsjc = 0, cnt_qci = 0;
             Entity vendorSaysJobStartedEntity = null, workInProgressEntity = null, vendorSaysJobCompleteEntity = null, qcInspectionEntity = null, jobandContractSubToYardiEntity = null;
             //Retrieve Venodr Says Job Started Task.
@@ -2211,6 +2281,7 @@ namespace FirstKey.D365.Plug_Ins
                             decimal amount;
                             if (!decimal.TryParse(contract.Amount, out amount))
                                 amount = 0;
+                            totalAmount += amount;
                             tracer.Trace($"Contract Amount : {amount}.");
 
                             DateTime endDate = startDate.AddDays((double)Math.Ceiling(amount / 700));
@@ -2284,7 +2355,7 @@ namespace FirstKey.D365.Plug_Ins
 
                 if (ischildCreated)
                 {
-                    if(vendorSaysJobStartedEntity.GetAttributeValue<OptionSetValue>(Constants.Status.StatusCode).Value == 963850001)
+                    if (vendorSaysJobStartedEntity.GetAttributeValue<OptionSetValue>(Constants.Status.StatusCode).Value == 963850001)
                     {
                         Entity num = new Entity(vendorSaysJobStartedEntity.LogicalName);
                         num.Id = vendorSaysJobStartedEntity.Id;
@@ -2532,7 +2603,7 @@ namespace FirstKey.D365.Plug_Ins
                                 break;
                             case "11":          //VENDOR(S) SAYS JOB STARTED
                                 tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = localDate1.AddDays(1);
-                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(2);
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(1);
                                 requiredUpdate = true;
                                 break;
                             case "12":          //WORK IN PROGRESS
@@ -2628,36 +2699,40 @@ namespace FirstKey.D365.Plug_Ins
                                 break;
                             case "11":           //IR : WORK_IN_PROGRESS
                                 tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = localDate1.AddDays(1);
-                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(2);
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(3);
                                 requiredUpdate = true;
                                 break;
+
                             case "12":           //IR : VENDOR_SAYS_JOBS_COMPLETE
-                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = localDate1.AddDays(2);
-                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(3);
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = localDate1.AddDays(9);
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(10);
                                 requiredUpdate = true;
                                 break;
                             case "13":           //IR : QUALITY_CONTROL_INSPECTION
                                 tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = localDate1.AddDays(3);
-                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(4);
-                                requiredUpdate = true;
-                                break;
-                            case "14":           //IR : JOB_COMPLETED
-                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = localDate1.AddDays(4);
-                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(4);
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(11);
                                 requiredUpdate = true;
                                 break;
                             case "15":           //IR : HERO_SHOT_PICTURE
-                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(4);
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = localDate1;
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(11);
                                 requiredUpdate = true;
                                 break;
+
+                            case "14":           //IR : JOB_COMPLETED
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = localDate1.AddDays(10);
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(11);
+                                requiredUpdate = true;
+                                break;
+
                             case "16":           //IR : MARKETING_INSPECTION
-                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = localDate1.AddDays(4);
-                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(5);
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = localDate1.AddDays(11);
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(12);
                                 requiredUpdate = true;
                                 break;
                             case "17":           //IR : BI_WEEKLY_INSPECTION
-                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = localDate1.AddDays(18);
-                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(19);
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledStart] = localDate1.AddDays(24);
+                                tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(25);
                                 requiredUpdate = true;
                                 break;
                             case "18":           //IR : MOVE_IN_INSPECTION_COMPLETED
@@ -2665,6 +2740,7 @@ namespace FirstKey.D365.Plug_Ins
                                 tmpPrjTskEntity[Constants.ProjectTasks.ScheduledEnd] = localDate1.AddDays(50);
                                 requiredUpdate = true;
                                 break;
+
                         }
                         if (requiredUpdate)
                             service.Update(tmpPrjTskEntity);

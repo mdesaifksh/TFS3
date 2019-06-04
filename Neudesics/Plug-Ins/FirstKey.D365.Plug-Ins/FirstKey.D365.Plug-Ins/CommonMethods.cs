@@ -572,6 +572,7 @@ namespace FirstKey.D365.Plug_Ins
 
         public static int RetrieveCurrentUsersSettings(IOrganizationService _service)
         {
+            int timeZoneCode = 0;
             var currentUserSettingsEntityCollection = _service.RetrieveMultiple(
                 new QueryExpression("usersettings")
                 {
@@ -587,12 +588,15 @@ namespace FirstKey.D365.Plug_Ins
             if (currentUserSettingsEntityCollection is EntityCollection && currentUserSettingsEntityCollection.Entities.Count > 0)
             {
                 if (currentUserSettingsEntityCollection.Entities[0].Attributes.Contains("timezonecode"))
-                    return currentUserSettingsEntityCollection.Entities[0].GetAttributeValue<int>("timezonecode");
+                    timeZoneCode = currentUserSettingsEntityCollection.Entities[0].GetAttributeValue<int>("timezonecode");
                 else
-                    return -1;
+                    timeZoneCode = 35;
             }
 
-            return -1;
+            if (timeZoneCode == 0)
+                return 35;
+            else
+                return timeZoneCode;
 
         }
 
@@ -738,9 +742,9 @@ namespace FirstKey.D365.Plug_Ins
                 TopCount = 100
             };
 
-            LinkEntity linkEntity = new LinkEntity(Constants.ChangeOrderItems.LogicalName, Constants.JobCategories.LogicalName, Constants.ChangeOrderItems.JobCategory, Constants.JobCategories.PrimaryKey, JoinOperator.Inner)
+            LinkEntity linkEntity = new LinkEntity(Constants.ChangeOrderItems.LogicalName, Constants.PFSJobCategories.LogicalName, Constants.ChangeOrderItems.JobCategory, Constants.PFSJobCategories.PrimaryKey, JoinOperator.Inner)
             {
-                Columns = new ColumnSet(Constants.JobCategories.GLCode),
+                Columns = new ColumnSet(Constants.PFSJobCategories.JobCategoryCode),
                 EntityAlias = "JC"
             };
             Query.LinkEntities.Add(linkEntity);
@@ -748,7 +752,57 @@ namespace FirstKey.D365.Plug_Ins
 
             return service.RetrieveMultiple(Query);
         }
-        public static EntityCollection RetrieveAllBudjgetApprovers(ITracingService tracer, IOrganizationService service, int market, int approverLevel)
+
+        public static Entity RetrieveCRMEMailSystemUser(ITracingService tracer, IOrganizationService service)
+        {
+            QueryExpression Query = new QueryExpression
+            {
+                EntityName = Constants.SystemUsers.LogicalName,
+                ColumnSet = new ColumnSet(true),
+                Criteria = new FilterExpression
+                {
+                    FilterOperator = LogicalOperator.And,
+                    Conditions =
+                    {
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.SystemUsers.UserName,
+                            Operator = ConditionOperator.Equal,
+                            Values = { Constants.CRMEmail }
+                        }
+                    }
+                },
+                TopCount = 1
+            };
+
+            EntityCollection systemUserEntityCollection = service.RetrieveMultiple(Query);
+            if (systemUserEntityCollection.Entities.Count > 0)
+                return systemUserEntityCollection.Entities[0];
+            else
+                return null;
+        }
+
+        public static SendEmailResponse SendEmail(ITracingService tracer, IOrganizationService service, EntityReference emailEntityRefence)
+        {
+            try
+            {
+                SendEmailRequest emailSendRequest = new SendEmailRequest()
+                {
+                    EmailId = emailEntityRefence.Id,
+                    TrackingToken = string.Empty,
+                    IssueSend = true
+                };
+
+                return (SendEmailResponse)service.Execute(emailSendRequest);
+            }
+            catch(Exception ex)
+            {
+                tracer.Trace($"Error while sending Email. {ex.Message} {Environment.NewLine} {ex.StackTrace}");
+                return null;
+            }
+        }
+
+        public static EntityCollection RetrieveAllBudjgetApprovers(ITracingService tracer, IOrganizationService service, int market, int approverLevel, EntityReference projectTemplateEntityReference)
         {
             QueryExpression queryExpression = new QueryExpression
             {
@@ -781,6 +835,12 @@ namespace FirstKey.D365.Plug_Ins
                             AttributeName = Constants.BudgetApprovers.Level,
                             Operator = ConditionOperator.Equal,
                             Values = { approverLevel }
+                        },
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.BudgetApprovers.ProjectType,
+                            Operator = ConditionOperator.Equal,
+                            Values = { projectTemplateEntityReference.Id }
                         }
                     }
                 },
@@ -812,9 +872,23 @@ namespace FirstKey.D365.Plug_Ins
             emailActivity[Constants.Emails.Description] = $"{changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.Requestor).Name} has submitted a change order for your approval for the project {changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).Name}.<br/> Please review the change order for approval or rejection.<br/><br/> Click here to access the change order. <br/><a href ='{recordUrl}'>{changeOrderEntity.GetAttributeValue<string>(Constants.ChangeOrders.Name)}</a>   ";
 
             emailActivity.Id = service.Create(emailActivity);
+
+            try
+            {
+                //SendEmailResponse emailResponse = CommonMethods.SendEmail(tracer, service, emailActivity.ToEntityReference());
+                //if (emailResponse is SendEmailResponse)
+                //    tracer.Trace("Email successfully sent.");
+                //else
+                //    tracer.Trace("Operation successfully completed but Email Send failed.");
+            }
+            catch (Exception ex)
+            {
+                tracer.Trace(ex.Message + Environment.NewLine + ex.StackTrace);
+            }
+
         }
 
-        public static EntityCollection ApproverOrderList(ITracingService tracer, IOrganizationService service, int level, int market, Guid currentSystemUserID)
+        public static EntityCollection ApproverOrderList(ITracingService tracer, IOrganizationService service, int level, int market, EntityReference projectTemplateEntityReference, Guid currentSystemUserID)
         {
             QueryExpression Query = new QueryExpression
             {
@@ -848,6 +922,12 @@ namespace FirstKey.D365.Plug_Ins
                             AttributeName = Constants.Status.StateCode,
                             Operator = ConditionOperator.Equal,
                             Values = { 0 }
+                        },
+                        new ConditionExpression
+                        {
+                            AttributeName = Constants.BudgetApprovers.ProjectType,
+                            Operator = ConditionOperator.Equal,
+                            Values = { projectTemplateEntityReference.Id }
                         }
                     }
                 },
