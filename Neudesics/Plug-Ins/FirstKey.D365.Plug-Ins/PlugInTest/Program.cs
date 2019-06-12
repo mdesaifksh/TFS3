@@ -87,14 +87,38 @@ namespace PlugInTest
                         projectTemplateSettings = (ProjectTemplateSettings)serializer.Deserialize(fs);
                     }
 
+                    int timeZoneCode = 0;
+
+                    var currentUserSettingsEntityCollection = service.RetrieveMultiple(
+                            new QueryExpression("usersettings")
+                            {
+                                ColumnSet = new ColumnSet(true),
+                                Criteria = new FilterExpression
+                                {
+                                    Conditions =
+                                    {
+                                                    new ConditionExpression("systemuserid", ConditionOperator.EqualUserId,new Guid("29B31E5D-1BBF-45E9-A980-D8C243A96399"))
+                                    }
+                                }
+                            });
+                    if (currentUserSettingsEntityCollection is EntityCollection && currentUserSettingsEntityCollection.Entities.Count > 0)
+                    {
+                        if (currentUserSettingsEntityCollection.Entities[0].Attributes.Contains("timezonecode"))
+                            timeZoneCode = currentUserSettingsEntityCollection.Entities[0].GetAttributeValue<int>("timezonecode");
+                        else
+                            timeZoneCode = 35;
+                    }
+
+
+
                     //GetAllTimeZonesWithDisplayNameResponse res1 = (GetAllTimeZonesWithDisplayNameResponse) service.Execute(new GetAllTimeZonesWithDisplayNameRequest());
                     /*
                     //CommonMethods.ChangeEntityStatus(tracingService, _service, new EntityReference(Constants.Projects.LogicalName, new Guid("556C6EE4-E8E2-E811-A976-000D3A1A42B9")),1,2);
 
                     //Entity test = RetrieveProjectTemplateTask(new EntityReference("msdyn_project", new Guid("23A38E60-C0D0-E811-A96E-000D3A16ACEE")), "1");
                      */
-                    Entity azureIntegrationCallEntity = _client.Retrieve(Constants.AzureIntegrationCalls.LogicalName, new Guid("4ADC0514-BF7A-E911-A95A-000D3A1D58E9"), new Microsoft.Xrm.Sdk.Query.ColumnSet(true));
-                    AzureIntegrationCallAsync.ProcessIncomingIntegrationCall(tracer, service, azureIntegrationCallEntity, projectTemplateSettings);
+                    //Entity azureIntegrationCallEntity = _client.Retrieve(Constants.AzureIntegrationCalls.LogicalName, new Guid("A599A10F-9D88-E911-A95A-000D3A110BBD"), new Microsoft.Xrm.Sdk.Query.ColumnSet(true));
+                    //AzureIntegrationCallAsync.ProcessIncomingIntegrationCall(tracer, service, azureIntegrationCallEntity, projectTemplateSettings);
 
                     //Entity tmp = _client.Retrieve(Constants.ChangeOrders.LogicalName, new Guid("1035F584-7177-E911-A958-000D3A110BBD"), new ColumnSet(true));
                     //ApproveChangeOrder.ExecuteContext(tracer, service, tmp.ToEntityReference(), 0, projectTemplateSettings, res.UserId);
@@ -166,7 +190,7 @@ namespace PlugInTest
 
 
                     Console.WriteLine($"Press any key to exit.");
-                        Console.Read();
+                    Console.Read();
 
                 }
             }

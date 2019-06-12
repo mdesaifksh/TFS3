@@ -150,6 +150,8 @@ namespace FirstKey.D365.Plug_Ins
             tracer.Trace($"Retrieving Unit {gridEvent.data.PropertyID} in D365");
             Entity propertyEntity = CommonMethods.RetrieveUnitByUnitId(tracer, service, gridEvent.data.PropertyID);
             int timeZoneCode = CommonMethods.RetrieveCurrentUsersSettings(service);
+            tracer.Trace($"Execution User Time Zone Code : {timeZoneCode}");
+
             DateTime currentDateTime = CommonMethods.RetrieveLocalTimeFromUTCTime(service, timeZoneCode, DateTime.Now);
 
             if (propertyEntity == null)
@@ -260,7 +262,7 @@ namespace FirstKey.D365.Plug_Ins
                                 //prjTemp[Constants.Projects.DueDate] = (localDate1.AddHours(24) > DateTime.Now) ? localDate1.AddHours(24) : DateTime.Now;
                                 prjTemp[Constants.Projects.CurrentResidentMoveOutDate] = localDate1;
                                 prjTemp[Constants.Projects.ScheduledJobStartDate] = localDate1.ChangeTime(6, 0, 0, 0).AddDays(1);
-                                prjTemp[Constants.Projects.ScheduledJobCompletionDate] = localDate1.ChangeTime(6, 0, 0, 0).AddDays(11);
+                                prjTemp[Constants.Projects.ScheduledJobCompletionDate] = localDate1.ChangeTime(6, 0, 0, 0).AddDays(6);
 
                                 service.Update(prjTemp);
 
@@ -2304,6 +2306,7 @@ namespace FirstKey.D365.Plug_Ins
                                     ischildCreated = true;
                                     //Vendor Says Job Started...
                                     Entity tmp_vsjsEntity = CommonMethods.CloneEntitySandbox(vendorSaysJobStartedEntity);
+                                    tracer.Trace($"Creating Project Task with WBS ID : {vendorSaysJobStartedEntity.GetAttributeValue<string>(Constants.ProjectTasks.WBSID) + "." + cnt_vsjs.ToString()}");
                                     tmp_vsjsEntity.Id = CreateProjectTask(tracer, service, tmp_vsjsEntity, startDate, startDate.ChangeTime(23, 59, 0, 0), vendorSaysJobStartedEntity.GetAttributeValue<string>(Constants.ProjectTasks.WBSID) + "." + cnt_vsjs.ToString()
                                         , 0, contract.Contract_Code, vendorSaysJobStartedEntity.ToEntityReference(), ProjectTeamEntity.ToEntityReference());
 
@@ -2314,6 +2317,7 @@ namespace FirstKey.D365.Plug_Ins
 
                                     //Work In Progress
                                     Entity tmp_wipEntity = CommonMethods.CloneEntitySandbox(workInProgressEntity);
+                                    tracer.Trace($"Creating Project Task with WBS ID : {workInProgressEntity.GetAttributeValue<string>(Constants.ProjectTasks.WBSID) + "." + cnt_wip.ToString()}");
                                     tmp_wipEntity.Id = CreateProjectTask(tracer, service, tmp_wipEntity, startDate, endDate, workInProgressEntity.GetAttributeValue<string>(Constants.ProjectTasks.WBSID) + "." + cnt_wip.ToString()
                                         , 0, contract.Contract_Code, workInProgressEntity.ToEntityReference(), ProjectTeamEntity.ToEntityReference());
 
@@ -2324,6 +2328,7 @@ namespace FirstKey.D365.Plug_Ins
 
                                     //Vendor Says Job Completed.
                                     Entity tmp_vsjcEntity = CommonMethods.CloneEntitySandbox(vendorSaysJobCompleteEntity);
+                                    tracer.Trace($"Creating Project Task with WBS ID : {vendorSaysJobCompleteEntity.GetAttributeValue<string>(Constants.ProjectTasks.WBSID) + "." + cnt_vsjc.ToString()}");
                                     tmp_vsjcEntity.Id = CreateProjectTask(tracer, service, tmp_vsjcEntity, endDate, endDate.ChangeTime(23, 59, 0, 0), vendorSaysJobCompleteEntity.GetAttributeValue<string>(Constants.ProjectTasks.WBSID) + "." + cnt_vsjc.ToString()
                                         , 0, contract.Contract_Code, vendorSaysJobCompleteEntity.ToEntityReference(), ProjectTeamEntity.ToEntityReference());
 
@@ -2334,6 +2339,7 @@ namespace FirstKey.D365.Plug_Ins
 
                                     //QC Inspection
                                     Entity tmp_qcEntity = CommonMethods.CloneEntitySandbox(qcInspectionEntity);
+                                    tracer.Trace($"Creating Project Task with WBS ID : {qcInspectionEntity.GetAttributeValue<string>(Constants.ProjectTasks.WBSID) + "." + cnt_qci.ToString()}");
                                     tmp_qcEntity.Id = CreateProjectTask(tracer, service, tmp_qcEntity, endDate, endDate.AddDays(1).ChangeTime(23, 59, 0, 0), qcInspectionEntity.GetAttributeValue<string>(Constants.ProjectTasks.WBSID) + "." + cnt_qci.ToString()
                                         , 0, contract.Contract_Code, qcInspectionEntity.ToEntityReference(), ProjectTeamEntity.ToEntityReference());
 

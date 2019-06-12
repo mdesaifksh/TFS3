@@ -520,7 +520,7 @@ namespace FirstKey.D365.Plug_Ins
                 ColumnSet = new ColumnSet(true)
             };
             queryExpression.Criteria.AddCondition(new ConditionExpression(Constants.ProjectTasks.Project, ConditionOperator.Equal, projectEntityRefernce.Id));
-            queryExpression.Criteria.AddCondition(new ConditionExpression(Constants.Status.StatusCode, ConditionOperator.In, new int[] { 1, 963850000 }));
+            //queryExpression.Criteria.AddCondition(new ConditionExpression(Constants.Status.StatusCode, ConditionOperator.In, new int[] { 1, 963850000, }));
 
             LinkEntity linkEntity = new LinkEntity(Constants.ProjectTasks.LogicalName, Constants.TaskIdentifiers.LogicalName, Constants.ProjectTasks.TaskIdentifier, Constants.TaskIdentifiers.PrimaryKey, JoinOperator.Inner)
             {
@@ -592,6 +592,8 @@ namespace FirstKey.D365.Plug_Ins
                 else
                     timeZoneCode = 35;
             }
+            else
+                timeZoneCode = 92;
 
             if (timeZoneCode == 0)
                 return 35;

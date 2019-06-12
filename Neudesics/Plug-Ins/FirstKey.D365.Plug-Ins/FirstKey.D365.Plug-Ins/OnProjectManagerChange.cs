@@ -127,7 +127,7 @@ namespace FirstKey.D365.Plug_Ins
                 Columns = new ColumnSet(true),
                 EntityAlias = "TI"
             };
-            linkEntity.LinkCriteria.AddCondition(new ConditionExpression(Constants.TaskIdentifiers.IdentifierNumber, ConditionOperator.NotIn, new int[] { 18, 19, 20, 21, 217, 218, 219, 220 }));
+            linkEntity.LinkCriteria.AddCondition(new ConditionExpression(Constants.TaskIdentifiers.IdentifierNumber, ConditionOperator.NotIn, new int[] { 19, 20, 21, 218, 219, 220 }));
 
             QueryExpression Query = new QueryExpression
             {
