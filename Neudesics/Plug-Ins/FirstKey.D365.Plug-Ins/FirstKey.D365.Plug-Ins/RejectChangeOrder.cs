@@ -111,32 +111,16 @@ namespace FirstKey.D365.Plug_Ins
 
 
 
-                                string recordUrl = $"{ServerUrl}/main.aspx?etn={changeOrderEntity.LogicalName}&pagetype=entityrecord&id={changeOrderEntity.Id.ToString()}";
-                                Entity emailActivity = new Entity(Constants.Emails.LogicalName);
-                                emailActivity[Constants.Emails.Subject] = $"Change Order Rejected: {changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).Name}";
-                                emailActivity[Constants.Emails.To] = toEntitycollection;
-                                emailActivity[Constants.Emails.From] = fromEntitycollection;
-                                emailActivity[Constants.Emails.DirectionCode] = true;
-                                emailActivity[Constants.Emails.RegardingObject] = changeOrderEntity.ToEntityReference();
-                                emailActivity[Constants.Emails.Description] = $"{changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.Requestor).Name}  has rejected your request for a change order for the project {changeOrderEntity.GetAttributeValue<EntityReference>(Constants.ChangeOrders.ProjectID).Name} with the following comment.<br/>{Reason}<br/><br/>Please make necessary changes to the change order and resubmit for approval.<br/><br/>Click here to access the change order. <br/><a href ='{recordUrl}'>{changeOrderEntity.GetAttributeValue<string>(Constants.ChangeOrders.Name)}</a>   ";
+                            Guid emailId = service.Create(emailActivity);
+                            SendEmailRequest sendEmailreq = new SendEmailRequest
+                            {
+                                EmailId = emailId,
+                                TrackingToken = "",
+                                IssueSend = true
+                            };
+                            SendEmailResponse sendEmailresp = (SendEmailResponse)service.Execute(sendEmailreq);
 
-                                emailActivity.Id = service.Create(emailActivity);
-                                //CommonMethods.SendEmail(tracer, service, emailActivity.ToEntityReference());
-                                try
-                                {
-                                    SendEmailResponse emailResponse = CommonMethods.SendEmail(tracer, service, emailActivity.ToEntityReference());
-                                    if (emailResponse is SendEmailResponse)
-                                        tracer.Trace("Email successfully sent.");
-                                    else
-                                        errorMessage = "Operation successfully completed but Email Send failed.";
-                                }
-                                catch (Exception ex)
-                                {
-                                    tracer.Trace(ex.Message + Environment.NewLine + ex.StackTrace);
-                                }
-                            }
-                            else
-                                errorMessage = $"System User Not found with Email Address : {Constants.CRMEmail}. Operation Successfully performed but Email will not be generated.";
+//                            emailActivity.Id = service.Create(emailActivity);
                         }
                         else
                             errorMessage = "You are not an approver in the current market. Consequently, you may not approve this change order.";
